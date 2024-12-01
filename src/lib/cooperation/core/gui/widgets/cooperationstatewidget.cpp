@@ -1,4 +1,4 @@
-﻿// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+﻿// SPDX-FileCopyrightText: 2023-2024 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -25,6 +25,7 @@ DWIDGET_USE_NAMESPACE
 #include <QToolButton>
 #include <QScrollArea>
 #include <QMouseEvent>
+#include <QStackedLayout>
 
 #include <common/commonutils.h>
 
@@ -149,8 +150,8 @@ void NoNetworkWidget::initUI()
     setLayout(vLayout);
 }
 
-NoResultTipWidget::NoResultTipWidget(QWidget *parent, bool usetipMode)
-    : QWidget(parent), useTipMode(usetipMode)
+NoResultTipWidget::NoResultTipWidget(QWidget *parent, bool usetipMode, bool ismobile)
+    : QWidget(parent), useTipMode(usetipMode), isMobile(ismobile)
 {
     initUI();
 }
@@ -168,6 +169,7 @@ void NoResultTipWidget::setTitleVisible(bool visible)
 void NoResultTipWidget::initUI()
 {
     CooperationGuiHelper::setAutoFont(this, 12, QFont::Normal);
+
     QString leadintText =
             tr("1. Enable cross-end collaborative applications. Applications on the UOS "
                "can be downloaded from the App Store, and applications on the Windows "
@@ -177,6 +179,7 @@ void NoResultTipWidget::initUI()
     QString websiteLinkTemplate =
             "<br/><a href='%1' style='text-decoration: none; color: #0081FF;word-wrap: break-word;'>%2</a>";
     QString content1 = leadintText + websiteLinkTemplate.arg(hyperlink, hyperlink);
+
     CooperationLabel *contentLable1 = new CooperationLabel(this);
     contentLable1->setWordWrap(true);
     contentLable1->setText(content1);
@@ -201,16 +204,21 @@ void NoResultTipWidget::initUI()
 
     titleLabel = new CooperationLabel(tr("Unable to find collaborative device？"));
     titleLabel->setAlignment(Qt::AlignLeft);
+
     CooperationGuiHelper::setAutoFont(titleLabel, 14, QFont::Medium);
     titleLabel->setWordWrap(true);
 
     QVBoxLayout *contentLayout = new QVBoxLayout;
-    contentLayout->setSpacing(5);
     contentLayout->addWidget(titleLabel);
+    contentLayout->setSpacing(10);
     contentLayout->addWidget(contentLable1);
+    contentLayout->setSpacing(5);
     contentLayout->addWidget(contentLable2);
+    contentLayout->setSpacing(5);
     contentLayout->addWidget(contentLable3);
+    contentLayout->setSpacing(5);
     contentLayout->addWidget(contentLable4);
+    contentLayout->addStretch(1);
     contentLayout->setContentsMargins(5, 3, 5, 5);
     setLayout(contentLayout);
 
@@ -220,6 +228,19 @@ void NoResultTipWidget::initUI()
         contentLable2->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         contentLable3->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         contentLable4->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    }
+
+    if (isMobile) {
+        QString leadintText = tr("1. The mobile phone needs to download cross end collaborative applications.");
+        QString hypertext = tr("Go to download>");
+        QString hyperlink = "https://www.chinauos.com/resource/assistant";
+        content1 = leadintText + websiteLinkTemplate.arg(hyperlink, hypertext);
+        contentLable1->setText(content1);
+        contentLable2->setText(tr("2. After installation, scan the code to connect to this device for collaboration."));
+        contentLable3->setText(tr("3. After connecting this device, the mobile end needs to keep cross end collaborative applications open and on the same LAN as this device"));
+        contentLable4->setText("");
+        titleLabel->setText(tr("Instructions for use"));
+        titleLabel->setAlignment(Qt::AlignCenter);
     }
 
 #ifdef linux
@@ -300,7 +321,7 @@ BottomLabel::BottomLabel(QWidget *parent)
     : QWidget(parent)
 {
     initUI();
-    setFixedSize(500, 33);
+    setMaximumHeight(40);
     dialog->installEventFilter(this);
 }
 
@@ -339,14 +360,14 @@ void BottomLabel::initUI()
 {
     QString ip = QString(tr("Local IP: %1").arg("---"));
     ipLabel = new QLabel(ip);
-    ipLabel->setAlignment(Qt::AlignHCenter);
-    ipLabel->setFixedHeight(30);
+    ipLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     CooperationGuiHelper::setAutoFont(ipLabel, 12, QFont::Normal);
 
     dialog = new CooperationAbstractDialog(this);
     QScrollArea *scrollArea = new QScrollArea(dialog);
-    tipLabel = new QLabel(qobject_cast<QWidget *>(this->parent()));
+    tipLabel = new QLabel(this);
     tipLabel->installEventFilter(this);
+    tipLabel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
 
 #ifdef linux
     updateSizeMode();
@@ -355,7 +376,6 @@ void BottomLabel::initUI()
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::sizeModeChanged, this, &BottomLabel::updateSizeMode);
 #    endif
 #else
-    tipLabel->setGeometry(455, 600, 24, 24);
     tipLabel->setPixmap(QIcon(":/icons/deepin/builtin/light/icons/icon_tips_128px.svg").pixmap(24, 24));
     dialog->setWindowFlags(dialog->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     dialog->setStyleSheet("background-color: white;"
@@ -373,8 +393,15 @@ void BottomLabel::initUI()
     QVBoxLayout *layout = new QVBoxLayout(contentWidget);
     layout->setAlignment(Qt::AlignTop);
     layout->setContentsMargins(5, 6, 5, 0);
+
     NoResultTipWidget *tipWidgt = new NoResultTipWidget(scrollArea, true);
-    layout->addWidget(tipWidgt);
+    NoResultTipWidget *mobileTipWidgt = new NoResultTipWidget(scrollArea, true, true);
+    stackedLayout = new QStackedLayout;
+    stackedLayout->addWidget(tipWidgt);
+    stackedLayout->addWidget(mobileTipWidgt);
+    stackedLayout->setCurrentIndex(0);
+    layout->addLayout(stackedLayout);
+
     scrollArea->setWidget(contentWidget);
 
     QVBoxLayout *contentLayout = new QVBoxLayout;
@@ -388,9 +415,18 @@ void BottomLabel::initUI()
     CooperationGuiHelper::setAutoFont(tipWidgt, 14, QFont::Normal);
     CooperationGuiHelper::setAutoFont(tipWidgt, 12, QFont::Normal);
 
+    QHBoxLayout *hLayout = new QHBoxLayout;
+    hLayout->addSpacing(30); // left fix width
+    hLayout->addStretch();
+    hLayout->addWidget(ipLabel);
+    hLayout->addStretch();
+    tipLabel->setFixedWidth(30); // right fix width
+    tipLabel->setAlignment(Qt::AlignRight);
+    hLayout->addWidget(tipLabel);
+    hLayout->setAlignment(Qt::AlignHCenter);
+
     QVBoxLayout *mainLayout = new QVBoxLayout;
-    mainLayout->addWidget(ipLabel);
-    mainLayout->setAlignment(Qt::AlignHCenter);
+    mainLayout->addLayout(hLayout);
     setLayout(mainLayout);
 
     timer = new QTimer(this);
@@ -403,21 +439,29 @@ void BottomLabel::showDialog() const
     timer->stop();
     if (dialog->isVisible())
         return;
-    QMainWindow *activeMainWindow = qobject_cast<QMainWindow *>(qApp->topLevelAt(QCursor::pos()));
-    dialog->move(activeMainWindow->pos() + QPoint(228, 398));
+
+    // get dailog pos base on this bottom label
+    QPoint globalLabelPos = this->mapToGlobal(QPoint(0, 0)); // lable's showing pos
+    int x = this->width() - 10 - dialog->width();
+    int y = 0 - dialog->height();
+
+    dialog->move(globalLabelPos + QPoint(x, y));
     dialog->show();
+}
+
+void BottomLabel::onSwitchMode(int page)
+{
+    if (page > 1)
+        return;
+    stackedLayout->setCurrentIndex(page);
 }
 
 void BottomLabel::updateSizeMode()
 {
 #ifdef DTKWIDGET_CLASS_DSizeMode
-    tipLabel->setGeometry(460, DSizeModeHelper::element(562, 552), 24, 24);
     int size = DSizeModeHelper::element(18, 24);
-    ipLabel->setFixedHeight(DSizeModeHelper::element(15, 30));
     tipLabel->setPixmap(QIcon::fromTheme("icon_tips").pixmap(size, size));
 #else
-    tipLabel->setGeometry(480, 552, 24, 24);
-    ipLabel->setFixedHeight(30);
     tipLabel->setPixmap(QIcon(":/icons/deepin/builtin/light/icons/icon_tips.svg").pixmap(24, 24));
 #endif
 }

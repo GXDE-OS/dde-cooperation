@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023-2024 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -36,6 +36,12 @@ public Q_SLOTS:
 
     // exception: network connection(ping out) or other io
     void onShareExcepted(int type, const QString &remote);
+
+    // check the self is sharing with someone
+    int selfSharing(const QString &shareIp);
+
+    //switch the client peripheral share by setting
+    bool switchPeripheralShared(bool on);
 
 private:
     explicit ShareHelper(QObject *parent = nullptr);

@@ -1,4 +1,4 @@
-﻿// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+﻿// SPDX-FileCopyrightText: 2023-2024 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -102,48 +102,10 @@ bool ShareCooperationService::setServerConfig(const ShareServerConfig &config)
     return true;
 }
 
-bool ShareCooperationService::setClientTargetIp(const QString &screen, const QString &ip, const int &port)
+void ShareCooperationService::setClientTargetIp(const QString &ip)
 {
-    if (BarrierType::Server == _brrierType) {
-        ELOG << "not the brrier client !!!!!!!";
-        return false;
-    }
-    if (!_cooConfig) {
-        ELOG << "the _cooConfig is null !!!!!"
-             << " ip = " << ip.toStdString() << ":" << port;
-        return false;
-    }
-    if (ip.isEmpty()) {
-        ELOG << "error param !!!!!"
-             << " ip = " << ip.toStdString() << ":" << port;
-        return false;
-    }
-
-    _cooConfig->setServerIp(ip);
-    _cooConfig->setPort(port == 0 ? UNI_SHARE_SERVER_PORT : port);
-    return true;
-}
-
-bool ShareCooperationService::setClientTargetIp(const QString &ip)
-{
-    if (BarrierType::Server == _brrierType) {
-        ELOG << "not the brrier client !!!!!!!";
-        return false;
-    }
-    if (!_cooConfig) {
-        ELOG << "the _cooConfig is null !!!!!"
-             << " ip = " << ip.toStdString() << ":" << UNI_SHARE_SERVER_PORT;
-        return false;
-    }
-    if (ip.isEmpty()) {
-        ELOG << "error param !!!!!"
-             << " ip = " << ip.toStdString() << ":" << UNI_SHARE_SERVER_PORT;
-        return false;
-    }
-
-    _cooConfig->setServerIp(ip);
-    _cooConfig->setPort(UNI_SHARE_SERVER_PORT);
-    return true;
+    cooConfig().setServerIp(ip);
+    cooConfig().setPort(UNI_SHARE_SERVER_PORT);
 }
 
 void ShareCooperationService::setEnableCrypto(bool enable)
@@ -159,7 +121,55 @@ void ShareCooperationService::setBarrierProfile(const QString &dir)
         pdir.mkpath(pdir.absolutePath());
     }
 
-    _cooConfig->setProfileDir(dir);
+    cooConfig().setProfileDir(dir);
+}
+
+bool ShareCooperationService::isRunning()
+{
+    if (!barrierProcess()) {
+        return false;
+    }
+
+    return barrierProcess()->state() == QProcess::Running;
+}
+
+void ShareCooperationService::terminateAllBarriers()
+{
+#if defined(Q_OS_WIN)
+    // Windows
+    QProcess process;
+    process.start("tasklist");
+    process.waitForFinished();
+
+    QString output = process.readAllStandardOutput();
+    QStringList processList = output.split('\n', QString::SkipEmptyParts);
+    
+    for (const QString &line : processList) {
+        if (line.contains("barrier", Qt::CaseInsensitive)) {
+            QStringList tokens = line.split(QStringLiteral(" "), QString::SkipEmptyParts);
+            if (tokens.size() >= 2) {
+                QString pid = tokens[1]; // PID 在第二个字段
+                QProcess::execute("taskkill", QStringList() << "/F" << "/PID" << pid);
+                LOG << "Terminated barrier process with PID:" << pid.toStdString();
+            }
+        }
+    }
+#else
+    // Linux
+    QProcess process;
+    process.start("pgrep", QStringList() << "barrier");
+    process.waitForFinished();
+
+    QString output = process.readAllStandardOutput();
+    QStringList pidList = output.split('\n', QString::SkipEmptyParts);
+
+    for (const QString &pid : pidList) {
+        if (!pid.isEmpty()) {
+            QProcess::execute("kill", QStringList() << pid);
+            LOG << "Terminated barrier process with PID:" << pid.toStdString();
+        }
+    }
+#endif
 }
 
 bool ShareCooperationService::startBarrier()
@@ -194,6 +204,8 @@ bool ShareCooperationService::startBarrier()
         stopBarrier();
         return false;
     }
+
+    terminateAllBarriers();
 
     setBarrierProcess(new QProcess());
     connect(barrierProcess(), SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(barrierFinished(int, QProcess::ExitStatus)));
@@ -253,6 +265,10 @@ bool ShareCooperationService::clientArgs(QStringList &args, QString &app)
 
     if (!QFile::exists(app)) {
         WLOG << "Barrier client not found:" << app.toStdString();
+        return false;
+    }
+    if (cooConfig().serverIp().isEmpty()) {
+        WLOG << "Barrier client serverIp not setting!";
         return false;
     }
 

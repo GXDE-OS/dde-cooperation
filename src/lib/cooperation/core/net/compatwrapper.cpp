@@ -45,7 +45,7 @@ void CompatWrapperPrivate::onTimeConnectBackend()
 
         WLOG << "ping return ID:" << sessionId.toStdString();
     } else {
-        WLOG << "can not connect to: cooperation-daemon";
+        //WLOG << "can not connect to: cooperation-daemon";
         ipcTimer->start(2000);
     }
 }
@@ -84,6 +84,11 @@ void CompatWrapperPrivate::ipcCompatSlot(int type, const QString& msg)
 
         auto ip = QString::fromStdString(nodeInfo.os.ipv4);
         auto sharedip = QString::fromStdString(nodeInfo.os.share_connect_ip);
+        auto sharing = ShareHelper::instance()->selfSharing(sharedip);
+        if (sharing > 0) {
+            // self shared ip but not running, reset the sharedip as empty.
+            sharedip = "";
+        }
 
         // typedef QMap<QString, QString> StringMap;
         StringMap infoMap;
