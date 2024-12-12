@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2024 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -27,7 +27,7 @@ extern "C"
 using namespace deepin_cross;
 using namespace cooperation_core;
 
-const char *compatProc = "cooperation-daemon";
+const char *compatProc = "dde-cooperation-daemon";
 
 static void appExitHandler(int sig)
 {
@@ -83,6 +83,11 @@ int main(int argc, char *argv[])
     bool canSetSingle = app.setSingleInstance(app.applicationName());
     if (!canSetSingle) {
         qCritical() << app.applicationName() << "is already running.";
+        QStringList msgs = app.arguments().mid(1); //remove first arg: app name
+        if (msgs.isEmpty()) {
+            msgs << "top"; // top show
+        }
+        app.onDeliverMessage(app.applicationName(), msgs);
         return 0;
     }
 
