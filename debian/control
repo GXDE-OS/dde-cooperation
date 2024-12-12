@@ -30,7 +30,7 @@ Build-Depends:
  libdisplayjack-dev | hello,
  libsystemd-dev,
  libqrencode-dev,
- dde-file-manager-dev,
+ dde-file-manager,
 Standards-Version: 4.1.3
 Section: utils
 Homepage: http://www.deepin.org
