@@ -13,6 +13,9 @@
 
 #include <iostream>
 
+// timeout if no data arrived
+inline constexpr int ExitCount = 5000;
+
 using CppServer::HTTP::HTTPRequest;
 using CppServer::HTTP::HTTPResponse;
 
@@ -23,7 +26,13 @@ public:
 
     void setResponseHandler(ResponseHandler cb)
     {
-        _handler = std::move(cb);
+        if (_handler) {
+            _handler = nullptr;
+        }
+        _handler = cb;
+        // Must sleep for release something, or it will be blocked in request
+        CppCommon::Thread::Yield();
+        CppCommon::Thread::Sleep(1);
     }
 
 protected:
@@ -55,6 +64,8 @@ protected:
                 DisconnectAsync();
             }
             _response.ClearCache();
+        } else {
+            HTTPSClientEx::onReceivedResponseHeader(response);
         }
     }
 
@@ -68,12 +79,9 @@ protected:
         if (_handler) {
             std::string cache = response.cache();
             size_t size = cache.size();
-            if (_handler(RES_FINISH, cache.data(), size)) {
-                // cancel
-                DisconnectAsync();
-            }
+            // donot disconnect at here, this connection may be continue to downlad other, or cause mem leak
+            _handler(RES_FINISH, cache.data(), size);
             _response.Clear();
-            // donot disconnect at here, this connection may be continue to downlad other.
         } else {
             HTTPSClientEx::onReceivedResponse(response);
         }
@@ -81,7 +89,7 @@ protected:
 
     bool onReceivedResponseBody(const HTTPResponse &response) override
     {
-//        std::cout << "Response BODY cache: " << response.cache().size() << std::endl;
+       // std::cout << "Response BODY cache: " << response.cache().size() << std::endl;
         if (_handler) {
             std::string cache = response.cache();
             size_t size = cache.size();
@@ -91,6 +99,8 @@ protected:
                 DisconnectAsync();
             }
             _response.ClearCache();
+        } else {
+            HTTPSClientEx::onReceivedResponseBody(response);
         }
 
         return true;
@@ -101,6 +111,8 @@ protected:
         std::cout << "Response error: " << error << std::endl;
         if (_handler) {
             _handler(RES_ERROR, nullptr, 0);
+        } else {
+            HTTPSClientEx::onReceivedResponseError(response, error);
         }
     }
 
@@ -121,9 +133,18 @@ FileClient::FileClient(const std::shared_ptr<CppServer::Asio::Service> &service,
 
 FileClient::~FileClient()
 {
+    if (_downloadThread.joinable())
+        _downloadThread.join();
     if (_httpClient) {
-        _httpClient->Disconnect();
-        _httpClient = nullptr;
+        try {
+            _httpClient->DisconnectAsync();
+            _httpClient->context().reset();
+            _httpClient.reset();
+        } catch (const std::exception &e) {
+            std::cerr << "Exception in FileClient destructor: " << e.what() << std::endl;
+        } catch (...) {
+            std::cerr << "Unknown exception in FileClient destructor" << std::endl;
+        }
     }
 }
 
@@ -142,6 +163,8 @@ void FileClient::stop()
 {
     _stop.store(true);
     _httpClient->DisconnectAsync();
+    // Note: can not join this thread beause of it callback to main thread.
+    // _downloadThread.join();
 }
 
 void FileClient::startFileDownload(const std::vector<std::string> &webnames)
@@ -153,9 +176,7 @@ void FileClient::startFileDownload(const std::vector<std::string> &webnames)
 
     _stop.store(false);
 
-    // 创建新线程来运行walkDownload函数
-    std::thread downloadThread(&FileClient::walkDownload, this, webnames);
-    downloadThread.detach(); // 由于线程函数是成员函数，这里用detach分离线程
+    _downloadThread = CppCommon::Thread::Start([this, webnames]() { walkDownload(webnames); });
 }
 
 //-------------private-----------------
@@ -170,7 +191,7 @@ void FileClient::sendInfobyHeader(uint8_t mask, const std::string &name)
     _httpClient->setResponseHandler(nullptr);
 
     std::string url = s_headerInfos[mask] + ">" + name;
-    _httpClient->SendHeadRequest(url).get();
+    _httpClient->SendHeadRequest(url, CppCommon::Timespan::seconds(3)).get();
 }
 
 InfoEntry FileClient::requestInfo(const std::string &name)
@@ -191,11 +212,8 @@ InfoEntry FileClient::requestInfo(const std::string &name)
     url.append("&token=").append(_token);
 
     _httpClient->setResponseHandler(nullptr);
-    // Must sleep for release something, or it will be blocked in request
-    CppCommon::Thread::Yield();
-    CppCommon::Thread::Sleep(1);
 
-    auto response = _httpClient->SendGetRequest(url).get();
+    auto response = _httpClient->SendGetRequest(url, CppCommon::Timespan::seconds(3)).get();
     if (response.status() == 404) {
         return fileInfo;
     }
@@ -238,221 +256,195 @@ std::string FileClient::getHeadKey(const std::string &headstrs, const std::strin
 // [GET]download/<name>&token
 bool FileClient::downloadFile(const std::string &name, const std::string &rename)
 {
-    if (_savedir.empty()) {
-        std::cout << "Must set save dir first!" << std::endl;
-        return false;
-    }
-    if (_token.empty()) {
-        std::cout << "Must set access token!" << std::endl;
-        return false;
-    }
-
-    // use smart pointer in order to wait all free while client stop.
-    std::shared_ptr<std::promise<bool>> exitPromisePtr = std::make_shared<std::promise<bool>>();
-    std::future<bool> exitFuture = exitPromisePtr->get_future();  // 获取与 promise 关联的 future
-
-    uint64_t current = 0, total = 0;
-    uint64_t offset = 0;
-    std::string url = "download/";
-    // base64 the file name in order to keep original name, which may include '&'
-    std::string ename = CppCommon::Encoding::Base64Encode(name);
-    url.append(ename);
-
     auto avaipath = createNextAvailableName(rename.empty() ? name : rename, true);
     if (avaipath.empty()) {
         //FS exception now
         std::cout << "createNextAvailableName exception now! " << name << std::endl;
-        _callback->onWebChanged(WEB_IO_ERROR, "fs_exception");
+        if (auto callback = _callback.lock()) {
+            callback->onWebChanged(WEB_IO_ERROR, "fs_exception");
+        }
         return false;
     }
-    auto tempFile = CppCommon::File(avaipath);
-//    offset = tempFile.size();
-
-    url.append("&token=").append(_token);
-    url.append("&offset=").append(std::to_string(offset));
-
-    ResponseHandler cb([exitPromisePtr, this, &current, &total, &tempFile](int status, const char *buffer, size_t size) -> bool {
-        if (_stop.load()) {
-            std::cout << "has been canceled from outside!" << std::endl;
-            try {
-                exitPromisePtr->set_exception(std::make_exception_ptr(std::runtime_error("Download stopped")));
-            } catch (const std::future_error &ex) {
-                std::cerr << "Promise future error: " << ex.what() << std::endl;
-            }
-            return true;
-        }
-
-        bool shouldExit = false;
-        switch (status)
-        {
-        case RES_NOTFOUND: {
-            std::cout << "File not Found!" << std::endl;
-            if (tempFile.IsFileWriteOpened()) {
-                tempFile.Close();
-            }
-            // error：not found
-            shouldExit = true;
-            _callback->onWebChanged(WEB_NOT_FOUND, "not_found");
-        }
-        break;
-        case RES_OKHEADER: {
-            //std::string flag = this->getHeadKey(buffer, "Flag");
-            //std::cout << "head flag: " << flag << std::endl;
-            try {
-                CppCommon::Path file_path = tempFile.absolute().RemoveExtension();
-
-                if (!tempFile.IsFileWriteOpened()) {
-                    size_t cur_off = 0;
-                    if (tempFile.IsFileExists()) {
-                        cur_off = tempFile.size();
-                        //std::cout << "Exists seek=: " << offset  << " cur_off=" << cur_off << std::endl;
-                    }
-                    tempFile.OpenOrCreate(false, true, true);
-
-                    // set offset and current size
-                    tempFile.Seek(cur_off);
-                }
-
-                total = size;
-                _callback->onWebChanged(WEB_FILE_BEGIN, file_path.string(), total);
-            } catch (const CppCommon::FileSystemException &ex) {
-                std::cout << "Head create throw FS exception: " << ex.message() << std::endl;
-                _callback->onWebChanged(WEB_IO_ERROR, "io_error");
-                return true;
-            }
-        }
-        break;
-        case RES_BODY: {
-            if (tempFile.IsFileWriteOpened() && buffer && size > 0) {
-                current += size;
-                try {
-                    // 实现层已循环写全部
-                    tempFile.Write(buffer, size);
-                } catch (const CppCommon::FileSystemException &ex) {
-                    std::cout << "Write throw FS exception: " << ex.message() << std::endl;
-                    _callback->onWebChanged(WEB_IO_ERROR, "io_error");
-                    return true;
-                }
-
-                shouldExit = _callback->onProgress(size);
-            }
-        }
-        break;
-        case RES_ERROR: {
-            if (tempFile.IsFileWriteOpened())
-                tempFile.Close();
-            // error：break off
-            shouldExit = true;
-
-            _callback->onWebChanged(WEB_DISCONNECTED, "net_error");
-        }
-        break;
-        case RES_FINISH: {
-            if (tempFile.IsFileWriteOpened()) {
-                current += size;
-                try {
-                    // 写入最后一块
-                    tempFile.Write(buffer, size);
-                    tempFile.Close();
-                } catch (const CppCommon::FileSystemException &ex) {
-                    std::cout << "Write&Close throw FS exception: " << ex.message() << std::endl;
-                    _callback->onWebChanged(WEB_IO_ERROR, "io_error");
-                    return true;
-                }
-            }
-            std::cout << "RES_FINISH, current=" << current << " total:" << total << std::endl;
-
-            shouldExit = true;
-            _callback->onWebChanged(WEB_FILE_END, tempFile.string(), total);
-            tempFile.Clear();
-        }
-        break;
-
-        default:
-            std::cout << "error, unkonw status=" << status << std::endl;
-            break;
-        }
-
-        if (shouldExit) {
-            try {
-                exitPromisePtr->set_value(true);
-            } catch (const std::future_error &ex) {
-                std::cerr << "Promise future set_value error: " << ex.what() << std::endl;
-            }
-        }
-
-        return shouldExit;
-    });
-
-    _httpClient->setResponseHandler(std::move(cb));
-    _httpClient->SendGetRequest(url).get(); // use get to sync download one by one
 
     bool result = false;
-    try {
-        result = exitFuture.get();  // 等待下载完成
-    } catch (const std::exception &ex) {
-        // 捕获并处理异常
-        std::cout << "throw exception: " << ex.what() << std::endl;
-    }
-    // Must sleep for release something, or it will be blocked in request
-    CppCommon::Thread::Yield();
-    CppCommon::Thread::Sleep(1);
-    return result;
-}
+    {
+        std::atomic<int> timeout_done(0);
 
-void FileClient::downloadFolder(const std::string &foldername, const std::string &refoldername)
-{
-    // create a override folder
-    if (refoldername.empty()) {
-        CppCommon::Path path = CppCommon::Path(_savedir) / foldername;
-        path = path.canonical(); // remove all '.' and '..' properly
-        auto absapth = path.string();
-        auto ok = createNotExistPath(absapth, false);
-        if (!ok && absapth.empty()) {
-            // FS exception hanppend
-            _callback->onWebChanged(WEB_IO_ERROR, "fs_exception");
-            return;
-        }
-    }
+        uint64_t offset = 0;
+        auto tempFile = CppCommon::File(avaipath);
+        //    offset = tempFile.size();
 
-    // request get sub files's info
-    InfoEntry info = requestInfo(foldername);
+        ResponseHandler cb([&](int status, const char *buffer, size_t size) -> bool {
+            timeout_done.store(0); // reset when data arrived
+            if (_stop.load()) {
+                std::cout << "has been canceled from outside!" << std::endl;
+                return true;
+            }
 
-    // 循环处理文件夹内文件
-    for (const auto &entry : info.datas) {
-        if (_stop.load())
+            bool shouldExit = false;
+            switch (status)
+            {
+            case RES_NOTFOUND: {
+                std::cout << "File not Found!" << std::endl;
+
+                // error：not found
+                shouldExit = true;
+                if (auto callback = _callback.lock()) {
+                    callback->onWebChanged(WEB_NOT_FOUND, "not_found");
+                }
+            }
+            break;
+            case RES_OKHEADER: {
+                //std::string flag = this->getHeadKey(buffer, "Flag");
+                //std::cout << "head flag: " << flag << std::endl;
+                try {
+                    CppCommon::Path file_path = tempFile.absolute().RemoveExtension();
+
+                    if (!tempFile.IsFileWriteOpened()) {
+                        size_t cur_off = 0;
+                        if (tempFile.IsFileExists()) {
+                            cur_off = tempFile.size();
+                            //std::cout << "Exists seek=: " << offset  << " cur_off=" << cur_off << std::endl;
+                        }
+                        tempFile.OpenOrCreate(false, true, true);
+
+                        // set offset and current size
+                        tempFile.Seek(cur_off);
+                    }
+
+                    if (auto callback = _callback.lock()) {
+                        callback->onWebChanged(WEB_FILE_BEGIN, file_path.string(), size);
+                    }
+                } catch (const CppCommon::FileSystemException &ex) {
+                    std::cout << "Header create throw FS exception: " << ex.message() << std::endl;
+                    shouldExit = true;
+                    if (auto callback = _callback.lock()) {
+                        callback->onWebChanged(WEB_IO_ERROR, "io_error");
+                    }
+                }
+            }
+            break;
+            case RES_BODY: {
+                if (tempFile.IsFileWriteOpened() && buffer && size > 0) {
+                    try {
+                        // 实现层已循环写全部
+                        tempFile.Write(buffer, size);
+
+                        if (auto callback = _callback.lock()) {
+                            callback->onProgress(size);
+                        }
+                    } catch (const CppCommon::FileSystemException &ex) {
+                        std::cout << "Write throw FS exception: " << ex.message() << std::endl;
+                        shouldExit = true;
+                        if (auto callback = _callback.lock()) {
+                            callback->onWebChanged(WEB_IO_ERROR, "io_error");
+                        }
+                    }
+                }
+            }
+            break;
+            case RES_ERROR: {
+                // error：break off
+                shouldExit = true;
+
+                if (auto callback = _callback.lock()) {
+                    callback->onWebChanged(WEB_DISCONNECTED, "net_error");
+                }
+            }
+            break;
+            case RES_FINISH: {
+                if (tempFile.IsFileWriteOpened()) {
+                    try {
+                        // 写入最后一块
+                        tempFile.Write(buffer, size);
+                    } catch (const CppCommon::FileSystemException &ex) {
+                        std::cout << "Write&Close throw FS exception: " << ex.message() << std::endl;
+                        if (auto callback = _callback.lock()) {
+                            callback->onWebChanged(WEB_IO_ERROR, "io_error");
+                        }
+                    }
+                }
+
+                shouldExit = true;
+                if (auto callback = _callback.lock()) {
+                    callback->onWebChanged(WEB_FILE_END, tempFile.string(), size);
+                }
+            }
             break;
 
-        std::string relName = foldername + "/" + entry.name;
-        std::string repName = refoldername + "/" + entry.name;
-        int64_t size = entry.size;
-        if (size > 0) {
-            // replace with the new folder if need
-            downloadFile(relName, refoldername.empty() ? "" : repName);
-        } else if (size < 0) {
-            downloadFolder(relName, refoldername.empty() ? "" : repName);
-        } else {
-            // 链接文件或大小为0的空文件
-            createNextAvailableName(refoldername.empty() ? relName : repName, true);
+            default:
+                std::cout << "error, unkonw status=" << status << std::endl;
+                break;
+            }
+
+            if (shouldExit) {
+                timeout_done.store(ExitCount);
+            }
+
+            return shouldExit;
+        });
+
+        // auto self(_httpClient->shared_from_this());
+        _httpClient->setResponseHandler(std::move(cb));
+
+        std::string url = "download/";
+        // base64 the file name in order to keep original name, which may include '&'
+        std::string ename = CppCommon::Encoding::Base64Encode(name);
+        url.append(ename);
+        url.append("&token=").append(_token);
+        url.append("&offset=").append(std::to_string(offset));
+
+        _httpClient->SendGetRequest(url).get(); // use get to sync download one by one
+
+        // Wait for download finish or no data arrived more than many times
+        while (!_stop.load()) {
+            auto count = timeout_done.load();
+            if (count >= ExitCount) {
+                break;
+            }
+            timeout_done.fetch_add(1);
+            CppCommon::Thread::Yield();
+            CppCommon::Thread::Sleep(1);
         }
+
+        // make sure the file has been closed
+        if (tempFile.IsFileWriteOpened()) {
+            try {
+                // tempFile.Flush();
+                tempFile.Close();
+                tempFile.Clear();
+            } catch (const CppCommon::FileSystemException &ex) {
+                std::cout << "Close throw FS exception: " << ex.message() << std::endl;
+            }
+        }
+
+        _httpClient->setResponseHandler(nullptr);
     }
+    // std::cout << "$$$ file end: " << name << std::endl;
+
+    return result;
 }
 
 void FileClient::walkDownload(const std::vector<std::string> &webnames)
 {
     sendInfobyHeader(INFO_WEB_START);
-    _callback->onWebChanged(WEB_TRANS_START);
+    if (auto callback = _callback.lock()) {
+        callback->onWebChanged(WEB_TRANS_START);
+    }
 
     for (const auto& name : webnames) {
         //std::cout << "start download web: " << name << std::endl;
 
         sendInfobyHeader(INFO_WEB_INDEX, name);
-        _callback->onWebChanged(WEB_INDEX_BEGIN, name);
+        if (auto callback = _callback.lock()) {
+            callback->onWebChanged(WEB_INDEX_BEGIN, name);
+        }
 
         // do not sure the file type: floder or file
-        InfoEntry info = requestInfo(name);
+        auto info = requestInfo(name);
         if (info.size == 0) {
-            std::cout << name << " walkDownload requestInfo return NULL! " << std::endl;
+            std::cout << name << " walkDownload requestInfo return empty! " << std::endl;
+            createNextAvailableName(name, true);
             continue;
         }
 
@@ -460,21 +452,102 @@ void FileClient::walkDownload(const std::vector<std::string> &webnames)
         if (info.size > 0) {
             downloadFile(name);
         } else {
-            // check and create the first index dir, ex. a -> /xx/download/a(1)
-            std::string replacePath = createNextAvailableName(name, false);
-            std::string avainame = CppCommon::Path(replacePath).filename().string();
-            std::string rename = (name == avainame) ? "" : avainame;
-            // if need, change all sub files storage dir, e.x <save>/a : <save>/a(1)
-            downloadFolder(name, rename);
+            walkFolder(name);
+        }
+
+        if (_stop.load()) {
+            std::cout << "User stop to download!" << std::endl;
+            return;
         }
     }
-    //std::cout << "whole download finished!" << std::endl;
+    std::cout << "whole download finished!" << std::endl;
 
     sendInfobyHeader(INFO_WEB_FINISH);
-    _callback->onWebChanged(WEB_TRANS_FINISH);
+    if (auto callback = _callback.lock()) {
+        callback->onWebChanged(WEB_TRANS_FINISH);
+    }
+    std::cout << "whole download finished end thread!" << std::endl;
 }
 
+void FileClient::walkFolder(const std::string &name)
+{
+    // check and create the first index dir, ex. a -> /xx/download/a(1)
+    std::string replacePath = createNextAvailableName(name, false);
+    if (replacePath.empty()) {
+        // can not get a replace folder, skip.
+        std::cout << name << "can not get a replace folder, skip!" << std::endl;
+        return;
+    }
+    std::string avainame = CppCommon::Path(replacePath).filename().string();
+    std::string rename = (name == avainame) ? "" : avainame;
 
+    // walk all sub files and folders into queue
+    std::queue<std::string> folderEntryQueue;
+
+    {
+        // request the fist folder's info
+        auto info = requestInfo(name);
+        // get all sub files and folders
+        for (const auto &entry : info.datas) {
+            if (_stop.load())
+                break;
+
+            std::string subName = name + "/" + entry.name;
+            if (entry.size < 0) {
+                walkFolderEntry(subName, &folderEntryQueue);
+            } else if (entry.size > 0) {
+                folderEntryQueue.push(subName);
+            } else {
+                std::string saveName = subName;
+                if (!rename.empty()) {
+                    // replace the first folder name with the new one
+                    saveName.replace(0, name.length(), rename);
+                }
+                std::cout << "create empty file: " << saveName << std::endl;
+                createNextAvailableName(saveName, true);
+            }
+        }
+    }
+    // std::cout << "folderEntryQueue size: " << folderEntryQueue.size() << std::endl;
+
+    // download all files and folders in queue
+    while (!folderEntryQueue.empty()) {
+        if (_stop.load())
+            break;
+
+        std::string subName = folderEntryQueue.front();
+        folderEntryQueue.pop();
+
+        if (rename.empty()) {
+            // do not need to change the save dir
+            downloadFile(subName);
+        } else {
+            // replace the first folder name with the new one
+            std::string saveName = subName;
+            saveName.replace(0, name.length(), rename);
+            downloadFile(subName, saveName);
+        }
+    }
+}
+
+void FileClient::walkFolderEntry(const std::string &name, std::queue<std::string> *entryQueue)
+{
+    // request get sub files's info
+    auto info = requestInfo(name);
+
+    // get all sub files and folders
+    for (const auto &entry : info.datas) {
+        if (_stop.load())
+            break;
+
+        std::string subName = name + "/" + entry.name;
+        if (entry.size < 0) {
+            walkFolderEntry(subName, entryQueue);
+        } else if (entry.size > 0) {
+            entryQueue->push(subName);
+        }
+    }
+}
 
 bool FileClient::createNotExistPath(std::string &abspath, bool isfile)
 {
@@ -545,7 +618,7 @@ std::string FileClient::createNextAvailableName(const std::string &name, bool is
             }
         } catch (const CppCommon::FileSystemException &ex) {
             // 捕获并处理异常
-            std::cout << "IsEquivalent throw FS exception: " << ex.message()<< std::endl;
+            // std::cout << "IsEquivalent throw FS exception: " << ex.message()<< std::endl;
         }
     }
 

@@ -1,5 +1,12 @@
 @echo off
 
+if "%~1"=="" (
+    echo please set the app version same as in deiban/changelog
+    exit /B 1
+)
+
+set APP_VERSION=%~1
+echo set APP_VERSION: %APP_VERSION%
 
 REM Force use of the same compiler as used to build ChimeraX
 @REM call "%VS170COMNTOOLS%"\vcvars64.bat
@@ -53,7 +60,7 @@ mkdir installer-inno
 
 echo ------------starting cmake------------
 
-cmake -G "%cmake_gen%" -A x64 -D CMAKE_BUILD_TYPE=%B_BUILD_TYPE% -D CMAKE_PREFIX_PATH="%B_QT_FULLPATH%" -D QT_VERSION=%B_QT_VER% ..
+cmake -G "%cmake_gen%" -A x64 -D CMAKE_BUILD_TYPE=%B_BUILD_TYPE% -D CMAKE_PREFIX_PATH="%B_QT_FULLPATH%" -D QT_VERSION=%B_QT_VER% -D APP_VERSION=%APP_VERSION% ..
 if ERRORLEVEL 1 goto failed
 cmake --build . --config %B_BUILD_TYPE%
 if ERRORLEVEL 1 goto failed
@@ -70,8 +77,7 @@ if exist output\%B_BUILD_TYPE% (
     )
 
 
-    copy output\%B_BUILD_TYPE%\* output\%DT_PROJECT%\%B_BUILD_TYPE%\ > NUL
-    del output\%DT_PROJECT%\%B_BUILD_TYPE%\QtZeroConf.* > NUL
+    copy output\%B_BUILD_TYPE%\quazip5.* output\%DT_PROJECT%\%B_BUILD_TYPE%\ > NUL
     copy "%OPENSSL_ROOT_DIR%\libcrypto-1_1-x64.dll" output\%DT_PROJECT%\%B_BUILD_TYPE%\ > NUL
     copy "%OPENSSL_ROOT_DIR%\libssl-1_1-x64.dll" output\%DT_PROJECT%\%B_BUILD_TYPE%\ > NUL
     mkdir installer-inno\%DT_PROJECT%
