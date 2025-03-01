@@ -21,7 +21,7 @@
 #include <QStandardPaths>
 #include <QDir>
 
-#ifdef linux
+#ifdef __linux__
 #    include "base/reportlog/reportlogmanager.h"
 #endif
 
@@ -40,7 +40,7 @@ inline constexpr char NotifyAcceptAction[] { "accept" };
 inline constexpr char ConnectButtonId[] { "connect-button" };
 inline constexpr char DisconnectButtonId[] { "disconnect-button" };
 
-#ifdef linux
+#ifdef __linux__
 inline constexpr char Kconnect[] { "connect" };
 inline constexpr char Kdisconnect[] { "disconnect" };
 #else
@@ -61,7 +61,7 @@ ShareHelperPrivate::ShareHelperPrivate(ShareHelper *qq)
 CooperationTaskDialog *ShareHelperPrivate::taskDialog()
 {
     if (!ctDialog) {
-        ctDialog = new CooperationTaskDialog(qApp->activeWindow());
+        ctDialog = new CooperationTaskDialog(CooperationUtil::instance()->mainWindowWidget());
         ctDialog->setModal(true);
     }
     return ctDialog;
@@ -91,7 +91,7 @@ void ShareHelperPrivate::initConnect()
 void ShareHelperPrivate::cancelShareApply()
 {
     taskDialog()->hide();
-    NetworkUtil::instance()->cancelApply("share");
+    NetworkUtil::instance()->cancelApply("share", targetDeviceInfo->ipAddress());
 }
 
 void ShareHelperPrivate::notifyMessage(const QString &body, const QStringList &actions, int expireTimeout)
@@ -127,7 +127,7 @@ void ShareHelperPrivate::onAppAttributeChanged(const QString &group, const QStri
 
 void ShareHelperPrivate::reportConnectionData()
 {
-#ifdef linux
+#ifdef __linux__
     if (!targetDeviceInfo)
         return;
 
@@ -159,9 +159,9 @@ void ShareHelperPrivate::onActionTriggered(const QString &action)
 {
     isReplied = true;
     if (action == NotifyRejectAction) {
-        NetworkUtil::instance()->replyShareRequest(false, selfFingerPrint);
+        NetworkUtil::instance()->replyShareRequest(false, selfFingerPrint, senderDeviceIp);
     } else if (action == NotifyAcceptAction) {
-        NetworkUtil::instance()->replyShareRequest(true, selfFingerPrint);
+        NetworkUtil::instance()->replyShareRequest(true, selfFingerPrint, senderDeviceIp);
 
         auto client = ShareCooperationServiceManager::instance()->client();
         // remove "--disable-crypto" if receive server has fingerprint.
@@ -338,7 +338,7 @@ void ShareHelper::notifyConnectRequest(const QString &info)
         d->recvServerPrint = infoList[2];
     }
 
-#ifdef linux
+#ifdef __linux__
     d->notifyMessage(body.arg(CommonUitls::elidedText(d->targetDevName, Qt::ElideMiddle, 15)), actions, 10 * 1000);
 #else
     CooperationUtil::instance()->activateWindow();
@@ -471,9 +471,8 @@ void ShareHelper::handleCancelCooperApply()
         if (d->isReplied)
             return;
         static QString body(tr("The other party has cancelled the connection request !"));
-#ifdef linux
+#ifdef __linux__
         d->notifyMessage(body, {}, 3 * 1000);
-        d->notice->resetNotifyId();
 #else
         static QString title(tr("connect failed"));
         d->taskDialog()->switchInfomationPage(title, body);

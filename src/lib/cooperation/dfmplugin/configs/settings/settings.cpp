@@ -403,7 +403,11 @@ QStringList Settings::keyList(const QString &group) const
         }
     }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     keyList << keys.toList();
+#else
+    keyList << QStringList(keys.begin(), keys.end());
+#endif
 
     return keyList;
 }
@@ -412,13 +416,13 @@ QVariant Settings::value(const QString &group, const QString &key, const QVarian
 {
     Q_D(const Settings);
 
-    QVariant value = d->writableData.values.value(group).value(key, QVariant::Invalid);
+    QVariant value = d->writableData.values.value(group).value(key, QVariant());
 
     if (value.isValid()) {
         return value;
     }
 
-    value = d->fallbackData.values.value(group).value(key, QVariant::Invalid);
+    value = d->fallbackData.values.value(group).value(key, QVariant());
 
     if (value.isValid()) {
         return value;

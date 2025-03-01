@@ -44,7 +44,7 @@ public:
     CooperationTransDialog *transDialog();
 
     void reportTransferResult(bool result);
-    void notifyMessage(const QString &body, const QStringList &actions, int expireTimeout);
+    void notifyMessage(const QString &body, const QStringList &actions, int expireTimeout, const QVariantMap &hitMap = QVariantMap());
     void initConnect();
 
 private:
@@ -63,6 +63,8 @@ private:
     QString recvFilesSavePath;
 
     QTimer confirmTimer;
+    // 作为接收方时，发送方的ip; 作为发送方时，接收方的ip
+    QString targetDeviceIp;
 
 #ifdef __linux__
     NoticeUtil *notice { nullptr };

@@ -21,7 +21,7 @@
 #include <QProcess>
 #include <QRegularExpression>
 
-#ifdef linux
+#ifdef __linux__
 #    include "base/reportlog/reportlogmanager.h"
 #    include <QDBusInterface>
 #    include <QDBusReply>
@@ -46,7 +46,7 @@ inline constexpr char NotifyViewAction[] { "view" };
 using TransHistoryInfo = QMap<QString, QString>;
 Q_GLOBAL_STATIC(TransHistoryInfo, transHistory)
 
-#ifdef linux
+#ifdef __linux__
 inline constexpr char Khistory[] { "history" };
 inline constexpr char Ksend[] { "send" };
 #else
@@ -96,7 +96,7 @@ void TransferHelperPrivate::initConnect()
 CooperationTransDialog *TransferHelperPrivate::transDialog()
 {
     if (!dialog) {
-        dialog = new CooperationTransDialog(qApp->activeWindow());
+        dialog = new CooperationTransDialog(CooperationUtil::instance()->mainWindowWidget());
         dialog->setModal(true);
     }
 
@@ -112,10 +112,10 @@ void TransferHelperPrivate::reportTransferResult(bool result)
 #endif
 }
 
-void TransferHelperPrivate::notifyMessage(const QString &body, const QStringList &actions, int expireTimeout)
+void TransferHelperPrivate::notifyMessage(const QString &body, const QStringList &actions, int expireTimeout, const QVariantMap &hitMap)
 {
 #ifdef __linux__
-    notice->notifyMessage(tr("File transfer"), body, actions, QVariantMap(), expireTimeout);
+    notice->notifyMessage(tr("File transfer"), body, actions, hitMap, expireTimeout);
 #endif
 }
 
@@ -165,6 +165,7 @@ void TransferHelper::registBtn()
 void TransferHelper::sendFiles(const QString &ip, const QString &devName, const QStringList &fileList)
 {
     d->who = devName;
+    d->targetDeviceIp = ip;
     d->readyToSendFiles = fileList;
     if (fileList.isEmpty())
         return;
@@ -273,6 +274,8 @@ void TransferHelper::transferResult(bool result, const QString &msg)
 {
 #ifdef __linux__
     if (d->role != Server) {
+        d->notice->closeNotification(); // close previous progress notification
+
         QStringList actions;
         if (result)
             actions << NotifyViewAction << tr("View");
@@ -295,7 +298,7 @@ void TransferHelper::updateProgress(int value, const QString &remainTime)
         QVariantMap hitMap { { "x-deepin-ShowInNotifyCenter", false } };
         QString msg(tr("File receiving %1% | Remaining time %2").arg(QString::number(value), remainTime));
 
-        d->notifyMessage(msg, actions, 15 * 1000);
+        d->notifyMessage(msg, actions, 15 * 1000, hitMap);
         return;
     }
 #endif
@@ -313,12 +316,12 @@ void TransferHelper::onActionTriggered(const QString &action)
     d->transferInfo.clear();
     if (action == NotifyCancelAction) {
         cancelTransfer(true); // do UI first
-        NetworkUtil::instance()->cancelTrans();
+        NetworkUtil::instance()->cancelTrans(d->targetDeviceIp);
     } else if (action == NotifyRejectAction) {
-        NetworkUtil::instance()->replyTransRequest(false);
+        NetworkUtil::instance()->replyTransRequest(false, d->targetDeviceIp);
     } else if (action == NotifyAcceptAction) {
         d->role = Client;
-        NetworkUtil::instance()->replyTransRequest(true);
+        NetworkUtil::instance()->replyTransRequest(true, d->targetDeviceIp);
     } else if (action == NotifyCloseAction) {
 #ifdef __linux__
         d->notice->closeNotification();
@@ -352,6 +355,7 @@ void TransferHelper::notifyTransferRequest(const QString &nick, const QString &i
 
     static QString msg(tr("\"%1\" send some files to you"));
     d->who = nick;
+    d->targetDeviceIp = ip;
 #ifdef __linux__
 
     QStringList actions { NotifyRejectAction, tr("Reject"),
@@ -362,15 +366,6 @@ void TransferHelper::notifyTransferRequest(const QString &nick, const QString &i
 #else
     d->transDialog()->showConfirmDialog(nick);
 #endif
-}
-
-void TransferHelper::notifyTransferResult(bool result, const QString &msg)
-{
-    QStringList actions;
-    if (result)
-        actions << NotifyViewAction << tr("View");
-
-    d->notifyMessage(msg, actions, 3 * 1000);
 }
 
 void TransferHelper::handleCancelTransferApply()
@@ -507,7 +502,7 @@ void TransferHelper::accepted()
     d->role = Server;
     d->status.storeRelease(Transfering);
     updateProgress(1, tr("calculating"));
-    NetworkUtil::instance()->doSendFiles(d->readyToSendFiles);
+    NetworkUtil::instance()->doSendFiles(d->readyToSendFiles, d->targetDeviceIp);
 }
 
 void TransferHelper::rejected()
@@ -540,7 +535,7 @@ void TransferHelper::cancelTransferApply()
     d->status.storeRelease(Idle);
     d->confirmTimer.stop();
     d->transDialog()->hide();
-    NetworkUtil::instance()->cancelApply("transfer");
+    NetworkUtil::instance()->cancelApply("transfer", d->targetDeviceIp);
 }
 
 // ----------compat the old protocol-----------
@@ -625,7 +620,7 @@ void TransferHelper::onTransferExcepted(int type, const QString &remote)
 
     cancelTransfer(true); // hide dialog first and show exception
     // cancel transfer and hide progress
-    NetworkUtil::instance()->cancelTrans();
+    NetworkUtil::instance()->cancelTrans(remote);
 
     switch (type) {
     case EX_NETWORK_PINGOUT:
