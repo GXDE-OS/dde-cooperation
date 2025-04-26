@@ -1,4 +1,4 @@
-/build/
+build/
 /.vscode/
 meson.build.user
 CMakeLists.txt.user
@@ -7,7 +7,16 @@ CMakeLists.txt.user
 /out/
 CMake*.json
 *.o
+*.--quiet
 
+# AI configuration files
+.roomodes
+.roo/
+.roo_temp/
+.roo_temp_$$/
+.cursor/
+memory-bank/
+.cursorrules
 
 # Modules
 modules/*

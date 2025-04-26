@@ -27,10 +27,10 @@ Build-Depends:
  libice-dev,
  libsm-dev,
  uuid-dev,
- libdisplayjack-dev | hello,
  libsystemd-dev,
  libqrencode-dev,
  dde-file-manager,
+ libvncserver-dev,
 Standards-Version: 4.1.3
 Section: utils
 Homepage: http://www.deepin.org

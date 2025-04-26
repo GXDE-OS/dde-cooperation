@@ -1,3 +1,30 @@
+dde-cooperation (1.1.1) unstable; urgency=medium
+
+  * v1.1.1 version update.
+  * fix: Fix miss the dynamic library issue.
+
+ -- re2zero <yangwu@uniontech.com>  Fri, 25 Apr 2025 15:55:10 +0800
+
+dde-cooperation (1.1.0) unstable; urgency=medium
+
+  * v1.1.0 version update.
+  * feat: refactoring code structure.
+
+ -- re2zero <yangwu@uniontech.com>  Thu, 24 Apr 2025 19:55:10 +0800
+
+dde-cooperation (1.0.12) unstable; urgency=medium
+
+  * v1.0.12 version update.
+  * feat: Remove displayjack kvm depend.
+
+ -- re2zero <yangwu@uniontech.com>  Thu, 27 Mar 2025 13:25:42 +0800
+
+dde-cooperation (1.0.11) unstable; urgency=medium
+
+  * v1.0.11 version update.
+
+ -- re2zero <yangwu@uniontech.com>  Thu, 20 Mar 2025 18:55:55 +0800
+
 dde-cooperation (1.0.10) unstable; urgency=medium
 
   * v1.0.10 version update.
