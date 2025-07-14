@@ -13,15 +13,19 @@
 WaitTransferWidget::WaitTransferWidget(QWidget *parent)
     : QFrame(parent)
 {
+    DLOG << "Initializing wait transfer widget";
     initUI();
 }
 
 WaitTransferWidget::~WaitTransferWidget()
 {
+    DLOG << "Destroying wait transfer widget";
 }
 
 void WaitTransferWidget::initUI()
 {
+    DLOG << "Initializing UI";
+
     setStyleSheet(".WaitTransferWidget{background-color: white; border-radius: 10px;}");
 
     QVBoxLayout *mainLayout = new QVBoxLayout();
@@ -63,14 +67,19 @@ void WaitTransferWidget::initUI()
     mainLayout->addLayout(buttonLayout);
     mainLayout->addSpacing(10);
     mainLayout->addLayout(indexLayout);
+    DLOG << "UI initialization complete";
 }
 
 void WaitTransferWidget::nextPage()
 {
+    DLOG << "Switching to transferring page";
+
     emit TransferHelper::instance()->changeWidget(PageName::transferringwidget);
 }
 void WaitTransferWidget::backPage()
 {
+    DLOG << "Going back to connect page";
+
 #ifdef __linux__
     emit TransferHelper::instance()->changeWidget(PageName::connectwidget);
 #endif
@@ -78,11 +87,15 @@ void WaitTransferWidget::backPage()
 
 void WaitTransferWidget::themeChanged(int theme)
 {
+    DLOG << "Theme changed to:" << (theme == 1 ? "Light" : "Dark");
+
     //light
     if (theme == 1) {
+        DLOG << "Theme is light, setting stylesheet";
         setStyleSheet(".WaitTransferWidget{background-color: white; border-radius: 10px;}");
     } else {
         //dark
+        DLOG << "Theme is dark, setting stylesheet";
         setStyleSheet(".WaitTransferWidget{background-color: rgb(37, 37, 37); border-radius: 10px;}");
     }
 }
@@ -92,6 +105,8 @@ void WaitTransferWidget::themeChanged(int theme)
 DWIDGET_USE_NAMESPACE
 void WaitTransferWidget::cancel()
 {
+    DLOG << "User requested cancel operation";
+
     QMainWindow *activeMainWindow = qobject_cast<QMainWindow *>(QApplication::activeWindow());
     DDialog dlg(activeMainWindow);
     dlg.setIcon(QIcon::fromTheme("dialog-warning"));
@@ -105,8 +120,11 @@ void WaitTransferWidget::cancel()
 
     int code = dlg.exec();
     if (code == 1) {
+        DLOG << "User confirmed cancel, disconnecting";
         backPage();
         TransferHelper::instance()->disconnectRemote();
+    } else {
+        DLOG << "User cancelled dialog, not disconnecting";
     }
 }
 

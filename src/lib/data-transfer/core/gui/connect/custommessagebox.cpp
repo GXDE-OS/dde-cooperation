@@ -1,4 +1,6 @@
 ﻿#include "custommessagebox.h"
+#include "common/log.h"
+
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QToolButton>
@@ -9,6 +11,7 @@ CustomMessageBox::CustomMessageBox(const QString &mainTitle, const QString &subT
                                    QWidget *parent)
     : QDialog(parent), message1(mainTitle), message2(subTitle)
 {
+    DLOG << "Creating with title:" << mainTitle.toStdString();
     initUi();
 }
 
@@ -27,6 +30,7 @@ void CustomMessageBox::paintEvent(QPaintEvent *event)
 
 void CustomMessageBox::initUi()
 {
+    DLOG << "CustomMessageBox initUi";
     setWindowFlags(windowFlags() | Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
     setFixedSize(385, 160);
@@ -46,6 +50,7 @@ void CustomMessageBox::initUi()
                                  "font-weight: 500;"
                                  "font-style: normal;"
                                  " text-align: center;}");
+    DLOG << "message1Label stylesheet set";
     QLabel *message2Label = new QLabel(message2, this);
     message2Label->setAlignment(Qt::AlignCenter);
     message2Label->setWordWrap(true);
@@ -58,6 +63,7 @@ void CustomMessageBox::initUi()
                                  "font-weight: 400;"
                                  "font-style: normal;"
                                  " text-align: center;}");
+    DLOG << "message2Label stylesheet set";
 
     QVBoxLayout *mainLayout = new QVBoxLayout();
     setLayout(mainLayout);
@@ -131,13 +137,18 @@ void CustomMessageBox::initUi()
     QObject::connect(closeButton, &QPushButton::clicked, this, &CustomMessageBox::reject);
     QObject::connect(continueButton, &QPushButton::clicked, this, &CustomMessageBox::accept);
     QObject::connect(cancelButton, &QPushButton::clicked, this, &CustomMessageBox::reject);
+    DLOG << "CustomMessageBox initUi finished";
 }
 
 bool CustomMessageBox::SelectContinueTransfer()
 {
+    DLOG << "Checking for outstanding transfer tasks";
     CustomMessageBox messageBox(tr("The presence of outstanding transfer tasks between you and the target device has been detected."), tr("Do you want to continue with the last transfer?"));
-    if (messageBox.exec() == QDialog::Accepted)
+    if (messageBox.exec() == QDialog::Accepted) {
+        DLOG << "User accepted to continue transfer";
         return true;
-    else
+    } else {
+        DLOG << "User rejected to continue transfer";
         return false;
+    }
 }

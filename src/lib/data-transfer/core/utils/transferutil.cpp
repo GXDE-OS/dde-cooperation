@@ -18,13 +18,18 @@
 TransferUtil::TransferUtil()
     : QObject()
 {
+    DLOG << "Creating TransferUtil instance";
     initOnlineState();
 }
 
-TransferUtil::~TransferUtil() {}
+TransferUtil::~TransferUtil()
+{
+    DLOG << "Destroying TransferUtil instance";
+}
 
 TransferUtil *TransferUtil::instance()
 {
+    DLOG << "Accessing TransferUtil singleton instance";
     static TransferUtil ins;
     return &ins;
 }
@@ -40,6 +45,11 @@ void TransferUtil::initOnlineState()
             LOG << "Network is" << isConnected;
             online = isConnected;
             Q_EMIT TransferHelper::instance()->onlineStateChanged(isConnected);
+            if (!isConnected) {
+                // cancel transfer worker by net error
+                WLOG << "Network is offline, cancel transfer worker";
+                TransferHelper::instance()->cancelTransferJob("net_error");
+            }
         }
     });
 
@@ -138,6 +148,7 @@ bool TransferUtil::checkSize(const QString &filepath)
     LOG << "The actual size is " << sizestr.toStdString() << "B "
         << "Two times the space needs to be reserved" << size << "G";
     int remainSize = getRemainSize();
+    DLOG << "Remaining storage:" << remainSize << "GB";
     if (size >= remainSize) {
         LOG << "outOfStorage" << size;
         emit TransferHelper::instance()->outOfStorage(size);

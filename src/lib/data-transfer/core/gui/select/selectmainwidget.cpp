@@ -1,6 +1,7 @@
 ﻿#include "selectmainwidget.h"
 #include "../type_defines.h"
 #include "userselectfilesize.h"
+#include "common/log.h"
 
 #include <QToolButton>
 #include <QHBoxLayout>
@@ -15,25 +16,36 @@
 
 SelectMainWidget::SelectMainWidget(QWidget *parent) : QFrame(parent)
 {
+    DLOG << "Initializing main selection widget";
+
     initUi();
 }
 
-SelectMainWidget::~SelectMainWidget() { }
+SelectMainWidget::~SelectMainWidget()
+{
+    DLOG << "Destroying main selection widget";
+}
 
 void SelectMainWidget::changeSelectframeState(const SelectItemName &name)
 {
+    DLOG << "Updating selection state";
+
     if (name == SelectItemName::APP) {
         QStringList list = OptionsManager::instance()->getUserOption(Options::kApp);
         if (list.isEmpty()) {
+            DLOG << "App list is empty, setting appItem to not OK";
             appItem->isOk = false;
         } else {
+            DLOG << "App list is not empty, setting appItem to OK";
             appItem->isOk = true;
         }
         appItem->updateSelectSize(QString::number(list.size()));
     } else if (name == SelectItemName::FILES) {
         if (OptionsManager::instance()->getUserOption(Options::kFile).isEmpty()) {
+            DLOG << "File list is empty, setting fileItem to not OK";
             fileItem->isOk = false;
         } else {
+            DLOG << "File list is not empty, setting fileItem to OK";
             fileItem->isOk = true;
         }
     } else if (name == SelectItemName::CONFIG) {
@@ -41,32 +53,44 @@ void SelectMainWidget::changeSelectframeState(const SelectItemName &name)
         QStringList BrowserList =
                 OptionsManager::instance()->getUserOption(Options::kBrowserBookmarks);
         if (ConfigList.isEmpty() && BrowserList.isEmpty()) {
+            DLOG << "Config and Browser lists are empty, setting configItem to not OK";
             configItem->isOk = false;
         } else {
+            DLOG << "Config or Browser list is not empty, setting configItem to OK";
             configItem->isOk = true;
         }
         configItem->updateSelectSize(QString::number(ConfigList.size() + BrowserList.size()));
+    } else {
+        DLOG << "Unknown SelectItemName:" << name;
     }
 }
 
 void SelectMainWidget::changeText()
 {
+    DLOG << "Updating UI text based on transfer method";
+
     QString method = OptionsManager::instance()->getUserOption(Options::kTransferMethod)[0];
     if (method == TransferMethod::kLocalExport) {
+        DLOG << "Transfer method is LocalExport";
         titileLabel->setText(LocalText);
         nextButton->setText(BtnLocalText);
         LocalIndelabel->setVisible(true);
         InternetIndelabel->setVisible(false);
     } else if (method == TransferMethod::kNetworkTransmission) {
+        DLOG << "Transfer method is NetworkTransmission";
         titileLabel->setText(InternetText);
         nextButton->setText(BtnInternetText);
         LocalIndelabel->setVisible(false);
         InternetIndelabel->setVisible(true);
+    } else {
+        DLOG << "Unknown transfer method:" << method.toStdString();
     }
 }
 
 void SelectMainWidget::clear()
 {
+    DLOG << "Clearing all selections";
+
     changeSelectframeState(SelectItemName::FILES);
     changeSelectframeState(SelectItemName::CONFIG);
     changeSelectframeState(SelectItemName::APP);
@@ -74,6 +98,8 @@ void SelectMainWidget::clear()
 
 void SelectMainWidget::initUi()
 {
+    DLOG << "Initializing UI components";
+
     setStyleSheet("background-color: white; border-radius: 10px;");
 
     QVBoxLayout *mainLayout = new QVBoxLayout();
@@ -134,11 +160,15 @@ void SelectMainWidget::initUi()
     mainLayout->addLayout(buttonLayout);
     mainLayout->addSpacing(4);
     mainLayout->addLayout(indexLayout);
+    DLOG << "SelectMainWidget initUi done";
 }
 void SelectMainWidget::nextPage()
 {
+    DLOG << "Navigating to next page";
+
     // If the selected file is being calculated ,return
     if (!UserSelectFileSize::instance()->done()) {
+        DLOG << "File size calculation not done, returning";
         return;
     }
 
@@ -152,12 +182,16 @@ void SelectMainWidget::nextPage()
     PageName next;
     QString method = OptionsManager::instance()->getUserOption(Options::kTransferMethod)[0];
     if (method == TransferMethod::kLocalExport) {
+        DLOG << "Transfer method is LocalExport, setting next page to createbackupfilewidget";
         next = PageName::createbackupfilewidget;
         emit updateBackupFileSize();
     } else if (method == TransferMethod::kNetworkTransmission) {
+        DLOG << "Transfer method is NetworkTransmission, setting next page to transferringwidget and starting transfer";
         next = PageName::transferringwidget;
         // transfer
         TransferHelper::instance()->startTransfer();
+    } else {
+        DLOG << "Unknown transfer method:" << method.toStdString();
     }
 
     // ui
@@ -166,12 +200,18 @@ void SelectMainWidget::nextPage()
 
 void SelectMainWidget::backPage()
 {
+    DLOG << "Returning to previous page";
+
     PageName back;
     QString method = OptionsManager::instance()->getUserOption(Options::kTransferMethod)[0];
     if (method == TransferMethod::kLocalExport) {
+        DLOG << "Transfer method is LocalExport, setting back page to choosewidget";
         back = PageName::choosewidget;
     } else if (method == TransferMethod::kNetworkTransmission) {
+        DLOG << "Transfer method is NetworkTransmission, setting back page to readywidget";
         back = PageName::readywidget;
+    } else {
+        DLOG << "Unknown transfer method:" << method.toStdString();
     }
     TransferHelper::instance()->disconnectRemote();
     emit TransferHelper::instance()->changeWidget(back);
@@ -179,19 +219,25 @@ void SelectMainWidget::backPage()
 
 void SelectMainWidget::selectPage()
 {
+    DLOG << "Selecting specific item page";
+
     SelectItem *selectitem = qobject_cast<SelectItem *>(QObject::sender());
     QStackedWidget *stackedWidget = qobject_cast<QStackedWidget *>(this->parent());
     int pageNum = -1;
     if (selectitem->name == SelectItemName::FILES) {
+        DLOG << "Selected item is FILES";
         pageNum = PageName::filewselectidget;
     } else if (selectitem->name == SelectItemName::APP) {
+        DLOG << "Selected item is APP";
         pageNum = PageName::appselectwidget;
     } else if (selectitem->name == SelectItemName::CONFIG) {
+        DLOG << "Selected item is CONFIG";
         pageNum = PageName::configselectwidget;
     }
     if (pageNum == -1) {
         WLOG << "Jump to next page failed, qobject_cast<QStackedWidget *>(this->parent()) = "
                 "nullptr";
+        DLOG << "Page number is -1, cannot jump to next page";
     } else {
         stackedWidget->setCurrentIndex(pageNum);
     }
@@ -200,6 +246,7 @@ void SelectMainWidget::selectPage()
 SelectItem::SelectItem(QString text, QIcon icon, SelectItemName itemName, QWidget *parent)
     : QFrame(parent), name(itemName)
 {
+    DLOG << "SelectItem constructor";
     setStyleSheet(" background-color: rgba(0, 0, 0,0.08); border-radius: 8px;");
     setFixedSize(160, 185);
 
@@ -228,16 +275,23 @@ SelectItem::SelectItem(QString text, QIcon icon, SelectItemName itemName, QWidge
 
     QObject::connect(this, &SelectItem::changePage, qobject_cast<SelectMainWidget *>(parent),
                      &SelectMainWidget::selectPage);
+    DLOG << "SelectItem constructor done";
 }
-SelectItem::~SelectItem() { }
+SelectItem::~SelectItem()
+{
+    DLOG << "Destroying selection item";
+}
 
 void SelectItem::updateSelectSize(QString num)
 {
     if (name == SelectItemName::APP) {
+        DLOG << "Updating select size for APP:" << num.toStdString();
         sizeLabel->setText(QString(tr("Selected:%1")).arg(num));
     } else if (name == SelectItemName::FILES) {
+        DLOG << "Updating select size for FILES:" << num.toStdString();
         sizeLabel->setText(QString(tr("Selected:%1")).arg(num));
     } else if (name == SelectItemName::CONFIG) {
+        DLOG << "Updating select size for CONFIG:" << num.toStdString();
         sizeLabel->setText(QString(tr("Selected:%1")).arg(num));
     } else {
         DLOG << "selectItemName is error!";
@@ -266,6 +320,7 @@ void SelectItem::paintEvent(QPaintEvent *event)
     QFrame::paintEvent(event);
 
     if (isOk) {
+        // DLOG << "Item is OK, setting background and drawing checkmark";
         this->setStyleSheet(".SelectItem{background-color:rgba(0,129,255,0.1);}");
         QPainter painter(this);
 
@@ -285,11 +340,13 @@ void SelectItem::paintEvent(QPaintEvent *event)
         QRect iconRect(this->width() - 15, 5, scaledSize.width(), scaledSize.height());
         painter.drawPixmap(iconRect, scaledPixmap);
     } else {
+        // DLOG << "Item is not OK, setting default background";
         this->setStyleSheet(".SelectItem{background-color: rgba(0, 0, 0,0.08);}");
     }
 }
 void SelectItem::initEditFrame()
 {
+    DLOG << "SelectItem initEditFrame";
     editFrame = new QFrame(this);
     editFrame->setStyleSheet("background-color: rgba(0, 0, 0, 0.3);");
     editFrame->setGeometry(0, 0, width(), height());
@@ -317,10 +374,13 @@ void SelectItem::initEditFrame()
     editLayout->addWidget(iconLabel);
     editLayout->addWidget(textLabel);
     editLayout->setSpacing(10);
+    DLOG << "SelectItem initEditFrame done";
 }
 
 void SelectItem::changeState(const bool &ok)
 {
+    DLOG << "Changing state to:" << (ok ? "Selected" : "Unselected");
+
     isOk = ok;
     update();
 }

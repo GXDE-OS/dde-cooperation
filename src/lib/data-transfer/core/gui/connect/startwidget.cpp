@@ -1,5 +1,6 @@
 ﻿#include "startwidget.h"
 #include "../type_defines.h"
+#include "common/log.h"
 #include <net/helper/transferhepler.h>
 
 #include <QHBoxLayout>
@@ -13,15 +14,18 @@
 StartWidget::StartWidget(QWidget *parent)
     : QFrame(parent)
 {
+    DLOG << "Widget constructor called";
     initUI();
 }
 
 StartWidget::~StartWidget()
 {
+    DLOG << "Widget destructor called";
 }
 
 void StartWidget::initUI()
 {
+    DLOG << "StartWidget initUI";
     setStyleSheet(".StartWidget{background-color: white; border-radius: 10px;}");
 
     QVBoxLayout *mainLayout = new QVBoxLayout();
@@ -52,20 +56,26 @@ void StartWidget::initUI()
     mainLayout->addWidget(textLabel2);
     mainLayout->addSpacing(60);
     mainLayout->addLayout(buttonLayout);
+    DLOG << "StartWidget initUI finished";
 }
 
 void StartWidget::nextPage()
 {
+    DLOG << "Navigating to choose widget";
     emit TransferHelper::instance()->changeWidget(PageName::choosewidget);
 }
 
 void StartWidget::themeChanged(int theme)
 {
+    DLOG << "Theme changed to:" << (theme == 1 ? "light" : "dark");
+
     //light
     if (theme == 1) {
+        DLOG << "Theme is light, setting stylesheet";
         setStyleSheet(".StartWidget{background-color: white; border-radius: 10px;}");
     } else {
         //dark
+        DLOG << "Theme is dark, setting stylesheet";
         setStyleSheet(".StartWidget{background-color: rgb(37, 37, 37); border-radius: 10px;}");
     }
 }

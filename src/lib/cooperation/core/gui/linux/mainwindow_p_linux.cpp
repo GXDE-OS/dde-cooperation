@@ -4,6 +4,7 @@
 
 #include "../mainwindow.h"
 #include "../mainwindow_p.h"
+#include "common/log.h"
 
 #include <DTitlebar>
 #include <DIconButton>
@@ -23,6 +24,7 @@ DWIDGET_USE_NAMESPACE
 
 void MainWindowPrivate::initWindow()
 {
+    DLOG << "Enter initWindow() - Initializing main window components";
     q->setObjectName("MainWindow");
     q->setFixedSize(500, 630);
     q->setWindowIcon(QIcon::fromTheme("dde-cooperation"));
@@ -32,6 +34,7 @@ void MainWindowPrivate::initWindow()
     stackedLayout = new QStackedLayout;
     stackedLayout->addWidget(workspaceWidget);
 #ifdef ENABLE_PHONE
+    DLOG << "Phone support enabled, creating PhoneWidget";
     phoneWidget = new PhoneWidget(q);
     stackedLayout->addWidget(phoneWidget);
 #endif
@@ -47,12 +50,15 @@ void MainWindowPrivate::initWindow()
     centralWidget->setLayout(mainLayout);
 
     q->setCentralWidget(centralWidget);
+    DLOG << "Exit initWindow() - Main window initialized successfully";
 }
 
 void MainWindowPrivate::initTitleBar()
 {
+    DLOG << "Enter initTitleBar() - Initializing title bar";
     auto titleBar = q->titlebar();
 #ifdef ENABLE_PHONE
+    DLOG << "Phone support enabled, creating switch button";
     DButtonBox *switchBtn = new DButtonBox(q);
     QList<DButtonBoxButton *> list;
     DButtonBoxButton *PCBtn = new DButtonBoxButton(tr("Computer"));
@@ -66,6 +72,7 @@ void MainWindowPrivate::initTitleBar()
     connect(mobileBtn, &DButtonBoxButton::clicked, q, [this] { q->onSwitchMode(CooperationMode::kMobile); });
 #endif
     if (qApp->property("onlyTransfer").toBool()) {
+        DLOG << "onlyTransfer property is true, hiding menu and setting title";
         titleBar->setMenuVisible(false);
         titleBar->addWidget(new QLabel(tr("Selection of delivery device")), Qt::AlignHCenter);
         auto margins = titleBar->contentsMargins();
@@ -88,7 +95,12 @@ void MainWindowPrivate::initTitleBar()
     QObject::connect(menu, &QMenu::triggered, [this](QAction *act) {
         bool ok { false };
         int val { act->data().toInt(&ok) };
-        if (ok)
+        if (ok) {
+            DLOG << "Handling setting menu triggered with value: " << val;
             handleSettingMenuTriggered(val);
+        } else {
+            DLOG << "Failed to convert action data to integer";
+        }
     });
+    DLOG << "Exit initTitleBar() - Title bar initialized successfully";
 }

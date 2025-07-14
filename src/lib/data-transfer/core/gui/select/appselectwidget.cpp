@@ -2,6 +2,8 @@
 #include "../type_defines.h"
 #include "../win/drapwindowsdata.h"
 #include "item.h"
+#include "common/log.h"
+
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QDebug>
@@ -18,13 +20,19 @@
 
 AppSelectWidget::AppSelectWidget(QWidget *parent) : QFrame(parent)
 {
+    DLOG << "Initializing application selection widget";
     initUI();
 }
 
-AppSelectWidget::~AppSelectWidget() { }
+AppSelectWidget::~AppSelectWidget()
+{
+    DLOG << "Destroying application selection widget";
+}
 
 void AppSelectWidget::initUI()
 {
+    DLOG << "Initializing UI components";
+
     setStyleSheet(".AppSelectWidget{background-color: white; border-radius: 8px;}");
 
     QVBoxLayout *mainLayout = new QVBoxLayout();
@@ -68,10 +76,13 @@ void AppSelectWidget::initUI()
     mainLayout->addWidget(selectFrame);
     mainLayout->addSpacing(10);
     mainLayout->addLayout(buttonLayout);
+    DLOG << "Application selection widget initialized";
 }
 
 void AppSelectWidget::initSelectFrame()
 {
+    DLOG << "Initializing application selection frame";
+
     QVBoxLayout *selectframeLayout = new QVBoxLayout();
     selectframeLayout->setContentsMargins(1, 1, 1, 1);
     ItemTitlebar *titlebar = new ItemTitlebar(tr("Application"), tr("Recommendation"), 40, 360,
@@ -104,6 +115,7 @@ void AppSelectWidget::initSelectFrame()
         item->setIcon(QIcon(iterator.value()));
         item->setCheckable(true);
         model->appendRow(item);
+        DLOG << "Added transferable app:" << iterator.key().toStdString();
     }
 
     for (auto iterator = noRecommendList.begin(); iterator != noRecommendList.end(); ++iterator) {
@@ -114,14 +126,17 @@ void AppSelectWidget::initSelectFrame()
         item->setData(2, Qt::ToolTipPropertyRole);
         QPixmap pix = DrapWindowsData::instance()->getAppIcon(iterator.value());
         if (pix.isNull()) {
+            DLOG << "App icon is null, using default file icon";
             item->setIcon(QIcon(":/icon/file@2x.png"));
         } else {
+            DLOG << "App icon found, setting it";
             item->setIcon(QIcon(pix));
         }
 
         item->setCheckable(false);
 
         model->appendRow(item);
+        DLOG << "Added non-suitable app:" << iterator.key().toStdString();
     }
 
     selectframeLayout->addWidget(titlebar);
@@ -134,30 +149,41 @@ void AppSelectWidget::initSelectFrame()
     auto sortBtn = titlebar->getSortButton1();
     sortBtn->setVisible(true);
     QObject::connect(sortBtn, &SortButton::sort, appView, &SelectListView::sortListview);
+    DLOG << "Application selection frame initialized";
 }
 
 void AppSelectWidget::changeText()
 {
+    DLOG << "Updating application selection widget text";
     QString method = OptionsManager::instance()->getUserOption(Options::kTransferMethod)[0];
     if (method == TransferMethod::kLocalExport) {
+        DLOG << "Transfer method is LocalExport, setting title to LocalText";
         titileLabel->setText(LocalText);
     } else if (method == TransferMethod::kNetworkTransmission) {
+        DLOG << "Transfer method is NetworkTransmission, setting title to InternetText";
         titileLabel->setText(InternetText);
+    } else {
+        DLOG << "Unknown transfer method:" << method.toStdString();
     }
+    DLOG << "Application selection widget text updated";
 }
 
 void AppSelectWidget::clear()
 {
+    DLOG << "Clearing selected applications";
     QStandardItemModel *configmodel = appView->getModel();
     for (int row = 0; row < configmodel->rowCount(); ++row) {
         QModelIndex itemIndex = configmodel->index(row, 0);
         configmodel->setData(itemIndex, Qt::Unchecked, Qt::CheckStateRole);
     }
     OptionsManager::instance()->addUserOption(Options::kApp, QStringList());
+    DLOG << "Selected applications cleared";
 }
 
 void AppSelectWidget::sendOptions()
 {
+    DLOG << "Sending selected application options";
+
     QStringList appName;
     QAbstractItemModel *model = appView->model();
     for (int row = 0; row < model->rowCount(); ++row) {
@@ -173,10 +199,13 @@ void AppSelectWidget::sendOptions()
     OptionsManager::instance()->addUserOption(Options::kApp, appName);
 
     emit isOk(SelectItemName::APP);
+    DLOG << "Selected application options sent";
 }
 
 void AppSelectWidget::delOptions()
 {
+    DLOG << "Clearing selected application options";
+
     // Clear All App Selections
     QAbstractItemModel *model = appView->model();
     for (int row = 0; row < model->rowCount(); ++row) {
@@ -191,10 +220,13 @@ void AppSelectWidget::delOptions()
 
     // Deselect
     emit isOk(SelectItemName::APP);
+    DLOG << "Selected application options cleared";
 }
 
 void AppSelectWidget::nextPage()
 {
+    DLOG << "Navigating to next page";
+
     // send useroptions
     sendOptions();
 
@@ -203,6 +235,8 @@ void AppSelectWidget::nextPage()
 }
 void AppSelectWidget::backPage()
 {
+    DLOG << "Returning to previous page";
+
     // delete Options
     delOptions();
     // backpage

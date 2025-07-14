@@ -15,6 +15,7 @@ void ProtoClient::DisconnectAndStop()
 
 bool ProtoClient::hasConnected(const std::string &ip)
 {
+    // std::cout << "hasConnected: " << ip << " ?= " << _connected_host << std::endl;
     return ip == _connected_host;
 }
 
@@ -30,6 +31,12 @@ bool ProtoClient::startHeartbeat()
     return pingMessageStart();
 }
 
+void ProtoClient::setRealIP(const std::string &real_ip)
+{
+    _real_ip = real_ip;
+    // std::cout << "ProtoClient: Real IP set to " << real_ip << std::endl;
+}
+
 void ProtoClient::handlePong(const std::string &remote)
 {
     // std::cout << "client pong: " << remote << std::endl;
@@ -39,8 +46,10 @@ void ProtoClient::handlePong(const std::string &remote)
 
 bool ProtoClient::pingMessageStart()
 {
-    if (_connected_host.empty() || !IsHandshaked())
+    if (_connected_host.empty() || !IsHandshaked()) {
+        std::cout << "Try to start ping failed";
         return false;
+    }
 
     proto::MessageNotify ping;
     ping.notification = "ping";
@@ -95,6 +104,15 @@ void ProtoClient::onHandshaked()
     reset();
 
     _connected_host = socket().remote_endpoint().address().to_string();
+
+    // Send real IP notification to server if real IP is set
+    if (!_real_ip.empty()) {
+        proto::MessageNotify realip_notify;
+        realip_notify.notification = "real_ip:" + _real_ip;
+        send(realip_notify);
+        // std::cout << "Sent real IP notification: " << _real_ip << " to server" << std::endl;
+    }
+
     if (_callbacks) {
         _callbacks->onStateChanged(RPC_CONNECTED, _connected_host);
     }
@@ -179,9 +197,17 @@ void ProtoClient::onReceive(const ::proto::MessageNotify &notify)
     // FinalClient::onReceive(notify);
     // std::cout << "Received notify: " << notify << std::endl;
 
-    // mark pinged
-    auto remote = socket().remote_endpoint().address().to_string();
-    handlePong(remote);
+    // Check if this is a real IP acknowledgment
+    if (notify.notification == "real_ip_ack") {
+        std::cout << "Received real IP mapping acknowledgment from server" << std::endl;
+        return;
+    }
+
+    // mark pinged for heartbeat pong
+    if (notify.notification == "pong") {
+        auto remote = socket().remote_endpoint().address().to_string();
+        handlePong(remote);
+    }
 }
 
 // Protocol implementation

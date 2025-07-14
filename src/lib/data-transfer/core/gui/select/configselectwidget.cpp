@@ -2,6 +2,7 @@
 #include "appselectwidget.h"
 #include "item.h"
 #include "../type_defines.h"
+#include "common/log.h"
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QDebug>
@@ -17,13 +18,20 @@
 
 ConfigSelectWidget::ConfigSelectWidget(QWidget *parent) : QFrame(parent)
 {
+    DLOG << "Initializing config selection widget";
+
     initUI();
 }
 
-ConfigSelectWidget::~ConfigSelectWidget() { }
+ConfigSelectWidget::~ConfigSelectWidget()
+{
+    DLOG << "Destroying config selection widget";
+}
 
 void ConfigSelectWidget::initUI()
 {
+    DLOG << "Initializing UI components";
+
     setStyleSheet(".ConfigSelectWidget{background-color: white; border-radius: 8px;}");
 
     QVBoxLayout *mainLayout = new QVBoxLayout();
@@ -66,10 +74,13 @@ void ConfigSelectWidget::initUI()
     mainLayout->addWidget(selectConfigFrame);
     mainLayout->addSpacing(10);
     mainLayout->addLayout(buttonLayout);
+    DLOG << "UI components initialized";
 }
 
 void ConfigSelectWidget::initSelectBrowerBookMarkFrame()
 {
+    DLOG << "Initializing browser bookmark selection frame";
+
     QVBoxLayout *selectframeLayout = new QVBoxLayout();
     selectframeLayout->setContentsMargins(1, 1, 1, 1);
     ItemTitlebar *titlebar = new ItemTitlebar(tr("Browser bookmarks"), tr("Recommendation"), 40,
@@ -99,6 +110,7 @@ void ConfigSelectWidget::initSelectBrowerBookMarkFrame()
         item->setIcon(QIcon(iterator.value()));
         item->setCheckable(true);
         model->appendRow(item);
+        // DLOG << "Added browser bookmark:" << iterator.key().toStdString();
     }
 
     selectframeLayout->addWidget(titlebar);
@@ -108,10 +120,13 @@ void ConfigSelectWidget::initSelectBrowerBookMarkFrame()
     QObject::connect(browserView, &SelectListView::currentSelectState, titlebar,
                      &ItemTitlebar::updateSelectAllButState);
     QObject::connect(titlebar, &ItemTitlebar::sort, browserView, &SelectListView::sortListview);
+    DLOG << "Browser bookmark selection frame initialized";
 }
 
 void ConfigSelectWidget::initSelectConfigFrame()
 {
+    DLOG << "Initializing config selection frame";
+
     QVBoxLayout *selectframeLayout = new QVBoxLayout();
     ItemTitlebar *titlebar = new ItemTitlebar(tr("Personal Settings"), tr("Recommendation"), 40,
                                               360, QRectF(10, 8, 16, 16), 3, this);
@@ -139,6 +154,7 @@ void ConfigSelectWidget::initSelectConfigFrame()
     item->setData(tr("Transferable"), Qt::ToolTipRole);
     item->setCheckable(true);
     model->appendRow(item);
+    DLOG << "Added customized wallpaper item";
 
     selectframeLayout->addWidget(titlebar);
     selectframeLayout->addWidget(configView);
@@ -147,10 +163,13 @@ void ConfigSelectWidget::initSelectConfigFrame()
     QObject::connect(configView, &SelectListView::currentSelectState, titlebar,
                      &ItemTitlebar::updateSelectAllButState);
     QObject::connect(titlebar, &ItemTitlebar::sort, configView, &SelectListView::sortListview);
+    DLOG << "Config selection frame initialized";
 }
 
 void ConfigSelectWidget::sendOptions()
 {
+    DLOG << "Sending selected options";
+
     QStringList browser;
     QAbstractItemModel *model = browserView->model();
     for (int row = 0; row < model->rowCount(); ++row) {
@@ -158,6 +177,7 @@ void ConfigSelectWidget::sendOptions()
         QVariant checkboxData = model->data(index, Qt::CheckStateRole);
         Qt::CheckState checkState = static_cast<Qt::CheckState>(checkboxData.toInt());
         if (checkState == Qt::Checked) {
+            DLOG << "Browser bookmark at row" << row << "is checked";
             browser << model->data(index, Qt::DisplayRole).toString();
         }
     }
@@ -172,6 +192,7 @@ void ConfigSelectWidget::sendOptions()
         QVariant checkboxData = model->data(index, Qt::CheckStateRole);
         Qt::CheckState checkState = static_cast<Qt::CheckState>(checkboxData.toInt());
         if (checkState == Qt::Checked) {
+            DLOG << "Config item at row" << row << "is checked";
             config << model->data(index, Qt::DisplayRole).toString();
         }
     }
@@ -180,10 +201,13 @@ void ConfigSelectWidget::sendOptions()
     OptionsManager::instance()->addUserOption(Options::kConfig, config);
 
     emit isOk(SelectItemName::CONFIG);
+    DLOG << "Selected options sent";
 }
 
 void ConfigSelectWidget::delOptions()
 {
+    DLOG << "Clearing selected options";
+
     // Clear All config Selections
     QAbstractItemModel *model = browserView->getModel();
     for (int row = 0; row < model->rowCount(); ++row) {
@@ -209,10 +233,12 @@ void ConfigSelectWidget::delOptions()
 
     // Deselect
     emit isOk(SelectItemName::CONFIG);
+    DLOG << "Selected options cleared";
 }
 
 void ConfigSelectWidget::changeText()
 {
+    DLOG << "Updating title text";
     QString method = OptionsManager::instance()->getUserOption(Options::kTransferMethod)[0];
     if (method == TransferMethod::kLocalExport) {
         titileLabel->setText(LocalText);
@@ -223,6 +249,7 @@ void ConfigSelectWidget::changeText()
 
 void ConfigSelectWidget::clear()
 {
+    DLOG << "Clearing selection";
     QStandardItemModel *browsermodel = browserView->getModel();
     for (int row = 0; row < browsermodel->rowCount(); ++row) {
         QModelIndex itemIndex = browsermodel->index(row, 0);
@@ -240,6 +267,8 @@ void ConfigSelectWidget::clear()
 
 void ConfigSelectWidget::nextPage()
 {
+    DLOG << "Navigating to next page";
+
     // send useroptions
     sendOptions();
 
@@ -248,6 +277,8 @@ void ConfigSelectWidget::nextPage()
 }
 void ConfigSelectWidget::backPage()
 {
+    DLOG << "Returning to previous page";
+
     // delete Options
     delOptions();
 

@@ -6,6 +6,7 @@
 #include "backgroundwidget.h"
 #include "global_defines.h"
 #include "gui/utils/cooperationguihelper.h"
+#include "net/helper/phonehelper.h"
 
 #ifdef linux
 #    include <DPalette>
@@ -44,24 +45,38 @@ const char *Knot_find_device = ":/icons/deepin/builtin/light/icons/not_find_devi
 LookingForDeviceWidget::LookingForDeviceWidget(QWidget *parent)
     : QWidget(parent)
 {
+    DLOG << "Initializing widget";
     initUI();
 
     animationTimer = new QTimer(this);
     animationTimer->setInterval(16);
     connect(animationTimer, &QTimer::timeout, this, [this] { update(); });
+    DLOG << "LookingForDeviceWidget created";
 }
 
 void LookingForDeviceWidget::seAnimationtEnabled(bool enabled)
 {
-    if (isEnabled == enabled)
+    DLOG << "Setting animation state:" << enabled;
+    if (isEnabled == enabled) {
+        DLOG << "Animation state unchanged";
         return;
+    }
 
+    if (enabled) {
+        DLOG << "Enabling animation";
+        animationTimer->start();
+    } else {
+        DLOG << "Disabling animation";
+        animationTimer->stop();
+    }
     angle = 0;
-    (isEnabled = enabled) ? animationTimer->start() : animationTimer->stop();
+    isEnabled = enabled;
+    DLOG << "LookingForDeviceWidget animation state changed to" << enabled;
 }
 
 void LookingForDeviceWidget::initUI()
 {
+    DLOG << "Initializing widget UI";
     setFocusPolicy(Qt::ClickFocus);
 
     iconLabel = new CooperationLabel(this);
@@ -83,12 +98,14 @@ void LookingForDeviceWidget::initUI()
     vLayout->addWidget(tipsLabel, 0, Qt::AlignVCenter);
     vLayout->addSpacerItem(new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding));
     setLayout(vLayout);
+    DLOG << "Widget UI initialized";
 }
 
 void LookingForDeviceWidget::paintEvent(QPaintEvent *event)
 {
     // 绘制动画效果
     if (isEnabled) {
+        DLOG << "Animation is enabled, painting animation";
         QPainter painter(this);
         painter.setRenderHint(QPainter::Antialiasing);
 
@@ -97,9 +114,11 @@ void LookingForDeviceWidget::paintEvent(QPaintEvent *event)
         int centerY = iconLabel->geometry().center().y();
         QConicalGradient gradient(centerX, centerY, angle + 180);
         if (CooperationGuiHelper::isDarkTheme()) {
+            DLOG << "Dark theme detected, setting dark gradient colors";
             gradient.setColorAt(0.3, QColor(63, 63, 63));
             gradient.setColorAt(0.7, QColor(63, 63, 63, 0));
         } else {
+            DLOG << "Light theme detected, setting light gradient colors";
             gradient.setColorAt(0.3, QColor(208, 228, 245));
             gradient.setColorAt(0.7, QColor(208, 228, 245, 0));
         }
@@ -122,11 +141,14 @@ void LookingForDeviceWidget::paintEvent(QPaintEvent *event)
 NoNetworkWidget::NoNetworkWidget(QWidget *parent)
     : QWidget(parent)
 {
+    DLOG << "Initializing widget";
     initUI();
+    DLOG << "Initialization completed";
 }
 
 void NoNetworkWidget::initUI()
 {
+    DLOG << "Initializing widget";
     setFocusPolicy(Qt::ClickFocus);
 
     CooperationLabel *iconLabel = new CooperationLabel(this);
@@ -135,7 +157,9 @@ void NoNetworkWidget::initUI()
     iconLabel->setPixmap(icon.pixmap(150, 150));
     connect(CooperationGuiHelper::instance(), &CooperationGuiHelper::themeTypeChanged, this, [icon, iconLabel] {
         iconLabel->setPixmap(icon.pixmap(150, 150));
+        DLOG << "NoNetworkWidget theme changed";
     });
+    DLOG << "NoNetworkWidget initialized";
 
     CooperationLabel *tipsLabel = new CooperationLabel(tr("Please connect to the network"), this);
 
@@ -148,33 +172,38 @@ void NoNetworkWidget::initUI()
     vLayout->addWidget(tipsLabel, 0, Qt::AlignCenter);
     vLayout->addSpacerItem(new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding));
     setLayout(vLayout);
+    DLOG << "NoNetworkWidget initialized";
 }
 
 NoResultTipWidget::NoResultTipWidget(QWidget *parent, bool usetipMode, bool ismobile)
     : QWidget(parent), useTipMode(usetipMode), isMobile(ismobile)
 {
+    DLOG << "Initializing widget";
     initUI();
 }
 
 void NoResultTipWidget::onLinkActivated(const QString &link)
 {
+    DLOG << "Opening external link:" << link.toStdString();
     QDesktopServices::openUrl(QUrl(link));
 }
 
 void NoResultTipWidget::setTitleVisible(bool visible)
 {
+    DLOG << "Setting title visibility to" << visible;
     titleLabel->setVisible(visible);
 }
 
 void NoResultTipWidget::initUI()
 {
+    DLOG << "Initializing widget";
     CooperationGuiHelper::setAutoFont(this, 12, QFont::Normal);
 
     QString leadintText =
             tr("1. Enable cross-end collaborative applications. Applications on the UOS "
                "can be downloaded from the App Store, and applications on the Windows "
                "side can be downloaded from: ");
-    QString hyperlink = "https://www.chinauos.com/resource/assistant";
+    QString hyperlink = KdownloadUrl;
 
     QString websiteLinkTemplate =
             "<br/><a href='%1' style='text-decoration: none; color: #0081FF;word-wrap: break-word;'>%2</a>";
@@ -190,8 +219,10 @@ void NoResultTipWidget::initUI()
 
     QString settingTip;
     if (qApp->property("onlyTransfer").toBool()) {
+        DLOG << "onlyTransfer property is true, setting tip for file transfer";
         settingTip = tr("3. File Manager-Settings-File Drop-Allow the following users to drop files to me -\"Everyone on the same LAN\"");
     } else {
+        DLOG << "onlyTransfer property is false, setting tip for basic settings";
         settingTip = tr("3. Settings-Basic Settings-Discovery Mode-\"Allow everyone in the same LAN\"");
     }
 
@@ -223,6 +254,7 @@ void NoResultTipWidget::initUI()
     setLayout(contentLayout);
 
     if (useTipMode) {
+        DLOG << "useTipMode is true, setting size policy for labels";
         titleLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         contentLable1->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         contentLable2->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -231,9 +263,10 @@ void NoResultTipWidget::initUI()
     }
 
     if (isMobile) {
+        DLOG << "isMobile is true, setting mobile specific tips";
         QString leadintText = tr("1. The mobile phone needs to download cross end collaborative applications.");
         QString hypertext = tr("Go to download>");
-        QString hyperlink = "https://www.chinauos.com/resource/assistant";
+        QString hyperlink = KdownloadUrl;
         content1 = leadintText + websiteLinkTemplate.arg(hyperlink, hypertext);
         contentLable1->setText(content1);
         contentLable2->setText(tr("2. After installation, scan the code to connect to this device for collaboration."));
@@ -259,16 +292,19 @@ void NoResultTipWidget::initUI()
     CooperationGuiHelper::instance()->autoUpdateTextColor(titleLabel, colorList);
     contentLayout->setSpacing(15);
 #endif
+    DLOG << "Widget initialization completed";
 }
 
 NoResultWidget::NoResultWidget(QWidget *parent)
     : QWidget(parent)
 {
+    DLOG << "Initializing widget";
     initUI();
 }
 
 void NoResultWidget::initUI()
 {
+    DLOG << "Initializing widget";
     setFocusPolicy(Qt::ClickFocus);
 
     CooperationLabel *iconLabel = new CooperationLabel(this);
@@ -315,20 +351,25 @@ void NoResultWidget::initUI()
 
     vLayout->addSpacerItem(new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding));
     setLayout(vLayout);
+    DLOG << "BottomLabel initialized";
 }
 
 BottomLabel::BottomLabel(QWidget *parent)
     : QWidget(parent)
 {
+    DLOG << "Initializing BottomLabel";
     initUI();
     setMaximumHeight(40);
     dialog->installEventFilter(this);
+    DLOG << "BottomLabel installed event filter";
 }
 
 void BottomLabel::setIp(const QString &ip)
 {
+    DLOG << "Setting IP address to:" << ip.toStdString();
     QString iptext = QString(tr("Local IP: %1").arg(ip));
     ipLabel->setText(iptext);
+    DLOG << "BottomLabel IP set to:" << ip.toStdString();
 }
 
 void BottomLabel::paintEvent(QPaintEvent *)
@@ -342,14 +383,21 @@ void BottomLabel::paintEvent(QPaintEvent *)
 bool BottomLabel::eventFilter(QObject *obj, QEvent *event)
 {
     if (obj == tipLabel) {
-        if (event->type() == QEvent::Enter)
-            showDialog();
-        else if (event->type() == QEvent::Leave)
-            timer->start();
-    } else if (obj == dialog) {
+        DLOG << "Event on tipLabel, type: " << event->type();
         if (event->type() == QEvent::Enter) {
+            DLOG << "Mouse entered tipLabel";
             showDialog();
         } else if (event->type() == QEvent::Leave) {
+            DLOG << "Mouse left tipLabel";
+            timer->start();
+        }
+    } else if (obj == dialog) {
+        DLOG << "Event on dialog, type: " << event->type();
+        if (event->type() == QEvent::Enter) {
+            DLOG << "Mouse entered dialog";
+            showDialog();
+        } else if (event->type() == QEvent::Leave) {
+            DLOG << "Mouse left dialog";
             timer->start();
         }
     }
@@ -358,6 +406,7 @@ bool BottomLabel::eventFilter(QObject *obj, QEvent *event)
 
 void BottomLabel::initUI()
 {
+    DLOG << "Initializing BottomLabel";
     QString ip = QString(tr("Local IP: %1").arg("---"));
     ipLabel = new QLabel(ip);
     ipLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -432,13 +481,17 @@ void BottomLabel::initUI()
     timer = new QTimer(this);
     timer->setInterval(200);
     connect(timer, &QTimer::timeout, dialog, &QDialog::hide);
+    DLOG << "BottomLabel timer initialized";
 }
 
 void BottomLabel::showDialog() const
 {
+    DLOG << "Showing dialog";
     timer->stop();
-    if (dialog->isVisible())
+    if (dialog->isVisible()) {
+        DLOG << "Dialog already visible";
         return;
+    }
 
     // get dailog pos base on this bottom label
     QPoint globalLabelPos = this->mapToGlobal(QPoint(0, 0)); // lable's showing pos
@@ -447,17 +500,23 @@ void BottomLabel::showDialog() const
 
     dialog->move(globalLabelPos + QPoint(x, y));
     dialog->show();
+    DLOG << "BottomLabel dialog shown";
 }
 
 void BottomLabel::onSwitchMode(int page)
 {
-    if (page > 1)
+    DLOG << "Switching to page:" << page;
+    if (page > 1) {
+        WLOG << "Invalid page index:" << page;
         return;
+    }
     stackedLayout->setCurrentIndex(page);
+    DLOG << "Page switched successfully";
 }
 
 void BottomLabel::updateSizeMode()
 {
+    DLOG << "Updating size mode";
 #ifdef DTKWIDGET_CLASS_DSizeMode
     int size = DSizeModeHelper::element(18, 24);
     tipLabel->setPixmap(QIcon::fromTheme("icon_tips").pixmap(size, size));

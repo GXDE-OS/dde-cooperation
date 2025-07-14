@@ -1,4 +1,5 @@
 ﻿#include "networkdisconnectionwidget.h"
+#include "common/log.h"
 
 #include <QLabel>
 #include <QStackedWidget>
@@ -10,15 +11,18 @@
 NetworkDisconnectionWidget::NetworkDisconnectionWidget(QWidget *parent)
     : QFrame(parent)
 {
+    DLOG << "Widget constructor called";
     initUI();
 }
 
 NetworkDisconnectionWidget::~NetworkDisconnectionWidget()
 {
+    DLOG << "Widget destructor called";
 }
 
 void NetworkDisconnectionWidget::initUI()
 {
+    DLOG << "NetworkDisconnectionWidget initUI";
     setStyleSheet(".NetworkDisconnectionWidget{background-color: white; border-radius: 10px;}");
 
     QVBoxLayout *mainLayout = new QVBoxLayout();
@@ -59,24 +63,30 @@ void NetworkDisconnectionWidget::initUI()
     mainLayout->addLayout(buttonLayout);
     mainLayout->addSpacing(10);
     mainLayout->addLayout(indexLayout);
+    DLOG << "NetworkDisconnectionWidget initUI finished";
 }
 
 void NetworkDisconnectionWidget::backPage()
 {
+    DLOG << "Executing back navigation to choose widget";
     emit TransferHelper::instance()->changeWidget(PageName::choosewidget);
 }
 
 void NetworkDisconnectionWidget::retryPage()
 {
+    DLOG << "Executing retry connection attempt";
     emit TransferHelper::instance()->changeWidget(PageName::choosewidget);
 }
 
 void NetworkDisconnectionWidget::themeChanged(int theme)
 {
+    DLOG << "Theme changed to:" << (theme == 1 ? "light" : "dark");
     //light
     if (theme == 1) {
+        DLOG << "Theme is light, setting stylesheet";
         setStyleSheet(".NetworkDisconnectionWidget{background-color: white; border-radius: 10px;}");
     } else {
+        DLOG << "Theme is dark, setting stylesheet";
         setStyleSheet(".NetworkDisconnectionWidget{background-color: rgb(37, 37, 37); border-radius: 10px;}");
         //dark
     }

@@ -21,21 +21,27 @@ DWIDGET_USE_NAMESPACE
 FileChooserEdit::FileChooserEdit(QWidget *parent)
     : QWidget(parent)
 {
+    qInfo() << "Creating FileChooserEdit instance";
     initUI();
 }
 
 void FileChooserEdit::setText(const QString &text)
 {
+    qInfo() << "Setting text for file chooser edit:" << text;
     QFontMetrics fontMetrices(pathLabel->font());
     QString showName = fontMetrices.elidedText(text, Qt::ElideRight, pathLabel->width() - 16);
-    if (showName != text)
+    if (showName != text) {
+        qInfo() << "Text truncated, setting tooltip";
         pathLabel->setToolTip(text);
+    }
 
     pathLabel->setText(showName);
+    qInfo() << "Text set to:" << showName;
 }
 
 void FileChooserEdit::initUI()
 {
+    qInfo() << "Initializing file chooser edit UI";
     pathLabel = new QLabel(this);
     pathLabel->setContentsMargins(8, 8, 8, 8);
     pathLabel->setText(QStandardPaths::writableLocation(QStandardPaths::DownloadLocation));
@@ -52,6 +58,7 @@ void FileChooserEdit::initUI()
 
     mainLayout->addWidget(pathLabel);
     mainLayout->addWidget(fileChooserBtn);
+    qInfo() << "File chooser edit UI initialized";
 }
 
 void FileChooserEdit::paintEvent(QPaintEvent *event)
@@ -73,21 +80,27 @@ void FileChooserEdit::paintEvent(QPaintEvent *event)
 
 void FileChooserEdit::onButtonClicked()
 {
+    qInfo() << "File chooser button clicked";
     auto dirPath = QFileDialog::getExistingDirectory(this);
-    if (dirPath.isEmpty())
+    if (dirPath.isEmpty()) {
+        qInfo() << "No directory selected, returning";
         return;
+    }
 
     setText(dirPath);
     emit fileChoosed(dirPath);
+    qInfo() << "File path emitted:" << dirPath;
 }
 
 BackgroundWidget::BackgroundWidget(QWidget *parent)
     : QFrame(parent)
 {
+    qInfo() << "Creating BackgroundWidget instance";
 }
 
 void BackgroundWidget::setRoundRole(BackgroundWidget::RoundRole role)
 {
+    qInfo() << "Setting round role for BackgroundWidget";
     this->role = role;
 }
 
@@ -100,6 +113,7 @@ void BackgroundWidget::paintEvent(QPaintEvent *event)
 
     switch (role) {
     case Top:
+        qInfo() << "Painting top rounded background";
         path.moveTo(paintRect.bottomRight());
         path.lineTo(paintRect.topRight() + QPoint(0, radius));
         path.arcTo(QRect(QPoint(paintRect.topRight() - QPoint(radius * 2, 0)),
@@ -111,6 +125,7 @@ void BackgroundWidget::paintEvent(QPaintEvent *event)
         path.lineTo(paintRect.bottomRight());
         break;
     case Bottom:
+        qInfo() << "Painting bottom rounded background";
         path.moveTo(paintRect.bottomRight() - QPoint(0, radius));
         path.lineTo(paintRect.topRight());
         path.lineTo(paintRect.topLeft());
@@ -124,11 +139,13 @@ void BackgroundWidget::paintEvent(QPaintEvent *event)
                    270, 90);
         break;
     default:
+        qInfo() << "Painting default background";
         break;
     }
 
     QColor color = DGuiApplicationHelper::instance()->applicationPalette().frameBorder().color();
     if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::DarkType) {
+        qInfo() << "Dark theme detected, setting color to #323232";
         color = QColor("#323232");
         color.setAlpha(230);
     }
@@ -140,16 +157,21 @@ void BackgroundWidget::paintEvent(QPaintEvent *event)
 FileTransferSettingsDialog::FileTransferSettingsDialog(QWidget *parent)
     : DDialog(parent)
 {
+    qDebug() << "Creating file transfer settings dialog";
     initUI();
     initConnect();
+    qDebug() << "File transfer settings dialog initialized";
 }
 
 void FileTransferSettingsDialog::initUI()
 {
+    qDebug() << "Initializing file transfer settings UI";
+
     setIcon(QIcon::fromTheme("dde-file-manager"));
     setTitle(tr("File transfer settings"));
     setFixedWidth(400);
     setContentsMargins(0, 0, 0, 0);
+    qDebug() << "Dialog basic properties set";
 
     QWidget *contentWidget = new QWidget(this);
     mainLayout = new QVBoxLayout;
@@ -157,8 +179,10 @@ void FileTransferSettingsDialog::initUI()
     mainLayout->setSpacing(1);
     contentWidget->setLayout(mainLayout);
     addContent(contentWidget);
+    qDebug() << "Main content layout created";
 
     fileChooserEdit = new FileChooserEdit(this);
+    qDebug() << "File chooser edit created";
 
     comBox = new DComboBox(this);
     QStringList items { tr("Everyone in the same LAN"),
@@ -166,9 +190,11 @@ void FileTransferSettingsDialog::initUI()
                         tr("Not allow") };
     comBox->addItems(items);
     comBox->setFocusPolicy(Qt::NoFocus);
+    qDebug() << "Transfer mode combo box created with options";
 
     addItem(tr("Allows the following users to send files to me"), comBox, 0);
     addItem(tr("File save location"), fileChooserEdit, 1);
+    qInfo() << "File transfer settings UI initialized";
 }
 
 void FileTransferSettingsDialog::initConnect()
@@ -179,12 +205,15 @@ void FileTransferSettingsDialog::initConnect()
 
 void FileTransferSettingsDialog::loadConfig()
 {
+    qDebug() << "Loading file transfer settings";
 #ifdef linux
     auto value = DConfigManager::instance()->value(kDefaultCfgPath, "cooperation.transfer.mode", 0);
     int mode = value.toInt();
     mode = (mode < 0) ? 0 : (mode > 2) ? 2 : mode;
     comBox->setCurrentIndex(mode);
+    qDebug() << "Loaded transfer mode from dconfig:" << mode;
 #else
+    qDebug() << "Non-Linux platform, loading transfer mode from ConfigManager";
     auto value = ConfigManager::instance()->appAttribute("GenericAttribute", "TransferMode");
     comBox->setCurrentIndex(value.isValid() ? value.toInt() : 0);
 #endif
@@ -195,15 +224,19 @@ void FileTransferSettingsDialog::loadConfig()
 
 void FileTransferSettingsDialog::addItem(const QString &text, QWidget *widget, int indexPos)
 {
+    qInfo() << "Adding item with text:" << text;
     BackgroundWidget *bgWidget = new BackgroundWidget(this);
     switch (indexPos) {
     case 0:
+        qInfo() << "Setting round role to Top for index 0";
         bgWidget->setRoundRole(BackgroundWidget::Top);
         break;
     case 1:
+        qInfo() << "Setting round role to Bottom for index 1";
         bgWidget->setRoundRole(BackgroundWidget::Bottom);
         break;
     default:
+        qInfo() << "Unknown index position, no round role set";
         break;
     }
 
@@ -217,28 +250,35 @@ void FileTransferSettingsDialog::addItem(const QString &text, QWidget *widget, i
     vLayout->addWidget(widget);
 
     mainLayout->addWidget(bgWidget);
+    qInfo() << "Added item with text:" << text;
 }
 
 void FileTransferSettingsDialog::onFileChoosered(const QString &fileName)
 {
     ConfigManager::instance()->setAppAttribute("GenericAttribute", "StoragePath", fileName);
+    qInfo() << "Saved storage path to config:" << fileName;
 }
 
 void FileTransferSettingsDialog::onComBoxValueChanged(int index)
 {
 #ifdef linux
+    qInfo() << "Linux platform, setting cooperation.transfer.mode to:" << index;
     DConfigManager::instance()->setValue(kDefaultCfgPath, "cooperation.transfer.mode", index);
     bool status = index == 2 ? false : true;
     QVariantMap data;
     data.insert("enableFileDelivery", status);
     deepin_cross::ReportLogManager::instance()->commit("CooperationStatus", data);
+    qInfo() << "Reported transfer mode change to log system";
 #else
+    qInfo() << "Non-Linux platform, setting GenericAttribute.TransferMode to:" << index;
     ConfigManager::instance()->setAppAttribute("GenericAttribute", "TransferMode", index);
+    qInfo() << "Saved transfer mode to config:" << index;
 #endif
 }
 
 void FileTransferSettingsDialog::showEvent(QShowEvent *e)
 {
+    qInfo() << "File transfer settings dialog shown";
     loadConfig();
     DDialog::showEvent(e);
 }

@@ -32,6 +32,7 @@ using namespace cooperation_core;
 NetworkUtilPrivate::NetworkUtilPrivate(NetworkUtil *qq)
     : q(qq)
 {
+    DLOG << "Initializing NetworkUtil private implementation";
     ExtenMessageHandler msg_cb([this](int32_t mask, const picojson::value &json_value, std::string *res_msg) -> bool {
         DLOG << "NetworkUtil >> " << mask << " msg_cb, json_msg: " << json_value << std::endl;
         switch (mask) {
@@ -61,11 +62,12 @@ NetworkUtilPrivate::NetworkUtilPrivate(NetworkUtil *qq)
 
 NetworkUtilPrivate::~NetworkUtilPrivate()
 {
+    DLOG << "Destroying NetworkUtil private implementation";
 }
 
 void NetworkUtilPrivate::handleConnectStatus(int result, QString reason)
 {
-    DLOG << " connect status: " << result << " " << reason.toStdString();
+    WLOG << " connect status: " << result << " " << reason.toStdString();
     if (result == 2)
         confirmTargetAddress = reason;
 
@@ -86,7 +88,10 @@ void NetworkUtilPrivate::handleConnectStatus(int result, QString reason)
         emit TransferHelper::instance()->connectSucceed();
         return;
     } else if (result == EX_NETWORK_PINGOUT) {
+        WLOG << "EX_NETWORK_PINGOUT: " << reason.toStdString();
         emit TransferHelper::instance()->onlineStateChanged(false);
+        // cancel transfer worker by net error
+        q->cancelTrans("net_error");
         return;
     }
 }
@@ -97,15 +102,18 @@ void NetworkUtilPrivate::handleTransChanged(int status, const QString &path, qui
     Q_UNUSED(status);
     Q_UNUSED(path);
     Q_UNUSED(size);
+    DLOG << "windows not handle handleTransChanged: " << status << " " << path.toStdString();
     return;
 #else
     //DLOG << "handleTransChanged" << status << " " << path.toStdString();
     switch (status) {
     case TRANS_CANCELED:
         //cancelTransfer(path.compare("im_sender") == 0);
+        WLOG << "TRANS_CANCELED: " << path.toStdString();
         break;
     case TRANS_EXCEPTION:
         //TODO: notify show exception UI
+        WLOG << "TRANS_EXCEPTION: " << path.toStdString();
         break;
     case TRANS_COUNT_SIZE:
         // only update the total size while rpc notice
@@ -207,6 +215,7 @@ NetworkUtil::NetworkUtil(QObject *parent)
     : QObject(parent),
       d(new NetworkUtilPrivate(this))
 {
+    DLOG << "Creating NetworkUtil instance";
     updateStorageConfig();
 
 #ifdef ENABLE_COMPAT
@@ -217,6 +226,7 @@ NetworkUtil::NetworkUtil(QObject *parent)
 
 NetworkUtil::~NetworkUtil()
 {
+    DLOG << "Destroying NetworkUtil instance";
 }
 
 NetworkUtil *NetworkUtil::instance()
@@ -254,12 +264,14 @@ void NetworkUtil::updatePassword(const QString &code)
 
 bool NetworkUtil::doConnect(const QString &ip, const QString &password)
 {
+    LOG << "Attempting to connect to:" << ip.toStdString();
     _loginCombi.first = ip;
     _loginCombi.second = password;
 
     int logind = d->sessionManager->sessionConnect(ip, DATA_SESSION_PORT, password);
     if (logind > 0) {
         d->confirmTargetAddress = ip;
+        LOG << "Connection established with:" << ip.toStdString();
         return true;
     } else if (logind < 0){
         DLOG << "try connect FAILED, try compat!";
@@ -270,6 +282,7 @@ bool NetworkUtil::doConnect(const QString &ip, const QString &password)
 
 void NetworkUtil::disConnect()
 {
+    DLOG << "Disconnecting from:" << d->confirmTargetAddress.toStdString();
     if (!d->confirmTargetAddress.isEmpty()) {
         d->sessionManager->sessionDisconnect(d->confirmTargetAddress);
     }
@@ -306,10 +319,10 @@ bool NetworkUtil::sendMessage(const QString &message)
     return true;
 }
 
-void NetworkUtil::cancelTrans()
+void NetworkUtil::cancelTrans(const QString &reason)
 {
     if (!d->confirmTargetAddress.isEmpty()) {
-        d->sessionManager->cancelSyncFile(d->confirmTargetAddress);
+        d->sessionManager->cancelSyncFile(d->confirmTargetAddress, reason);
     }
 #ifdef ENABLE_COMPAT
     else {
@@ -326,6 +339,7 @@ void NetworkUtil::cancelTrans()
 
 void NetworkUtil::doSendFiles(const QStringList &fileList)
 {
+    LOG << "Preparing to send" << fileList.size() << "files";
     if (!d->confirmTargetAddress.isEmpty()) {
         int ranport = deepin_cross::CommonUitls::getAvailablePort();
         d->sessionManager->sendFiles(d->confirmTargetAddress, ranport, fileList);

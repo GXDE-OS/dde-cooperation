@@ -26,15 +26,19 @@ WorkspaceWidgetPrivate::WorkspaceWidgetPrivate(WorkspaceWidget *qq)
       sortFilterWorker(new SortFilterWorker),
       workThread(new QThread)
 {
+    DLOG << "Initializing worker thread";
     sortFilterWorker->moveToThread(workThread.data());
     workThread->start();
+    DLOG << "Worker thread started";
 }
 
 WorkspaceWidgetPrivate::~WorkspaceWidgetPrivate()
 {
+    DLOG << "Stopping worker thread";
     sortFilterWorker->stop();
     workThread->quit();
     workThread->wait();
+    DLOG << "Worker thread stopped";
 }
 
 void WorkspaceWidgetPrivate::initUI()
@@ -91,9 +95,11 @@ void WorkspaceWidgetPrivate::initUI()
     mainLayout->setSpacing(0);
     mainLayout->setContentsMargins(0, 15, 0, 0);
 #ifndef linux
+    DLOG << "Non-Linux platform, adding spacing and searchEdit";
     mainLayout->addSpacing(50);
     mainLayout->addWidget(searchEdit, 0, Qt::AlignHCenter);
 #else
+    DLOG << "Linux platform, adding searchEdit";
     mainLayout->addWidget(searchEdit);
 #endif
 
@@ -122,8 +128,11 @@ void WorkspaceWidgetPrivate::initConnect()
 
 void WorkspaceWidgetPrivate::onSearchValueChanged(const QString &text)
 {
-    if (currentPage == WorkspaceWidget::kNoNetworkWidget)
+    DLOG << "Search value changed to:" << text.toStdString();
+    if (currentPage == WorkspaceWidget::kNoNetworkWidget) {
+        DLOG << "Current page is NoNetworkWidget, skipping search value change";
         return;
+    }
 
     dlWidget->clear();
     Q_EMIT filterDevice(text);
@@ -131,10 +140,13 @@ void WorkspaceWidgetPrivate::onSearchValueChanged(const QString &text)
 
 void WorkspaceWidgetPrivate::onSearchDevice()
 {
+    DLOG << "Search device triggered";
     QRegularExpression ipPattern("^(10\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}|172\\.(1[6-9]|2[0-9]|3[0-1])\\.\\d{1,3}\\.\\d{1,3}|192\\.168\\.\\d{1,3}\\.\\d{1,3})$");
     QString ip = searchEdit->text();
-    if (!ipPattern.match(ip).hasMatch())
+    if (!ipPattern.match(ip).hasMatch()) {
+        DLOG << "IP does not match pattern:" << ip.toStdString();
         return;
+    }
 
     q->switchWidget(WorkspaceWidget::kLookignForDeviceWidget);
     emit q->search(ip);
@@ -149,7 +161,9 @@ void WorkspaceWidgetPrivate::onSortFilterResult(int index, const DeviceInfoPoint
 void WorkspaceWidgetPrivate::onFilterFinished()
 {
     if (dlWidget->itemCount() == 0) {
+        DLOG << "No items in device list";
         if (searchEdit->text().isEmpty()) {
+            DLOG << "Search text is empty, reverting to current page";
             stackedLayout->setCurrentIndex(currentPage);
             return;
         }
@@ -180,8 +194,10 @@ WorkspaceWidget::WorkspaceWidget(QWidget *parent)
     : QWidget(parent),
       d(new WorkspaceWidgetPrivate(this))
 {
+    DLOG << "Initializing workspace widget";
     d->initUI();
     d->initConnect();
+    DLOG << "Initialization completed";
 }
 
 int WorkspaceWidget::itemCount()
@@ -191,24 +207,32 @@ int WorkspaceWidget::itemCount()
 
 void WorkspaceWidget::switchWidget(PageName page)
 {
-    if (d->currentPage == page || page == kUnknownPage)
+    if (d->currentPage == page || page == kUnknownPage) {
+        DLOG << "Already on requested page or unknown page, skipping switch";
         return;
+    }
 
     if (page == kDeviceListWidget) {
+        DLOG << "Switching to DeviceListWidget";
         d->deviceLabel->setVisible(true);
         d->refreshBtn->setVisible(true);
     } else {
+        DLOG << "Switching to non-DeviceListWidget, hiding device label and refresh button";
         d->deviceLabel->setVisible(false);
         d->refreshBtn->setVisible(false);
     }
 
     if (page == kLookignForDeviceWidget) {
+        DLOG << "Switching to LookingForDeviceWidget, enabling animation and hiding tip widget";
         d->lfdWidget->seAnimationtEnabled(true);
         d->tipWidget->setVisible(false);
 
     } else {
-        if (qApp->property("onlyTransfer").toBool() || !QFile(deepin_cross::CommonUitls::tipConfPath()).exists())
+        DLOG << "Switching to non-LookingForDeviceWidget, disabling animation";
+        if (qApp->property("onlyTransfer").toBool() || !QFile(deepin_cross::CommonUitls::tipConfPath()).exists()) {
+            DLOG << "onlyTransfer is true or tip config file does not exist, showing tip widget";
             d->tipWidget->setVisible(true);
+        }
         d->lfdWidget->seAnimationtEnabled(false);
     }
 
@@ -218,11 +242,13 @@ void WorkspaceWidget::switchWidget(PageName page)
 
 void WorkspaceWidget::addDeviceInfos(const QList<DeviceInfoPointer> &infoList)
 {
+    DLOG << "Adding " << infoList.size() << " devices";
     Q_EMIT d->devicesAdded(infoList);
 }
 
 void WorkspaceWidget::removeDeviceInfos(const QString &ip)
 {
+    DLOG << "Removing device with IP:" << ip.toStdString();
     Q_EMIT d->devicesRemoved(ip);
 }
 
@@ -238,8 +264,10 @@ DeviceInfoPointer WorkspaceWidget::findDeviceInfo(const QString &ip)
 
 void WorkspaceWidget::clear()
 {
+    DLOG << "Clearing device list";
     d->dlWidget->clear();
     Q_EMIT d->clearDevice();
+    DLOG << "Device list cleared";
 }
 
 void WorkspaceWidget::setFirstStartTip(bool visible)
@@ -250,10 +278,13 @@ void WorkspaceWidget::setFirstStartTip(bool visible)
 bool WorkspaceWidget::event(QEvent *event)
 {
     if (event->type() == QEvent::MouseButtonPress) {
+        DLOG << "Mouse button press event detected";
         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
         if (mouseEvent->button() == Qt::LeftButton) {
+            DLOG << "Left mouse button pressed";
             QWidget *widget = childAt(mouseEvent->pos());
             if (widget) {
+                DLOG << "Setting focus to child widget";
                 widget->setFocus();
             }
         }

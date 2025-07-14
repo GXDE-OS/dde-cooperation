@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "filechooseredit.h"
+#include "common/log.h"
 
 #ifdef linux
 #    include <DStyle>
@@ -22,18 +23,22 @@ using namespace cooperation_core;
 FileChooserEdit::FileChooserEdit(QWidget *parent)
     : QWidget(parent)
 {
+    DLOG << "Initializing file chooser edit";
     initUI();
+    DLOG << "Initialization completed";
 }
 
 void FileChooserEdit::initUI()
 {
 #ifdef linux
+    DLOG << "Initializing UI for Linux";
     pathLabel = new CooperationLineEdit(this);
     pathLabel->setClearButtonEnabled(false);
     pathLabel->lineEdit()->setReadOnly(true);
     fileChooserBtn = new CooperationSuggestButton(this);
     fileChooserBtn->setIcon(DTK_WIDGET_NAMESPACE::DStyleHelper(style()).standardIcon(DTK_WIDGET_NAMESPACE::DStyle::SP_SelectElement, nullptr));
 #else
+    DLOG << "Initializing UI for non-Linux";
     pathLabel = new QLabel(this);
     auto margins = pathLabel->contentsMargins();
     margins.setLeft(8);
@@ -47,6 +52,7 @@ void FileChooserEdit::initUI()
             "   color: white;"
             "   font-weight: bold;"
             "}");
+    DLOG << "File chooser button style set";
 #endif
     fileChooserBtn->setFocusPolicy(Qt::NoFocus);
     connect(fileChooserBtn, &QPushButton::clicked, this, &FileChooserEdit::onButtonClicked);
@@ -64,43 +70,56 @@ void FileChooserEdit::initUI()
 
 void FileChooserEdit::setText(const QString &text)
 {
+    DLOG << "Setting text:" << text.toStdString();
     QFontMetrics fontMetrices(pathLabel->font());
     QString showName = fontMetrices.elidedText(text, Qt::ElideRight, pathLabel->width() - 16);
-    if (showName != text)
+    if (showName != text) {
+        DLOG << "Text truncated, setting tooltip";
         pathLabel->setToolTip(text);
+    }
 
     pathLabel->setText(showName);
+    DLOG << "Text set to:" << showName.toStdString();
 }
 
 void FileChooserEdit::onButtonClicked()
 {
+    DLOG << "Opening file dialog";
     auto dirPath = QFileDialog::getExistingDirectory(this);
-    if (dirPath.isEmpty())
+    if (dirPath.isEmpty()) {
+        DLOG << "No directory selected";
         return;
+    }
 
     if (!QFileInfo(dirPath).isWritable() || QDir(dirPath).entryInfoList().isEmpty()) {
+        DLOG << "Invalid directory selected:" << dirPath.toStdString();
         InformationDialog dialog;
         dialog.exec();
         onButtonClicked();
         return;
     }
 
+    DLOG << "Valid directory selected:" << dirPath.toStdString();
     setText(dirPath);
     emit fileChoosed(dirPath);
 }
 
 void FileChooserEdit::updateSizeMode()
 {
+    DLOG << "Updating size mode";
 #ifdef DTKWIDGET_CLASS_DSizeMode
     fileChooserBtn->setFixedSize(DSizeModeHelper::element(QSize(24, 24), QSize(36, 36)));
     pathLabel->setFixedHeight(DSizeModeHelper::element(24, 36));
+    DLOG << "Size mode elements updated";
 
     if (!property("isConnected").toBool()) {
+        DLOG << "Connecting size mode signals";
         setProperty("isConnected", true);
         connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::sizeModeChanged, this, &FileChooserEdit::updateSizeMode);
     }
 #else
     fileChooserBtn->setFixedSize(36, 36);
+    DLOG << "Using fixed size for non-DTK environment";
 #endif
 }
 
@@ -138,10 +157,12 @@ void InformationDialog::initUI()
     connect(okBtn, &QPushButton::clicked, this, &InformationDialog::close);
 
 #ifdef linux
+    DLOG << "Initializing InformationDialog UI for Linux";
     setIcon(QIcon::fromTheme("dde-cooperation"));
     setTitle(tr("the file save location is invalid"));
     addContent(contentWidget);
 #else
+    DLOG << "Initializing InformationDialog UI for non-Linux";
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addSpacing(30);
     layout->addWidget(contentWidget);

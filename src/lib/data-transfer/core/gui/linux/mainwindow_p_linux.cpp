@@ -29,6 +29,8 @@ using namespace data_transfer_core;
 
 void MainWindowPrivate::initWindow()
 {
+    DLOG << "Initializing main window";
+
     q->setWindowTitle(tr("UOS data transfer"));
     q->setFixedSize(740, 552);
     q->setWindowIcon(QIcon(":/icon/icon.svg"));
@@ -45,10 +47,13 @@ void MainWindowPrivate::initWindow()
     layout->setContentsMargins(8, 8, 8, 8);
 
     q->setCentralWidget(centerWidget);
+    DLOG << "Main window initialized";
 }
 
 void MainWindowPrivate::initWidgets()
 {
+    DLOG << "Initializing widgets and pages";
+
     stackedWidget = new QStackedWidget(q);
 
     StartWidget *startwidget = new StartWidget(q);
@@ -78,30 +83,41 @@ void MainWindowPrivate::initWidgets()
     stackedWidget->setCurrentIndex(PageName::startwidget);
 
     connect(TransferHelper::instance(), &TransferHelper::clearWidget, this, [transferringwidget, resultwidget, uploadwidget]() {
+        DLOG << "Clearing widgets content";
         transferringwidget->clear();
         resultwidget->clear();
         uploadwidget->clear();
     });
     connect(TransferHelper::instance(), &TransferHelper::connectSucceed, this, [this] {
+        DLOG << "Connection succeeded, switching to wait widget";
         stackedWidget->setCurrentIndex(PageName::waitwidget);
     });
 
     connect(TransferHelper::instance(), &TransferHelper::transferring, this, [this] {
+        DLOG << "Transfer started, switching to transferring widget";
         stackedWidget->setCurrentIndex(PageName::transferringwidget);
     });
     connect(TransferHelper::instance(), &TransferHelper::transferFinished, this, [this] {
+        DLOG << "Transfer finished, switching to result widget";
         stackedWidget->setCurrentIndex(PageName::resultwidget);
     });
 
     connect(TransferHelper::instance(), &TransferHelper::onlineStateChanged,
             [this, errorwidget](bool online) {
-                if (online)
+                DLOG << "Online state changed:" << online;
+                if (online) {
+                    DLOG << "Network is online, returning";
                     return;
+                }
                 int index = stackedWidget->currentIndex();
                 //only these need jump to networkdisconnectwidget
-                if (index == PageName::connectwidget || index == PageName::waitwidget || index == PageName::promptwidget)
+                if (index == PageName::connectwidget || index == PageName::waitwidget || index == PageName::promptwidget) {
+                    DLOG << "Current page is connect, wait, or prompt widget, switching to networkdisconnectwidget";
                     stackedWidget->setCurrentIndex(PageName::networkdisconnectwidget);
+                }
                 if (index == PageName::transferringwidget) {
+                    WLOG << "receiver > network offline, jump to errorwidget";
+                    DLOG << "Current page is transferring widget, switching to errorwidget due to network offline";
                     stackedWidget->setCurrentIndex(PageName::errorwidget);
                     errorwidget->setErrorType(ErrorType::networkError);
                 }
@@ -110,16 +126,24 @@ void MainWindowPrivate::initWidgets()
     //disconect transfer
     connect(TransferHelper::instance(), &TransferHelper::disconnected,
             [this, errorwidget]() {
+                DLOG << "Disconnected signal received";
                 int index = stackedWidget->currentIndex();
-                if (index == PageName::errorwidget)
+                if (index == PageName::errorwidget) {
+                    DLOG << "Current page is errorwidget, returning";
                     return;
-                if (index == PageName::transferringwidget || index == PageName::waitwidget)
+                }
+
+                if (index == PageName::transferringwidget || index == PageName::waitwidget) {
+                    WLOG << "receiver > disconnected, jump to errorwidget";
+                    DLOG << "Current page is transferring or wait widget, switching to errorwidget due to disconnection";
                     stackedWidget->setCurrentIndex(PageName::errorwidget);
-                errorwidget->setErrorType(ErrorType::networkError);
+                    errorwidget->setErrorType(ErrorType::networkError);
+                }
             });
 
     connect(TransferHelper::instance(), &TransferHelper::outOfStorage,
             [this, errorwidget](int size) {
+                WLOG << "receiver > out of storage, jump to errorwidget";
                 stackedWidget->setCurrentIndex(PageName::errorwidget);
                 errorwidget->setErrorType(ErrorType::outOfStorageError, size);
             });
@@ -142,7 +166,9 @@ void MainWindowPrivate::initWidgets()
     emit DGuiApplicationHelper::instance()->themeTypeChanged(DGuiApplicationHelper::instance()->themeType());
 
     connect(TransferHelper::instance(), &TransferHelper::changeWidget, [this](PageName index) {
+        DLOG << "Changing to widget:" << index;
         stackedWidget->setCurrentIndex(index);
     });
     q->centralWidget()->layout()->addWidget(stackedWidget);
+    DLOG << "Main window widgets initialized";
 }

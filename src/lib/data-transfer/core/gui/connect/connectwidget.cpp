@@ -17,15 +17,18 @@
 ConnectWidget::ConnectWidget(QWidget *parent)
     : QFrame(parent)
 {
+    DLOG << "Widget constructor called";
     initUI();
 }
 
 ConnectWidget::~ConnectWidget()
 {
+    DLOG << "Widget destructor called";
 }
 
 void ConnectWidget::initUI()
 {
+    DLOG << "ConnectWidget initUI";
     setStyleSheet(".ConnectWidget{background-color: white; border-radius: 10px;}");
 
     QVBoxLayout *mainLayout = new QVBoxLayout();
@@ -47,6 +50,7 @@ void ConnectWidget::initUI()
     downloadLabel->setContentsMargins(0, 10, 0, 0);
     downloadLabel->setText(QString("<a href=\"https://\" style=\"text-decoration:none;\">%1</a>").arg(tr("Download Windows client")));
     connect(downloadLabel, &QLabel::linkActivated, this, [] {
+        DLOG << "Download Windows client link activated";
         QDesktopServices::openUrl(QUrl("https://www.chinauos.com/resource/deepin-data-transfer"));
     });
 
@@ -91,10 +95,12 @@ void ConnectWidget::initUI()
     mainLayout->addLayout(buttonLayout);
     mainLayout->addSpacing(10);
     mainLayout->addLayout(indexLayout);
+    DLOG << "ConnectWidget initUI finished";
 }
 
 void ConnectWidget::initConnectLayout()
 {
+    DLOG << "ConnectWidget initConnectLayout";
     //ipLayout
     QList<QHostAddress> address = QNetworkInterface::allAddresses();
     QString ipaddress = address.count() > 2 ? address[2].toString() : "";
@@ -167,10 +173,12 @@ void ConnectWidget::initConnectLayout()
     QTimer *timer = new QTimer();
     connect(timer, &QTimer::timeout, [refreshLabel, tipLabel, passwordLabel, nullLabel, timer, this]() {
         if (remainingTime > 0 && !passwordLabel->text().isEmpty()) {
+            DLOG << "Remaining time:" << remainingTime << "s";
             remainingTime--;
             QString tip = QString("%1<font color='#6199CA'> %2s </font>%3").arg(tr("The code will be expired in")).arg(QString::number(remainingTime)).arg(tr("please input connect code as soon as possible"));
             tipLabel->setText(tip);
         } else {
+            DLOG << "Connect code expired or password label is empty";
             tipLabel->setVisible(false);
             passwordLabel->setVisible(false);
             nullLabel->setVisible(true);
@@ -181,6 +189,7 @@ void ConnectWidget::initConnectLayout()
     });
     timer->start(1000);
     connect(refreshLabel, &QLabel::linkActivated, this, [this, timer, passwordLabel, tipLabel, nullLabel] {
+        DLOG << "Refreshing connection password";
         QString password = TransferHelper::instance()->updateConnectPassword();
         passwordLabel->setText(password);
         tipLabel->setVisible(true);
@@ -188,8 +197,10 @@ void ConnectWidget::initConnectLayout()
         nullLabel->setVisible(false);
         WarnningLabel->setVisible(false);
         remainingTime = 300;
-        if (!timer->isActive())
+        if (!timer->isActive()) {
+            DLOG << "Restarting password expiration timer";
             timer->start(1000);
+        }
     });
 
     passwordHLayout->addWidget(nullLabel);
@@ -213,33 +224,42 @@ void ConnectWidget::initConnectLayout()
     connectLayout->addLayout(passwordVLayout);
     connectLayout->setSpacing(15);
     connectLayout->setAlignment(Qt::AlignCenter);
+    DLOG << "ConnectWidget initConnectLayout finished";
 }
 
 void ConnectWidget::nextPage()
 {
+    DLOG << "Navigating to wait widget";
     emit TransferHelper::instance()->changeWidget(PageName::waitwidget);
 }
 
 void ConnectWidget::backPage()
 {
+    DLOG << "Returning to previous page";
     QStackedWidget *stackedWidget = qobject_cast<QStackedWidget *>(this->parent());
     if (stackedWidget) {
+        DLOG << "Stacked widget found, setting current index to previous page";
         stackedWidget->setCurrentIndex(stackedWidget->currentIndex() - 1);
     } else {
         WLOG << "Jump to next page failed, qobject_cast<QStackedWidget *>(this->parent()) = nullptr";
+        DLOG << "Stacked widget not found";
     }
 }
 
 void ConnectWidget::themeChanged(int theme)
 {
+    DLOG << "Theme changed to:" << (theme == 1 ? "light" : "dark");
+
     // light
     if (theme == 1) {
+        DLOG << "Theme is light, setting stylesheet";
         setStyleSheet(".ConnectWidget{background-color: rgba(255,255,255,1); border-radius: 10px;}");
         separatorLabel->setStyleSheet("QLabel { background-color: rgba(0, 0, 0, 0.1); width: 2px; }");
         ipLabel->setStyleSheet(" ");
         ipLabel1->setStyleSheet(" ");
     } else {
         // dark
+        DLOG << "Theme is dark, setting stylesheet";
         setStyleSheet(".ConnectWidget{background-color: rgba(37, 37, 37,1); border-radius: 10px;}");
         separatorLabel->setStyleSheet("background-color: rgba(220, 220, 220,0.1); width: 2px;");
         ipLabel->setStyleSheet("color: rgb(192, 192, 192);");

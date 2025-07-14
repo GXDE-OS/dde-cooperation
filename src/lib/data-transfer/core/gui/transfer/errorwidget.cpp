@@ -8,16 +8,25 @@
 #include <QStackedWidget>
 #include <QDebug>
 #include <net/helper/transferhepler.h>
+#include "common/commonutils.h"
 
 ErrorWidget::ErrorWidget(QWidget *parent)
     : QFrame(parent)
 {
+    DLOG << "Initializing error widget";
+
     initUI();
 }
 
-ErrorWidget::~ErrorWidget() {}
+ErrorWidget::~ErrorWidget()
+{
+    DLOG << "Destroying error widget";
+}
+
 void ErrorWidget::initUI()
 {
+    DLOG << "Initializing UI";
+
     setStyleSheet(".ErrorWidget{background-color: white; border-radius: 10px;}");
 
     QVBoxLayout *mainLayout = new QVBoxLayout();
@@ -93,43 +102,88 @@ void ErrorWidget::initUI()
     mainLayout->addSpacing(10);
     mainLayout->addLayout(indexLayout);
 
-    setErrorType(ErrorType::outOfStorageError);
+    // 默认设置为无错误状态
+    currentErrorType = noError;
+    DLOG << "Error widget initialized";
+}
+
+bool ErrorWidget::checkNetworkAndUpdate()
+{
+    DLOG << "Checking network and updating state";
+    // 检查当前网络状态
+    bool isNetworkAvailable = deepin_cross::CommonUitls::getFirstIp().size() > 0;
+
+    // 如果是网络错误类型，且现在网络已恢复，通知网络状态变更
+    if (currentErrorType == ErrorType::networkError && isNetworkAvailable) {
+        DLOG << "Network is now available, updating online state";
+        // 只通知网络状态变更，不触发其他操作
+        emit TransferHelper::instance()->onlineStateChanged(true);
+        return true;
+    }
+
+    DLOG << "Network is not available, updating offline state";
+    return isNetworkAvailable;
 }
 
 void ErrorWidget::backPage()
 {
+    DLOG << "Back button clicked, returning to choose page";
+
+    // 检查网络状态并更新
+    checkNetworkAndUpdate();
+
     emit TransferHelper::instance()->clearWidget();
     emit TransferHelper::instance()->changeWidget(PageName::choosewidget);
 }
 
 void ErrorWidget::retryPage()
 {
+    DLOG << "Retry button clicked, returning to choose page";
+
+    // 检查网络状态并更新
+    checkNetworkAndUpdate();
+
     emit TransferHelper::instance()->clearWidget();
     emit TransferHelper::instance()->changeWidget(PageName::choosewidget);
 }
+
 void ErrorWidget::themeChanged(int theme)
 {
+    DLOG << "Theme changed to:" << (theme == 1 ? "Light" : "Dark");
+
     // light
     if (theme == 1) {
+        DLOG << "Theme is light, setting stylesheet";
         setStyleSheet(".ErrorWidget{background-color: white; border-radius: 10px;}");
     } else {
         // dark
+        DLOG << "Theme is dark, setting stylesheet";
         setStyleSheet(".ErrorWidget{background-color: rgb(37, 37, 37); border-radius: 10px;}");
     }
 }
 
 void ErrorWidget::setErrorType(ErrorType type, int size)
 {
+    DLOG << "Setting error type to:" << (int)type;
+    currentErrorType = type;
+
     if (type == ErrorType::networkError) {
+        DLOG << "Setting error type to networkError";
         titleLabel->setText(internetError);
         promptLabel->setText(internetErrorPrompt);
-    } else {
+    } else if (type == ErrorType::outOfStorageError) {
+        DLOG << "Setting error type to outOfStorageError";
         titleLabel->setText(transferError);
         QString prompt;
-        if (size == 0)
+        if (size == 0) {
+            DLOG << "Size is 0, setting prompt for Windows";
             prompt = QString(transferErrorPromptWin);
-        else
+        } else {
+            DLOG << "Size is not 0, setting prompt for UOS with size";
             prompt = QString(transferErrorPromptUOS).arg(size);
+        }
         promptLabel->setText(prompt);
+    } else {
+        DLOG << "Unknown error type:" << type;
     }
 }

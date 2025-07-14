@@ -13,13 +13,14 @@
 #include <QStandardPaths>
 #include <QDir>
 
-inline constexpr char DaemonProcIPC[] { "dde-cooperation-daemon.ipc" };
+inline constexpr char DaemonProcIPC[] { "dde-cooperation-daemon" };
 
 using namespace cooperation_core;
 
 CompatWrapperPrivate::CompatWrapperPrivate(CompatWrapper *qq)
     : q(qq)
 {
+    DLOG << "Initializing CompatWrapper private implementation";
     ipcInterface = new SlotIPCInterface();
 
     ipcTimer = new QTimer(this);
@@ -30,11 +31,14 @@ CompatWrapperPrivate::CompatWrapperPrivate(CompatWrapper *qq)
 
 CompatWrapperPrivate::~CompatWrapperPrivate()
 {
+    DLOG << "Destroying CompatWrapper private implementation";
 }
 
 void CompatWrapperPrivate::onTimeConnectBackend()
 {
-    backendOk = ipcInterface->connectToServer(DaemonProcIPC);
+    QString ipcName = CommonUitls::ipcServerName(DaemonProcIPC);
+    DLOG << "Connecting to backend IPC:" << ipcName.toStdString();
+    backendOk = ipcInterface->connectToServer(ipcName);
     if (backendOk) {
         // bind SIGNAL to SLOT
         ipcInterface->remoteConnect(SIGNAL(dataTransferSignal(int, QString)), this, SLOT(ipcCompatSlot(int, QString)));
@@ -148,10 +152,12 @@ CompatWrapper::CompatWrapper(QObject *parent)
     : QObject(parent),
     d(new CompatWrapperPrivate(this))
 {
+    DLOG << "Creating CompatWrapper instance";
 }
 
 CompatWrapper::~CompatWrapper()
 {
+    DLOG << "Destroying CompatWrapper instance";
 }
 
 CompatWrapper *CompatWrapper::instance()

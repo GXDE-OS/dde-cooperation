@@ -4,6 +4,7 @@
 
 #include "../mainwindow.h"
 #include "../mainwindow_p.h"
+#include "common/log.h"
 
 #include <QVBoxLayout>
 #include <QApplication>
@@ -19,6 +20,7 @@
 using namespace cooperation_core;
 void MainWindowPrivate::initWindow()
 {
+    DLOG << "Initializing window";
     q->setObjectName("MainWindow");
     q->setFixedSize(500, 630);
 
@@ -35,6 +37,7 @@ void MainWindowPrivate::initWindow()
     mainLayout->setContentsMargins(0, 0, 0, 0);
     centralWidget->setLayout(mainLayout);
     q->setCentralWidget(centralWidget);
+    DLOG << "Central widget setup completed";
 
     workspaceWidget->setStyleSheet("background-color: rgba(230,230,230, 0.1);"
                                    "border-bottom-right-radius: 10px;"
@@ -56,6 +59,7 @@ void MainWindowPrivate::paintEvent(QPaintEvent *event)
 void MainWindowPrivate::mouseMoveEvent(QMouseEvent *event)
 {
     if ((event->buttons() == Qt::LeftButton) && leftButtonPressed) {
+        DLOG << "Mouse moving with left button pressed";
         q->move(event->globalPos() - lastPosition);
     }
 }
@@ -68,6 +72,7 @@ void MainWindowPrivate::mouseReleaseEvent(QMouseEvent *event)
 void MainWindowPrivate::mousePressEvent(QMouseEvent *event)
 {
     if (event->buttons() == Qt::LeftButton) {
+        DLOG << "Left mouse button pressed";
         leftButtonPressed = true;
         lastPosition = event->globalPos() - q->pos();
     }
@@ -75,6 +80,7 @@ void MainWindowPrivate::mousePressEvent(QMouseEvent *event)
 
 void MainWindowPrivate::initTitleBar()
 {
+    DLOG << "Initializing title bar";
     q->setWindowFlags(Qt::FramelessWindowHint);
     q->setAttribute(Qt::WA_TranslucentBackground);
     QWidget *titleBar = new QWidget(q->centralWidget());
@@ -128,10 +134,15 @@ void MainWindowPrivate::initTitleBar()
     menu->addAction(action);
 
     QObject::connect(menu, &QMenu::triggered, [this](QAction *act) {
+        DLOG << "Menu triggered";
         bool ok{ false };
         int val{ act->data().toInt(&ok) };
-        if (ok)
+        if (ok) {
+            DLOG << "Handling setting menu triggered with value:" << val;
             handleSettingMenuTriggered(val);
+        } else {
+            DLOG << "Failed to convert action data to integer";
+        }
     });
 
     QObject::connect(closeButton, &QToolButton::clicked, q, &MainWindow::close);
@@ -146,6 +157,8 @@ void MainWindowPrivate::initTitleBar()
     titleLayout->addWidget(closeButton, Qt::AlignHCenter);
     titleLayout->setContentsMargins(8, 0, 0, 0);
     titleBar->setLayout(titleLayout);
+    DLOG << "Title bar layout completed";
 
     q->layout()->addWidget(titleBar);
+    DLOG << "Title bar initialization completed";
 }

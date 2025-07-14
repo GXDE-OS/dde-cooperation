@@ -19,6 +19,7 @@
 ShareCooperationService::ShareCooperationService(QObject *parent)
     : QObject(parent)
 {
+    DLOG << "ShareCooperationService constructor";
     qRegisterMetaType<QProcess::ExitStatus>("QProcess::ExitStatus");
 
     _expectedRunning = false;
@@ -29,15 +30,18 @@ ShareCooperationService::ShareCooperationService(QObject *parent)
     _cooConfig = new CooConfig(settings);
     QString ipName = QString::fromStdString(deepin_cross::CommonUitls::getFirstIp());
     _cooConfig->setScreenName(ipName);
+    DLOG << "ShareCooperationService initialized, IP:" << ipName.toStdString();
 }
 
 ShareCooperationService::~ShareCooperationService()
 {
+    DLOG << "ShareCooperationService destructor";
     stopBarrier();
 }
 
 void ShareCooperationService::setBarrierType(BarrierType type)
 {
+    DLOG << "Setting barrier type:" << static_cast<int>(type);
     _brrierType = type;
 
     // terminate all current exit barrier when launchup
@@ -46,6 +50,8 @@ void ShareCooperationService::setBarrierType(BarrierType type)
 
 void ShareCooperationService::setServerConfig(const DeviceInfoPointer selfDevice, const DeviceInfoPointer targetDevice)
 {
+    DLOG << "Setting server config with self device:" << selfDevice->ipAddress().toStdString()
+                              << "target device:" << targetDevice->ipAddress().toStdString();
     ShareServerConfig config;
     config.server_screen = selfDevice->ipAddress();
     config.client_screen = targetDevice->ipAddress();
@@ -65,6 +71,7 @@ BarrierType ShareCooperationService::barrierType() const
 
 bool ShareCooperationService::restartBarrier()
 {
+    DLOG << "Restarting barrier service";
     stopBarrier();
     return startBarrier();
 }
@@ -73,16 +80,20 @@ bool ShareCooperationService::setServerConfig(const ShareServerConfig &config)
 {
     if (BarrierType::Server != _brrierType) {
         ELOG << "not the brrier server !!!!!!!";
+        DLOG << "Barrier type is not Server, returning false";
         return false;
     }
 
-    if (!checkParam(config))
+    if (!checkParam(config)) {
+        DLOG << "Config parameters are invalid, returning false";
         return false;
+    }
     auto path = configFilename();
     QFile file(path);
     if (!file.open(QFileDevice::OpenModeFlag::Truncate | QFileDevice::OpenModeFlag::WriteOnly)) {
         ELOG << "open server config error, path = " << path.toStdString() << ", case : "
              << file.errorString().toStdString();
+        DLOG << "Failed to open server config file, returning false";
         return false;
     }
 
@@ -103,24 +114,30 @@ bool ShareCooperationService::setServerConfig(const ShareServerConfig &config)
 
 void ShareCooperationService::setClientTargetIp(const QString &ip)
 {
+    DLOG << "Setting client target IP:" << ip.toStdString();
     cooConfig().setServerIp(ip);
     cooConfig().setPort(UNI_SHARE_SERVER_PORT);
+    DLOG << "Client target port:" << UNI_SHARE_SERVER_PORT;
 }
 
 void ShareCooperationService::setEnableCrypto(bool enable)
 {
+    DLOG << "Setting crypto enabled:" << enable;
     cooConfig().setCryptoEnabled(enable);
 }
 
 void ShareCooperationService::setBarrierProfile(const QString &dir)
 {
+    DLOG << "Setting barrier profile directory:" << dir.toStdString();
     // check and create
     QDir pdir(dir);
     if (!pdir.exists()) {
+        DLOG << "Creating barrier profile directory";
         pdir.mkpath(pdir.absolutePath());
     }
 
     cooConfig().setProfileDir(dir);
+    DLOG << "Barrier profile directory set";
 }
 
 bool ShareCooperationService::isRunning()
@@ -135,39 +152,18 @@ bool ShareCooperationService::isRunning()
 void ShareCooperationService::terminateAllBarriers()
 {
 #if defined(Q_OS_WIN)
-    // Windows
-    QProcess process;
-    process.start("tasklist");
-    process.waitForFinished();
-
-    QString output = process.readAllStandardOutput();
-    QStringList processList = output.split('\n', SKIP_EMPTY_PARTS);
-    
-    for (const QString &line : processList) {
-        if (line.contains("barrier", Qt::CaseInsensitive)) {
-            QStringList tokens = line.split(QStringLiteral(" "), SKIP_EMPTY_PARTS);
-            if (tokens.size() >= 2) {
-                QString pid = tokens[1]; // PID 在第二个字段
-                QProcess::execute("taskkill", QStringList() << "/F" << "/PID" << pid);
-                LOG << "Terminated barrier process with PID:" << pid.toStdString();
-            }
-        }
-    }
+    // On Windows, use taskkill with a wildcard to terminate all barrier processes.
+    // This is more robust than parsing tasklist output and avoids issues with
+    // QProcess::waitForFinished during application shutdown.
+    QProcess::execute("taskkill", QStringList() << "/F" << "/IM" << "barrier*.exe");
+    LOG << "Attempted to terminate barrier processes on Windows.";
 #else
-    // Linux
-    QProcess process;
-    process.start("pgrep", QStringList() << "barrier");
-    process.waitForFinished();
-
-    QString output = process.readAllStandardOutput();
-
-    QStringList pidList = output.split('\n', SKIP_EMPTY_PARTS);
-    for (const QString &pid : pidList) {
-        if (!pid.isEmpty()) {
-            QProcess::execute("kill", QStringList() << pid);
-            LOG << "Terminated barrier process with PID:" << pid.toStdString();
-        }
-    }
+    // On Linux, use pkill to terminate barrierc and barriers processes by name.
+    // This is simpler and more robust than a pgrep + kill loop, and avoids
+    // issues with QProcess::waitForFinished during application shutdown.
+    QProcess::execute("pkill", QStringList() << "barrierc");
+    QProcess::execute("pkill", QStringList() << "barriers");
+    LOG << "Attempted to terminate barrierc and barriers processes on Linux.";
 #endif
 }
 
@@ -200,10 +196,12 @@ bool ShareCooperationService::startBarrier()
 
     if ((barrierType() == BarrierType::Client && !clientArgs(args, app))
         || (barrierType() == BarrierType::Server && !serverArgs(args, app))) {
+        WLOG << "Failed to prepare barrier arguments";
         stopBarrier();
         return false;
     }
 
+    DLOG << "Terminating existing barrier processes";
     terminateAllBarriers();
 
     setBarrierProcess(new QProcess());
@@ -218,8 +216,10 @@ bool ShareCooperationService::startBarrier()
 #if defined(Q_OS_WIN)
     QString winarg = args.join(" ");
     barrierProcess()->setNativeArguments(winarg);
+    DLOG << "Starting barrier process on Windows";
     barrierProcess()->start(app);
 #else
+    DLOG << "Starting barrier process on Linux";
     barrierProcess()->start(app, args);
 #endif
 
@@ -239,21 +239,29 @@ void ShareCooperationService::stopBarrier()
     _expectedRunning = false;
 
     if (!barrierProcess()) {
+        DLOG << "No barrier process, terminating all existing barriers";
         // kill existed process.
         terminateAllBarriers();
         return;
     }
 
     if (barrierProcess()->isOpen()) {
+        DLOG << "Barrier process is open, attempting graceful shutdown";
         // try to shutdown child gracefully
         barrierProcess()->write(&ShutdownCh, 1);
 #if defined(Q_OS_WIN)
         // it will freeze UI if aync wait on windows
+        DLOG << "Waiting for barrier process to finish on Windows";
         barrierProcess()->waitForFinished(100);
 #else
+        DLOG << "Waiting for barrier process to exit (Linux)";
         barrierProcess()->waitForFinished(5000);
 #endif
+        
         barrierProcess()->close();
+        DLOG << "Barrier process closed";
+    } else {
+        DLOG << "Barrier process is not open";
     }
 
     delete barrierProcess();
@@ -437,8 +445,10 @@ void ShareCooperationService::barrierFinished(int exitCode, QProcess::ExitStatus
     // auto restart if expect keep running
     if (_expectedRunning) {
 #if defined(Q_OS_WIN)
+        DLOG << "Windows platform, restarting barrier immediately";
         restartBarrier();
 #else
+        DLOG << "Linux platform, restarting barrier after 1 second";
         QTimer::singleShot(1000, this, SLOT(restartBarrier()));
 #endif
         LOG << "detected process not running, auto restarting";

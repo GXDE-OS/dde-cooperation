@@ -1,3 +1,91 @@
+dde-cooperation (1.1.13) unstable; urgency=medium
+
+  * chore: Update deepin-manual resources
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Wed, 09 Jul 2025 15:49:47 +0800
+
+dde-cooperation (1.1.12) unstable; urgency=medium
+
+  * v1.1.12 version update.
+  * chore: update translation.
+  * chore: more logs.
+
+ -- re2zero <yangwu@uniontech.com>  Thu, 03 Jul 2025 16:02:26 +0800
+
+dde-cooperation (1.1.11) unstable; urgency=medium
+
+  * update version to 1.1.11.
+
+ -- Tian ShiLin <tianshilin@uniontech.com>  Tue, 01 Jul 2025 21:56:22 +0800
+
+dde-cooperation (1.1.10) unstable; urgency=medium
+
+  * v1.1.10 version update.
+  * chore: clear up en translation.
+
+ -- re2zero <yangwu@uniontech.com>  Fri, 27 Jun 2025 17:37:00 +0800
+
+dde-cooperation (1.1.9) unstable; urgency=medium
+
+  * v1.1.9 version update.
+  * fix: Fix dman icon show.
+
+ -- re2zero <yangwu@uniontech.com>  Tue, 24 Jun 2025 17:23:45 +0800
+
+dde-cooperation (1.1.8) unstable; urgency=medium
+
+  * chore: New version 1.1.8.
+
+ -- xiepengfei <xiepengfei@uniontech.com>  Mon, 23 Jun 2025 12:09:21 +0800
+
+dde-cooperation (1.1.7) unstable; urgency=medium
+
+  * v1.1.7 version update.
+  * fix: Fix screen rotation issues.
+  * fix: Ensure timer management in ShareHelper.
+
+ -- re2zero <yangwu@uniontech.com>  Sun, 22 Jun 2025 14:58:28 +0800
+
+dde-cooperation (1.1.6) unstable; urgency=medium
+
+  * v1.1.6 version update.
+  * fix: Handle network errors.
+  * chore: Update dman's resources.
+
+ -- re2zero <yangwu@uniontech.com>  Thu, 19 Jun 2025 20:13:15 +0800
+
+dde-cooperation (1.1.5) unstable; urgency=medium
+
+  * v1.1.5 version update.
+  * fix: Introduce IPC name generation for service management.
+  * fix: Fix coredump.
+
+ -- re2zero <yangwu@uniontech.com>  Wed, 18 Jun 2025 11:49:02 +0800
+
+dde-cooperation (1.1.4) unstable; urgency=medium
+
+  * v1.1.4 version update.
+  * feat: Add NAT IP mapping solution.
+  * fix: Enhance wallpaper setting functionality.
+  * fix: Fix some issues.
+  * more logs.
+
+ -- re2zero <yangwu@uniontech.com>  Thu, 12 Jun 2025 18:55:00 +0800
+
+dde-cooperation (1.1.3) unstable; urgency=medium
+
+  * v1.1.3 version update.
+  * fix: Fix start avahi service failed issue.
+
+ -- re2zero <yangwu@uniontech.com>  Mon, 19 May 2025 19:20:35 +0800
+
+dde-cooperation (1.1.2) unstable; urgency=medium
+
+  * v1.1.2 version update.
+  * fix: Fix crash issue after network change.
+
+ -- re2zero <yangwu@uniontech.com>  Tue, 29 Apr 2025 19:21:18 +0800
+
 dde-cooperation (1.1.1) unstable; urgency=medium
 
   * v1.1.1 version update.

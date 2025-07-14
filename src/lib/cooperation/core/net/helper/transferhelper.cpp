@@ -61,6 +61,7 @@ TransferHelperPrivate::TransferHelperPrivate(TransferHelper *qq)
     : QObject(qq),
       q(qq)
 {
+    DLOG << "TransferHelperPrivate constructor";
     *transHistory = HistoryManager::instance()->getTransHistory();
     connect(HistoryManager::instance(), &HistoryManager::transHistoryUpdated, q,
             [] {
@@ -68,18 +69,34 @@ TransferHelperPrivate::TransferHelperPrivate(TransferHelper *qq)
             });
 
     initConnect();
+    DLOG << "TransferHelperPrivate initialized";
 }
 
 TransferHelperPrivate::~TransferHelperPrivate()
 {
+    DLOG << "TransferHelperPrivate destructor";
+    if (dialog) {
+        dialog->deleteLater();
+        dialog = nullptr;
+    }
+#ifdef __linux__
+    if (notice) {
+        notice->deleteLater();
+        notice = nullptr;
+    }
+#endif
+    transHistory->clear();
 }
 
 void TransferHelperPrivate::initConnect()
 {
 #ifdef __linux__
+    DLOG << "Linux platform, initializing NoticeUtil";
     notice = new NoticeUtil(q);
     connect(notice, &NoticeUtil::onConfirmTimeout, q, &TransferHelper::onVerifyTimeout);
     connect(notice, &NoticeUtil::ActionInvoked, q, &TransferHelper::onActionTriggered);
+#else
+    DLOG << "Non-Linux platform, skipping NoticeUtil initialization";
 #endif
 
     confirmTimer.setInterval(10 * 1000);
@@ -116,21 +133,37 @@ void TransferHelperPrivate::notifyMessage(const QString &body, const QStringList
 {
 #ifdef __linux__
     notice->notifyMessage(tr("File transfer"), body, actions, hitMap, expireTimeout);
+#else
+    Q_UNUSED(body)
+    Q_UNUSED(actions)
+    Q_UNUSED(expireTimeout)
+    Q_UNUSED(hitMap)
+    DLOG << "Non-Linux platform, skipping notification message";
 #endif
+}
+
+QVariantMap TransferHelperPrivate::createViewFileHints(const QString &path) {
+    QVariantMap hints;
+    QStringList commands{"xdg-open", path};
+    hints["x-deepin-action-view"] = commands.join(",");
+    return hints;
 }
 
 TransferHelper::TransferHelper(QObject *parent)
     : QObject(parent),
       d(new TransferHelperPrivate(this))
 {
+    DLOG << "TransferHelper constructor";
 }
 
 TransferHelper::~TransferHelper()
 {
+    DLOG << "TransferHelper destructor";
 }
 
 TransferHelper *TransferHelper::instance()
 {
+    DLOG << "Getting TransferHelper instance";
     static TransferHelper ins;
     return &ins;
 }
@@ -167,10 +200,14 @@ void TransferHelper::sendFiles(const QString &ip, const QString &devName, const 
     d->who = devName;
     d->targetDeviceIp = ip;
     d->readyToSendFiles = fileList;
-    if (fileList.isEmpty())
+    
+    if (fileList.isEmpty()) {
+        WLOG << "No files to send";
         return;
+    }
 
     if (!d->status.testAndSetRelease(TransferHelper::Idle, TransferHelper::Connecting)) {
+        WLOG << "Transfer is not idle, cannot start new transfer. Current status:" << d->status.loadAcquire();
         d->status.storeRelease(TransferHelper::Idle);
         return;
     }
@@ -178,6 +215,7 @@ void TransferHelper::sendFiles(const QString &ip, const QString &devName, const 
     // send the transfer file RPC request
     NetworkUtil::instance()->tryTransApply(ip);
 
+    DLOG << "Waiting for transfer confirmation";
     waitForConfirm();
 }
 
@@ -199,10 +237,13 @@ void TransferHelper::buttonClicked(const QString &id, const DeviceInfoPointer in
         if (selectedFiles.isEmpty())
             selectedFiles = QFileDialog::getOpenFileNames(qApp->activeWindow());
 
-        if (selectedFiles.isEmpty())
+        if (selectedFiles.isEmpty()) {
+            DLOG << "No files selected, returning";
             return;
+        }
 
         if (qApp->property("onlyTransfer").toBool()) {
+            DLOG << "onlyTransfer is true, sending command to local socket";
             // send command to local socket.
             QStringList msgs;
             // must be in the format of: <ip> <name> <files>
@@ -210,6 +251,7 @@ void TransferHelper::buttonClicked(const QString &id, const DeviceInfoPointer in
             emit TransferHelper::instance()->deliverMessage(MainAppName, msgs);
             qApp->exit(0);
         } else {
+            DLOG << "onlyTransfer is false, sending files";
             TransferHelper::instance()->sendFiles(ip, name, selectedFiles);
         }
     } else if (id == HistoryButtonId) {
@@ -234,15 +276,22 @@ bool TransferHelper::buttonVisible(const QString &id, const DeviceInfoPointer in
     }
 
     if (id == HistoryButtonId) {
-        if (qApp->property("onlyTransfer").toBool())
+        DLOG << "Button ID is HistoryButtonId";
+        if (qApp->property("onlyTransfer").toBool()) {
+            DLOG << "onlyTransfer is true, returning false";
             return false;
+        }
 
-        if (!transHistory->contains(info->ipAddress()))
+        if (!transHistory->contains(info->ipAddress())) {
+            DLOG << "Transfer history does not contain IP, returning false";
             return false;
+        }
 
         bool exists = QFile::exists(transHistory->value(info->ipAddress()));
-        if (!exists)
+        if (!exists) {
+            DLOG << "File does not exist, removing from history";
             HistoryManager::instance()->removeTransHistory(info->ipAddress());
+        }
 
         return exists;
     }
@@ -262,9 +311,12 @@ bool TransferHelper::buttonClickable(const QString &id, const DeviceInfoPointer 
 
 void TransferHelper::onVerifyTimeout()
 {
+    DLOG << "Transfer verification timeout";
     d->isTransTimeout = true;
-    if (d->status.loadAcquire() != TransferHelper::Confirming)
+    if (d->status.loadAcquire() != TransferHelper::Confirming) {
+        DLOG << "Not in confirming state, ignoring timeout";
         return;
+    }
 
     d->status.storeRelease(Idle);
     d->transDialog()->showResultDialog(false, tr("The other party did not receive, the files failed to send"));
@@ -274,12 +326,19 @@ void TransferHelper::transferResult(bool result, const QString &msg)
 {
 #ifdef __linux__
     if (d->role != Server) {
+        DLOG << "Role is not Server, closing notification";
         d->notice->closeNotification(); // close previous progress notification
 
         QStringList actions;
-        if (result)
+        if (result) {
+            DLOG << "Transfer successful, adding view action";
             actions << NotifyViewAction << tr("View");
-        d->notifyMessage(msg, actions, 3 * 1000);
+            auto hints = d->createViewFileHints(d->recvFilesSavePath);
+            d->notifyMessage(msg, actions, -1, hints);
+        } else {
+            DLOG << "Transfer failed, showing message";
+            d->notifyMessage(msg, {}, 3 * 1000);
+        }
         return;
     }
 #endif
@@ -292,6 +351,7 @@ void TransferHelper::updateProgress(int value, const QString &remainTime)
 {
 #ifdef __linux__
     if (d->role != Server) {
+        DLOG << "Role is not Server, updating notification";
         // 在通知中心中，如果通知内容包含“%”且actions中存在“cancel”，则不会在通知中心显示
         QStringList actions { NotifyCancelAction, tr("Cancel") };
         // dde-session-ui 5.7.2.2 版本后，支持设置该属性使消息不进通知中心
@@ -312,33 +372,44 @@ void TransferHelper::updateProgress(int value, const QString &remainTime)
 
 void TransferHelper::onActionTriggered(const QString &action)
 {
+    DLOG << "Action triggered:" << action.toStdString();
     // clear transfer info
     d->transferInfo.clear();
     if (action == NotifyCancelAction) {
+        DLOG << "Action is NotifyCancelAction";
         cancelTransfer(true); // do UI first
         NetworkUtil::instance()->cancelTrans(d->targetDeviceIp);
     } else if (action == NotifyRejectAction) {
+        DLOG << "Action is NotifyRejectAction";
         NetworkUtil::instance()->replyTransRequest(false, d->targetDeviceIp);
     } else if (action == NotifyAcceptAction) {
+        DLOG << "Action is NotifyAcceptAction";
         d->role = Client;
         NetworkUtil::instance()->replyTransRequest(true, d->targetDeviceIp);
     } else if (action == NotifyCloseAction) {
+        DLOG << "Action is NotifyCloseAction";
 #ifdef __linux__
         d->notice->closeNotification();
 #endif
     } else if (action == NotifyViewAction) {
+        DLOG << "Action is NotifyViewAction";
         auto fileurl = d->recvFilesSavePath;
         if (fileurl.isEmpty()) {
+            DLOG << "Received files save path is empty, getting from config";
             auto value = ConfigManager::instance()->appAttribute(AppSettings::GenericGroup, AppSettings::StoragePathKey);
             fileurl = value.isValid() ? value.toString() : QStandardPaths::writableLocation(QStandardPaths::DownloadLocation);
         }
 
-        openFileLocation(fileurl);
+        // has been opened by notify center
+        // openFileLocation(fileurl);
+    } else {
+        DLOG << "Unknown action:" << action.toStdString();
     }
 }
 
 void TransferHelper::openFileLocation(const QString &path)
 {
+    DLOG << "Opening file location:" << path.toStdString();
 #ifdef __linux__
     QProcess::execute("dde-file-manager", QStringList() << path);
 #else
@@ -352,11 +423,13 @@ void TransferHelper::notifyTransferRequest(const QString &nick, const QString &i
     DLOG << "request info: " << nick.toStdString() << ip.toStdString();
     auto storageFolder = nick + "(" + ip + ")";
     NetworkUtil::instance()->setStorageFolder(storageFolder);
+    DLOG << "Set storage folder to:" << storageFolder.toStdString();
 
     static QString msg(tr("\"%1\" send some files to you"));
     d->who = nick;
     d->targetDeviceIp = ip;
 #ifdef __linux__
+    DLOG << "Linux platform, sending notification";
 
     QStringList actions { NotifyRejectAction, tr("Reject"),
                           NotifyAcceptAction, tr("Accept"),
@@ -364,6 +437,7 @@ void TransferHelper::notifyTransferRequest(const QString &nick, const QString &i
 
     d->notifyMessage(msg.arg(CommonUitls::elidedText(nick, Qt::ElideMiddle, 25)), actions, 10 * 1000);
 #else
+    DLOG << "Showing transfer confirmation dialog";
     d->transDialog()->showConfirmDialog(nick);
 #endif
 }
@@ -374,6 +448,7 @@ void TransferHelper::handleCancelTransferApply()
 #ifdef __linux__
     d->notifyMessage(body, {}, 3 * 1000);
 #else
+    DLOG << "Non-Linux platform, showing result dialog";
     d->transDialog()->showResultDialog(false, body);
 #endif
 }
@@ -382,13 +457,19 @@ void TransferHelper::onConnectStatusChanged(int result, const QString &msg, cons
 {
     LOG << "connect status: " << result << " msg:" << msg.toStdString();
     if (result > 0) {
-        if (!isself)
+        DLOG << "Connection successful";
+        if (!isself) {
+            DLOG << "Not self connection, returning";
             return;
+        }
 
         d->status.storeRelease(Confirming);
     } else {
-        if (Idle == d->status.loadAcquire())
+        DLOG << "Connection failed";
+        if (Idle == d->status.loadAcquire()) {
+            DLOG << "Status is Idle, returning";
             return;
+        }
 
         d->status.storeRelease(Idle);
         transferResult(false, tr("Connect to \"%1\" failed").arg(msg));
@@ -402,40 +483,53 @@ void TransferHelper::onTransChanged(int status, const QString &path, quint64 siz
 #endif
     switch (status) {
     case TRANS_CANCELED:
+        DLOG << "Transfer canceled by remote";
         cancelTransfer(false);
         break;
     case TRANS_EXCEPTION:
+        DLOG << "Transfer exception occurred";
         // exception reason: "io_error" "net_error" "not_found" "fs_exception"
         d->status.storeRelease(Idle);
         if (path == "io_error") {
+            WLOG << "IO error - insufficient storage space";
             transferResult(false, tr("Insufficient storage space, file delivery failed this time. Please clean up disk space and try again!"));
         } else if (path == "net_error") {
+            WLOG << "Network error - connection lost";
             transferResult(false, tr("Network not connected, file delivery failed this time. Please connect to the network and try again!"));
         } else {
+            WLOG << "Unknown transfer exception";
             transferResult(false, tr("File read/write exception"));
         }
         break;
     case TRANS_COUNT_SIZE:
+        DLOG << "Transfer count size updated";
         // only update the total size while rpc notice
         d->transferInfo.totalSize = size;
         break;
     case TRANS_WHOLE_START:
+        DLOG << "Transfer started successfully";
         d->status.storeRelease(Transfering);
         updateTransProgress(0);
         break;
     case TRANS_WHOLE_FINISH:
+        DLOG << "Transfer completed successfully";
         d->status.storeRelease(Idle);
         if (d->role == Client) {
+            DLOG << "Client role, setting received files save path";
             d->recvFilesSavePath = NetworkUtil::instance()->getStorageFolder();
+            DLOG << "Files saved to:" << d->recvFilesSavePath.toStdString();
             HistoryManager::instance()->writeIntoTransHistory(NetworkUtil::instance()->getConfirmTargetAddress(), d->recvFilesSavePath);
         }
         transferResult(true, tr("File sent successfully"));
         break;
     case TRANS_INDEX_CHANGE:
+        DLOG << "Transfer index changed to:" << path.toStdString();
         break;
     case TRANS_FILE_CHANGE:
+        DLOG << "Current transfer file changed to:" << path.toStdString();
         break;
     case TRANS_FILE_SPEED: {
+        DLOG << "Transfer file speed updated";
         d->transferInfo.transferSize += size;
         d->transferInfo.maxTimeS += 1;   // 每1秒收到此信息
         updateTransProgress(d->transferInfo.transferSize);
@@ -446,12 +540,17 @@ void TransferHelper::onTransChanged(int status, const QString &path, quint64 siz
 
     } break;
     case TRANS_FILE_DONE:
+        DLOG << "File transfer completed:" << path.toStdString();
+        break;
+    default:
+        DLOG << "Unknown transfer status:" << status;
         break;
     }
 }
 
 void TransferHelper::updateTransProgress(uint64_t current)
 {
+    DLOG << "Updating transfer progress, current:" << current << "total:" << d->transferInfo.totalSize;
     QTime time(0, 0, 0);
     if (d->transferInfo.totalSize < 1) {
         // the total has not been set.

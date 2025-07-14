@@ -8,15 +8,22 @@ CMakeLists.txt.user
 CMake*.json
 *.o
 *.--quiet
+.cache/
 
 # AI configuration files
 .roomodes
 .roo/
+.ruru/
 .roo_temp/
 .roo_temp_$$/
 .cursor/
 memory-bank/
 .cursorrules
+.cursorindexingignore
+.specstory/
+.taskmaster/
+.kilocode/
+.marscode/
 
 # Modules
 modules/*

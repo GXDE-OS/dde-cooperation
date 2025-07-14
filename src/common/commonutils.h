@@ -19,6 +19,8 @@ public:
 
     static void initLog();
 
+    static void shutdownLog();
+
     static QString elidedText(const QString &text, Qt::TextElideMode mode, int maxLength);
 
     static bool isFirstStart();
@@ -28,6 +30,8 @@ public:
     static QString generateRandomPassword();
 
     static int getAvailablePort();
+
+    static QString ipcServerName(const QString &appName);
 private:
     static QString logDir();
     static bool detailLog();

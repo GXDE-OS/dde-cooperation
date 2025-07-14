@@ -6,6 +6,7 @@
 #include "gui/widgets/cooperationstatewidget.h"
 #include "gui/widgets/devicelistwidget.h"
 #include "common/commonutils.h"
+#include "net/helper/phonehelper.h"
 
 #include <QMouseEvent>
 #include <QTimer>
@@ -23,22 +24,27 @@ using namespace cooperation_core;
 PhoneWidget::PhoneWidget(QWidget *parent)
     : QWidget(parent)
 {
+    DLOG << "Initializing phone widget";
     initUI();
+    DLOG << "Initialization completed";
 }
 
 void PhoneWidget::initUI()
 {
+    DLOG << "Initializing UI";
     stackedLayout = new QStackedLayout;
 
     nnWidget = new NoNetworkWidget(this);
     dlWidget = new DeviceListWidget(this);
     qrcodeWidget = new QRCodeWidget(this);
     dlWidget->setContentsMargins(10, 0, 10, 0);
+    DLOG << "Widgets created";
 
     stackedLayout->addWidget(qrcodeWidget);
     stackedLayout->addWidget(dlWidget);
     stackedLayout->addWidget(nnWidget);
     stackedLayout->setCurrentIndex(0);
+    DLOG << "Stacked layout configured";
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->setSpacing(0);
@@ -46,41 +52,54 @@ void PhoneWidget::initUI()
     mainLayout->setContentsMargins(0, 0, 0, 0);
     mainLayout->addLayout(stackedLayout);
     setLayout(mainLayout);
+    DLOG << "UI initialization completed";
 }
 
 void PhoneWidget::setDeviceInfo(const DeviceInfoPointer info)
 {
+    DLOG << "Setting device info";
     switchWidget(PageName::kDeviceListWidget);
     dlWidget->clear();
     dlWidget->appendItem(info);
+    DLOG << "Device info set successfully";
 }
 
 void PhoneWidget::addOperation(const QVariantMap &map)
 {
+    DLOG << "Adding operation to device list";
     dlWidget->addItemOperation(map);
+    DLOG << "Operation added successfully";
 }
 
 void PhoneWidget::onSetQRcodeInfo(const QString &info)
 {
+    DLOG << "Setting QR code info";
     qrcodeWidget->setQRcodeInfo(info);
+    DLOG << "QR code info set successfully";
 }
 
 void PhoneWidget::switchWidget(PageName page)
 {
-    if (stackedLayout->currentIndex() == page || page == kUnknownPage)
+    if (stackedLayout->currentIndex() == page || page == kUnknownPage) {
+        DLOG << "Already on page" << page << "or unknown page, skipping switch";
         return;
+    }
 
+    DLOG << "Switching to page" << page;
     stackedLayout->setCurrentIndex(page);
+    DLOG << "Page switched successfully";
 }
 
 QRCodeWidget::QRCodeWidget(QWidget *parent)
     : QWidget(parent)
 {
+    DLOG << "Initializing QRCodeWidget";
     initUI();
 }
 
 void QRCodeWidget::initUI()
 {
+    DLOG << "Initializing QRCodeWidget UI";
     QVBoxLayout *mainLayout = new QVBoxLayout();
 
     QLabel *title = new QLabel(tr("Scan code connection"), this);
@@ -129,7 +148,7 @@ void QRCodeWidget::initUI()
     hLayout->setAlignment(Qt::AlignCenter);
 
     QString hypertext = tr("Click to download UOS assistant APP");
-    QString hyperlink = "https://www.chinauos.com/resource/assistant";
+    QString hyperlink = KdownloadUrl;
 
     QString websiteLinkTemplate =
         "<br/><a href='%1' style='text-decoration: none; color: #0081FF;word-wrap: break-word;'>%2</a>";
@@ -140,6 +159,7 @@ void QRCodeWidget::initUI()
     linkLable1->setAlignment(Qt::AlignCenter);
     linkLable1->setText(content1);
     connect(linkLable1, &QLabel::linkActivated, this, [](const QString &link) {
+        DLOG << "Link activated: " << link.toStdString();
         QDesktopServices::openUrl(QUrl(link));
     });
 
@@ -155,20 +175,24 @@ void QRCodeWidget::initUI()
     mainLayout->addWidget(linkLable1);
     mainLayout->addSpacing(120);
     setLayout(mainLayout);
+    DLOG << "QRCodeWidget initialized";
 }
 
 void QRCodeWidget::setQRcodeInfo(const QString &info)
 {
+    DLOG << "Setting QR code info:" << info.toStdString();
     QPixmap qrImage = generateQRCode(info, 7);
     qrCode->setPixmap(qrImage);
 }
 
 QPixmap QRCodeWidget::generateQRCode(const QString &text, int scale)
 {
+    DLOG << "Generating QR code for text:" << text.toStdString();
     // 创建二维码对象，scale 参数控制二维码的大小
     QRcode *qrcode = QRcode_encodeString(text.toStdString().c_str(), 0, QR_ECLEVEL_H, QR_MODE_8, scale);
 
     if (!qrcode) {
+        WLOG << "Failed to generate QR code";
         return QPixmap();   // 处理编码失败情况
     }
 
@@ -211,6 +235,7 @@ QPixmap QRCodeWidget::generateQRCode(const QString &text, int scale)
     // 删除二维码对象
     QRcode_free(qrcode);
 
+    DLOG << "QR code generated successfully";
     // 转换为 QPixmap 并返回
     return QPixmap::fromImage(image).scaled(170, 170, Qt::KeepAspectRatio);
 }
