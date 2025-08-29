@@ -6,17 +6,17 @@
     <message>
         <location filename="Desktop Entry]GenericName" line="0"/>
         <source>Cooperation</source>
-        <translation>Coopération</translation>
+        <translation>ການຮ່ວມມື</translation>
     </message>
     <message>
         <location filename="Desktop Entry]Comment" line="0"/>
         <source>Cooperation is a powerful cross-terminal office tool that helps you deliver files, share keys and mice, and share clipboards between different devices.</source>
-        <translation>Coopération est un puissant outil bureautique multi-terminaux qui vous aide à transférer des fichiers, partager des claviers et des souris, et partager le presse-papiers entre différents appareils.</translation>
+        <translation>ການຮ່ວມມືແມ່ນເຄື່ອງມືຫ້ອງການຂ້າມສະຖານີທີ່ມີປະສິດທິພາບທີ່ຊ່ວຍໃຫ້ທ່ານສົ່ງໄຟລ໌, ແບ່ງປັນຄີ້ງແລະເມົາ, ແລະແບ່ງປັນຄລິບບອດລະຫວ່າງອຸປະກອນຕ່າງໆ.</translation>
     </message>
     <message>
         <location filename="Desktop Entry]Name" line="0"/>
         <source>Deepin Cooperation</source>
-        <translation>Deepin Coopération</translation>
+        <translation>Deepin ການຮ່ວມມື</translation>
     </message>
 </context>
 </TS>

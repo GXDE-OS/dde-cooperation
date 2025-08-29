@@ -6,47 +6,47 @@
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/appselectwidget.cpp" line="42"/>
         <source>Check transfer application will automatically install the corresponding UOS version of the application.</source>
-        <translation>L&apos;application de transfert vérifie automatiquement l&apos;installation de la version correspondante de l&apos;application pour UOS.</translation>
+        <translation>ການເລືອກແອັບພລິເຄຊັນໂອນຈະຕິດຕັ້ງເວີຊັນ UOS ທີ່ກ່ຽວຂ້ອງຂອງແອັບພລິເຄຊັນໂດຍອັດຕະໂນມັດ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/appselectwidget.cpp" line="56"/>
         <source>Confirm</source>
-        <translation>Confirmer</translation>
+        <translation>ຢັນຮັບ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/appselectwidget.cpp" line="54"/>
         <source>Cancel</source>
-        <translation>Annuler</translation>
+        <translation>ຢກເລີກ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/appselectwidget.cpp" line="77"/>
         <source>Application</source>
-        <translation>Application</translation>
+        <translation>ແອັບພລິເຄຊັນ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/appselectwidget.cpp" line="77"/>
         <source>Recommendation</source>
-        <translation>Recommandation</translation>
+        <translation>ການແນະນຳ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/appselectwidget.cpp" line="102"/>
         <source>Transferable</source>
-        <translation>Transférable</translation>
+        <translation>ສາມາດໂອນໄດ້</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/appselectwidget.cpp" line="112"/>
         <source>Not Suitable</source>
-        <translation>Non adapté</translation>
+        <translation>ບໍ່ມົດ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/appselectwidget.h" line="46"/>
         <source>Select apps to transfer</source>
-        <translation>Sélectionnez les applications à transférer</translation>
+        <translation>ເລື່ອງທີ່ຕ້ອນກຳນົດ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/appselectwidget.h" line="47"/>
         <source>Please select the applications to back up</source>
-        <translation>Veuillez sélectionner les applications à sauvegarder</translation>
+        <translation>ກະລົງເລື່ອງທີ່ຕ້ອນກຳນົດ</translation>
     </message>
 </context>
 <context>
@@ -54,12 +54,12 @@
     <message>
         <location filename="../../src/apps/data-transfer/main.cpp" line="86"/>
         <source>UOS data transfer</source>
-        <translation>Transfert de données UOS</translation>
+        <translation>ການຂ້ອງແບບຂ້ອງຂ້ອງຂ້ອງ</translation>
     </message>
     <message>
         <location filename="../../src/apps/data-transfer/main.cpp" line="91"/>
         <source>UOS transfer tool enables one click migration of your files, personal data, and applications to UOS, helping you seamlessly replace your system.</source>
-        <translation>L&apos;outil de transfert UOS permet une migration en un seul clic de vos fichiers, vos données personnelles et vos applications vers UOS, vous aidant à remplacer votre système de manière transparente.</translation>
+        <translation>ອື້ອງການແບບແບບຂ້ອງຂ້ອງຂ້ອງ UOS ແມ່ນເຄື່ອງມືທີ່ຊ່ວຍໃຫ້ທ່ານສາມາດເອື່ອຍການຍົກຂ້ອງຂ້ອງຂ້ອງຂອງທ່ານໄປ UOS ເປັນການກຳນົດຈະໄດ້ຮັບບັນທົກໄດ້, ເຊັ່ນ: ແມແນົດ, ແນ້ນີ້ບໍ່, ແລະ ເົ້າງການ, ເຊັ່ນດຽວກັນ.</translation>
     </message>
 </context>
 <context>
@@ -67,32 +67,32 @@
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/choosewidget.h" line="35"/>
         <source>Export to local directory</source>
-        <translation>Exporter dans un répertoire local</translation>
+        <translation>ອອກແບບໄປທີ່ຕຳລາທີ່ທ່ານຕ້ອນກຳນົດ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/choosewidget.cpp" line="41"/>
         <source>Select a transfer way</source>
-        <translation>...Sélectionner un mode de transfert</translation>
+        <translation>ເລື່ອງທີ່ຕ້ອນກຳນົດ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/choosewidget.cpp" line="56"/>
         <source>Unable to connect to the network， please check your network connection or select export to local directory.</source>
-        <translation>Impossible de se connecter au réseau, veuillez vérifier votre connexion réseau ou sélectionner l&apos;exportation vers un répertoire local.</translation>
+        <translation>ບໍ່ສາມາດຕໍ່ເຊື່ອມຕໍ່ເື່ອມງານໄດ້, ແກ້ໄດ້ເື່ອມງານຂອງທ່ານ ຫຼື ເລື່ອງທີ່ສາມາດອອກແບບໄດ້.</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/choosewidget.cpp" line="69"/>
         <source>Next</source>
-        <translation>Suivant</translation>
+        <translation>ຕໍ່ໄປ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/choosewidget.h" line="33"/>
         <source>From Windows PC</source>
-        <translation>Depuis un PC Windows</translation>
+        <translation>ໂຫມດ Windows PC</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/choosewidget.h" line="39"/>
         <source>Import from backup files</source>
-        <translation>Importer à partir de fichiers de sauvegarde</translation>
+        <translation>ເລື່ອງທີ່ຕ້ອນກຳນົດ</translation>
     </message>
 </context>
 <context>
@@ -100,52 +100,52 @@
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/configselectwidget.cpp" line="39"/>
         <source>Check transfer configuration will automatically apply to UOS.</source>
-        <translation>Vérifier la configuration de transfert appliquera automatiquement à UOS.</translation>
+        <translation>ການເລືອກແບບຕັ້ງຄ່າການໂອນຈະຕິດຕັ້ງເວີຊັນ UOS ທີ່ກ່ຽວຂ້ອງຂອງແອັບພລິເຄຊັນໂດຍອັດຕະໂນມັດ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/configselectwidget.cpp" line="51"/>
         <source>Confirm</source>
-        <translation>Confirmer</translation>
+        <translation>ຢັນຮັບ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/configselectwidget.cpp" line="49"/>
         <source>Cancel</source>
-        <translation>Annuler</translation>
+        <translation>ຢກເລີກ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/configselectwidget.cpp" line="75"/>
         <source>Browser bookmarks</source>
-        <translation>Signets du navigateur</translation>
+        <translation>ບັນທຶກລາຍການເວັບເບີ້ມາດ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/configselectwidget.cpp" line="75"/>
         <source>Recommendation</source>
-        <translation>Recommandation</translation>
+        <translation>ການແນະນຳ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/configselectwidget.cpp" line="98"/>
         <source>Transferable</source>
-        <translation>Transférable</translation>
+        <translation>ສາມາດໂອນໄດ້</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/configselectwidget.cpp" line="116"/>
         <source>Personal Settings</source>
-        <translation>Paramètres personnels</translation>
+        <translation>ຕຸ່ງແນ່ນອນສ່ວນຕີມ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/configselectwidget.cpp" line="138"/>
         <source>Customized Wallpaper</source>
-        <translation>Fond d&apos;écran personnalisé</translation>
+        <translation>ກຳນຳໃຊ້ພາບພື່ນສຳເພັນຄຳແນະນຳ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/configselectwidget.h" line="49"/>
         <source>Select the configuration to transfer</source>
-        <translation>Sélectionnez la configuration à transférer</translation>
+        <translation>ເລື່ອງທີ່ຕ້ອນກຳນົດ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/configselectwidget.h" line="50"/>
         <source>Please select the configurations to back up</source>
-        <translation>Veuillez sélectionner les configurations à sauvegarder</translation>
+        <translation>ກະລຸນາເລັກເລືອກອົງກອນທີ່ຕ່າງ່ານບັກອອກໄມ</translation>
     </message>
 </context>
 <context>
@@ -153,52 +153,52 @@
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/connectwidget.cpp" line="36"/>
         <source>Ready to connect</source>
-        <translation>Prêt à se connecter</translation>
+        <translation>ພາບພື່ນສຳເພັນຄຳແນະນຳ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/connectwidget.cpp" line="41"/>
         <source>Please open data transfer on Windows, and imput the IP and connect code</source>
-        <translation>Veuillez ouvrir le transfert de données sur Windows et entrer l&apos;IP et le code de connexion</translation>
+        <translation>ກະລຸນາເປົ້າ້າງການແບ່ງປັນຂໍ້ນຫຼຸດໃນ Windows ກື່ງໃຫ້ພາກສໍານຳ IP ລອດລົງ ການໂຫມດ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/connectwidget.cpp" line="48"/>
         <source>Download Windows client</source>
-        <translation>Télécharger le client Windows</translation>
+        <translation>ດາວໂຫລດແອັບພລິເຄຊັນໂຫມດ Windows</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/connectwidget.cpp" line="59"/>
         <source>Connect code is expired, please refresh for new code</source>
-        <translation>Le code de connexion a expiré, veuillez le rafraîchir pour obtenir un nouveau code</translation>
+        <translation>ລະຫື່ການຕິດຕັ້ງເວີຊັນຈະຫມື່ນສ່ວນຕີມທີ່ສາມາດເລີ່ມຕົ້ນໄດ້</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/connectwidget.cpp" line="75"/>
         <source>Back</source>
-        <translation>Retour</translation>
+        <translation>ກັບ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/connectwidget.cpp" line="104"/>
         <source>computer</source>
-        <translation>ordinateur</translation>
+        <translation>ຄົນຄວາມ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/connectwidget.cpp" line="107"/>
         <source>Local IP</source>
-        <translation>IP locale</translation>
+        <translation>ທ່ານັ້ນ དົງ དົງ མະຫຼຸນ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/connectwidget.cpp" line="163"/>
         <source>Refresh</source>
-        <translation>Rafraîchir</translation>
+        <translation>ອັບເນີ້</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/connectwidget.cpp" line="171"/>
         <source>The code will be expired in</source>
-        <translation>Le code expirera dans</translation>
+        <translation>ລະຫື່ການຕິດຕັ້ງເວີຊັນຈະຫມື່ນສ່ວນຕີມທີ່ສາມາດເລີ່ມຕົ້ນໄດ້</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/connectwidget.cpp" line="171"/>
         <source>please input connect code as soon as possible</source>
-        <translation>veillez entrer le code de connexion dès que possible</translation>
+        <translation>ກະລຸນາປ້ອນລະຫື່ການຕິດຕັ້ງເວີຊັນຈະຫມື່ນສ່ວນຕີມທີ່ສາມາດເລີ່ມຕົ້ນໄດ້</translation>
     </message>
 </context>
 <context>
@@ -206,62 +206,62 @@
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/getbackup/createbackupfilewidget.cpp" line="87"/>
         <source>Create data backup</source>
-        <translation>Créer une sauvegarde des données</translation>
+        <translation>ສ້າມ ຂໍ້ມູນຂໍ້ມູນ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/getbackup/createbackupfilewidget.cpp" line="95"/>
         <source>File information</source>
-        <translation>Informations sur le fichier</translation>
+        <translation>ຂໍ້ມູນຂໍ້ມູນ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/getbackup/createbackupfilewidget.cpp" line="115"/>
         <source>Name</source>
-        <translation>Nom</translation>
+        <translation>ນີ້ມ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/getbackup/createbackupfilewidget.cpp" line="133"/>
         <source>size:0B</source>
-        <translation>taille:0B</translation>
+        <translation>ຂະໍ້ນ:0B</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/getbackup/createbackupfilewidget.cpp" line="152"/>
         <source>Location</source>
-        <translation>Emplacement</translation>
+        <translation>ສະຖາທິບື</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/getbackup/createbackupfilewidget.cpp" line="162"/>
         <source>(Select Backup Disk)</source>
-        <translation>(Sélectionner le disque de sauvegarde)</translation>
+        <translation>ເປັນການເລົືອງ ຂໍ້ມູນຂໍ້ມູນ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/getbackup/createbackupfilewidget.cpp" line="187"/>
         <source>Insufficient space in the selected disk, please clean the space</source>
-        <translation>Espace insuffisant sur le disque sélectionné, veuillez libérer de l&apos;espace</translation>
+        <translation>ພື້ນທີ່ບໍ່ພຽງພໍໃນດິສທີ່ເລືອກ, ກະລຸນາທຳຄວາມສະອາດພື້ນທີ່</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/getbackup/createbackupfilewidget.cpp" line="195"/>
         <source>Backup</source>
-        <translation>Sauvegarde</translation>
+        <translation>ສ້າມ ຂໍ້ມູນຂໍ້ມູນ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/getbackup/createbackupfilewidget.cpp" line="193"/>
         <source>Cancel</source>
-        <translation>Annuler</translation>
+        <translation>ຢກເລີກ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/getbackup/createbackupfilewidget.cpp" line="339"/>
         <source>Size:%1</source>
-        <translation>Taille:%1</translation>
+        <translation>ຂະໍ້ນ:%1</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/getbackup/createbackupfilewidget.cpp" line="382"/>
         <source>local disk</source>
-        <translation>disque local</translation>
+        <translation>ດິສທີ່ຕິດຕັ້ງທີ່ບໍ່ພຽງພໍ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/getbackup/createbackupfilewidget.cpp" line="388"/>
         <source>%1/%2 available</source>
-        <translation>&apos;%1/%2 disponible&apos;</translation>
+        <translation>&apos;%1/%2 ມີພື້ນທີ່ພຽງພໍ&apos;</translation>
     </message>
 </context>
 <context>
@@ -269,22 +269,22 @@
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/custommessagebox.cpp" line="66"/>
         <source>Reselect</source>
-        <translation>Rechoisir</translation>
+        <translation>ການເລືອກອີກຄັ້ງ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/custommessagebox.cpp" line="81"/>
         <source>Continue</source>
-        <translation>Continuer</translation>
+        <translation>ດຳເນີນການ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/custommessagebox.cpp" line="138"/>
         <source>The presence of outstanding transfer tasks between you and the target device has been detected.</source>
-        <translation>La présence de tâches de transfert non terminées entre vous et le dispositif cible a été détectée.</translation>
+        <translation>ພາບພື່ນສຳເພັນຄຳແນະນຳ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/custommessagebox.cpp" line="138"/>
         <source>Do you want to continue with the last transfer?</source>
-        <translation>Souhaitez-vous continuer avec le dernier transfert ?</translation>
+        <translation>ທ່ານຕ້ອງການສືບຕໍ່ການໂອນຄັ້ງສຸດທ້າຍບໍ?</translation>
     </message>
 </context>
 <context>
@@ -292,42 +292,42 @@
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/errorwidget.cpp" line="54"/>
         <source>Transfer will be completed in</source>
-        <translation>Le transfert sera terminé dans</translation>
+        <translation>ການໂອນຈະສຳເລັດໃນ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/errorwidget.cpp" line="69"/>
         <source>Try again</source>
-        <translation>Réessayer</translation>
+        <translation>ລອກລາຍການອີກຄັ້ງ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/errorwidget.cpp" line="66"/>
         <source>Back</source>
-        <translation>Retour</translation>
+        <translation>ກັບຄືນ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/errorwidget.h" line="29"/>
         <source>Network Error</source>
-        <translation>Erreur de réseau</translation>
+        <translation>ຂໍ້ຜິດພາດລະຫັດເວັບ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/errorwidget.h" line="30"/>
         <source>Transfer interrupted</source>
-        <translation>Transfert interrompu</translation>
+        <translation>ການໂອນຖືກຢຸດ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/errorwidget.h" line="32"/>
         <source>The network disconnected, transfer failed, please connect the network and try again</source>
-        <translation>Le réseau s&apos;est déconnecté, le transfert a échoué, veuillez reconnecter le réseau et réessayer</translation>
+        <translation>ເຄືອຂ່າຍຖືກຕັດການເຊື່ອມຕໍ່, ການໂອນລົ້ມເຫລວ, ກະລຸນາເຊື່ອມຕໍ່ເຄືອຂ່າຍແລະລອງໃໝ່ອີກຄັ້ງ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/errorwidget.h" line="34"/>
         <source>Insufficient space in UOS, please clear at least %1 GB and try again</source>
-        <translation>Espace insuffisant dans UOS, veuillez libérer au moins %1 Go et réessayer</translation>
+        <translation>ພື້ນທີ່ບໍ່ພຽງພໍໃນ UOS, ກະລຸນາລົບພື້ນທີ່ອ້ອນສູງສຸດ %1 GB ຫາງານອີກຄັ້ງ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/errorwidget.h" line="36"/>
         <source>Insufficient space in UOS, Please reserve enough space</source>
-        <translation>Espace insuffisant dans UOS, veuillez réserver un espace suffisant</translation>
+        <translation>ພື້ນທີ່ບໍ່ພຽງພໍໃນ UOS, ກະລຸນາລົບພື້ນທີ່ອ້ອນສູງສຸດ</translation>
     </message>
 </context>
 <context>
@@ -335,37 +335,37 @@
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/fileselectwidget.cpp" line="50"/>
         <source>Name</source>
-        <translation>Nom</translation>
+        <translation>ຊື່</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/fileselectwidget.cpp" line="50"/>
         <source>Size</source>
-        <translation>Taille</translation>
+        <translation>ຂະໜາດ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/fileselectwidget.cpp" line="60"/>
         <source>When transfer completed, the data will be placed in the user&apos;s home directory</source>
-        <translation>Lorsque le transfert est terminé, les données seront placées dans le répertoire personnel de l&apos;utilisateur</translation>
+        <translation>ໃນເວລາ transfer ກົ້ນສໍາເລືອກແລ້ວ, data ຈະຖືກຈັບໃນທີ່ທີ່ຂອງຜູ້ໃຊ້ງານ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/fileselectwidget.cpp" line="73"/>
         <source>Confirm</source>
-        <translation>Confirmer</translation>
+        <translation>ຢັນຮັບ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/fileselectwidget.cpp" line="71"/>
         <source>Cancel</source>
-        <translation>Annuler</translation>
+        <translation>ຢກເລີກ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/fileselectwidget.h" line="56"/>
         <source>Select the file to transfer</source>
-        <translation>Sélectionnez le fichier à transférer</translation>
+        <translation>ເລືອກໄດ້ໄືອຍທີ່ຕ້ອງກຳນົດເພົ່າ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/fileselectwidget.h" line="57"/>
         <source>Please select the files to back up</source>
-        <translation>Veuillez sélectionner les fichiers à sauvegarder</translation>
+        <translation>ກະລຸນາເລືອກໄດ້ໄືອຍທີ່ຕ້ອງກຳນົດເພົ່າ</translation>
     </message>
 </context>
 <context>
@@ -373,17 +373,17 @@
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/networkdisconnectionwidget.cpp" line="34"/>
         <source>The network has been disconnected. Please check your network</source>
-        <translation>La connexion réseau a été perdue. Veuillez vérifier votre réseau</translation>
+        <translation>ເວັບໄດ້ຖືກdisconnect. Please check your network</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/networkdisconnectionwidget.cpp" line="40"/>
         <source>Back</source>
-        <translation>Retour</translation>
+        <translation>ກັບຄືນ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/networkdisconnectionwidget.cpp" line="41"/>
         <source>Try again</source>
-        <translation>Réessayer</translation>
+        <translation>ລອກລາຍການອີກຄັ້ງ</translation>
     </message>
 </context>
 <context>
@@ -391,7 +391,7 @@
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/transferringwidget.cpp" line="297"/>
         <source>Installing</source>
-        <translation>Installation en cours</translation>
+        <translation>ກຳລາການຕິດຕັ້ງ</translation>
     </message>
 </context>
 <context>
@@ -399,32 +399,32 @@
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/promptwidget.cpp" line="29"/>
         <source>Before tranfer</source>
-        <translation>Avant le transfert</translation>
+        <translation>ແມ່ນການໂອນຂໍ້ມູນ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/promptwidget.cpp" line="34"/>
         <source>Data transfer requires some time, to avoid interrupting the migration due to low battery, please keep connect to the  power.</source>
-        <translation>Le transfert de données prend quelques instants. Pour éviter d&apos;interrompre la migration en raison de la faible batterie, veuillez rester connecté à l&apos;alimentation.</translation>
+        <translation>ການໂອນຂໍ້ມູນຕ້ອງການເວລາ, ກະລຸນາລອງຢັງຕິດຕັ້ງພາບກຳລາການໂອນຂໍ້ມູນ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/promptwidget.cpp" line="36"/>
         <source>Other applications may slowdown the transfer speed. For smoother experience, please close other applications.</source>
-        <translation>D&apos;autres applications peuvent ralentir la vitesse de transfert. Pour une meilleure expérience, veuillez fermer les autres applications.</translation>
+        <translation>ການໂອນຂໍ້ມູນອาจລົງທາງຄວາມໄວຂອງການໂອນ, ກະລຸນາປິດການໂອນຂໍ້ມູນອື່ນໆ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/promptwidget.cpp" line="38"/>
         <source>For the security of your transfer, please use a trusted network.</source>
-        <translation>Pour la sécurité de votre transfert, veuillez utiliser un réseau fiable.</translation>
+        <translation>ລើងឈានចែកចាត់ទៅក្រោយគឺសម្រាប់សុវត្ថិភាពនៃការផ្ទុតទៅរបស់អ្នក។</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/promptwidget.cpp" line="62"/>
         <source>Back</source>
-        <translation>Retour</translation>
+        <translation>ກັບຄືນ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/promptwidget.cpp" line="64"/>
         <source>Confirm</source>
-        <translation>Confirmer</translation>
+        <translation>ຢັນຮັບ</translation>
     </message>
 </context>
 <context>
@@ -432,7 +432,7 @@
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/readywidget.cpp" line="48"/>
         <source>Ready to connect</source>
-        <translation>Prêt à se connecter</translation>
+        <translation>ຈຸດທີ່ຕິດຕໍ່ພ້ອມແຮງ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/readywidget.cpp" line="52"/>
@@ -442,42 +442,42 @@
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/readywidget.cpp" line="59"/>
         <source>Please input the IP of UOS</source>
-        <translation>Veuillez entrer l&apos;IP de UOS</translation>
+        <translation>ກະລົດປ້ອມກະລົນ IP ຂອງ UOS</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/readywidget.cpp" line="79"/>
         <source>Please open data transfer on UOS, and get the IP</source>
-        <translation>Veuillez activer le transfert de données sur UOS et obtenir l&apos;IP</translation>
+        <translation>ກະລົດປ້ອມກະລົນຂໍເປັນການເປັນຕິດຕໍ່ຂໍູ້ແລະຂໍໄດ້ຮັບ IP</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/readywidget.cpp" line="85"/>
         <source>Connect code</source>
-        <translation>Code de connexion</translation>
+        <translation>ກະລົນຕິດຕໍ່</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/readywidget.cpp" line="95"/>
         <source>Please input the connect code on UOS</source>
-        <translation>Veuillez entrer le code de connexion sur UOS</translation>
+        <translation>ກະລົດປ້ອມກະລົນຂໍເປັນການເປັນຕິດຕໍ່ຂໍູ້</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/readywidget.cpp" line="118"/>
         <source>Back</source>
-        <translation>Retour</translation>
+        <translation>ກັບຄືນ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/readywidget.cpp" line="33"/>
         <source>connect...</source>
-        <translation>connecter...</translation>
+        <translation>ຕິດຕໍ່...</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/readywidget.cpp" line="120"/>
         <source>Connect</source>
-        <translation>Connecter</translation>
+        <translation>ເປັນຕິດຕໍ່</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/readywidget.cpp" line="258"/>
         <source>Failed to connect, please check your input</source>
-        <translation>Échec de la connexion, veuillez vérifier votre entrée</translation>
+        <translation>ບໍ່ສົ່ງເປັນຕິດຕໍ່ໄດ້, ກະລົດປ້ອມກະລົນຂໍກວດສ୭ບຂໍູ້ຂອງທ່ານ</translation>
     </message>
 </context>
 <context>
@@ -485,27 +485,27 @@
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/resultdisplay.cpp" line="128"/>
         <source>Transfer completed partially</source>
-        <translation>Transfert partiellement terminé</translation>
+        <translation>ການແບ່ງປັນບໍ່ແທ້ງຄົບ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/resultdisplay.cpp" line="32"/>
         <source>Transfer completed</source>
-        <translation>Transfert terminé</translation>
+        <translation>ການໂອນຂໍ້ມູນດີເສືອມູນສຳເລັດ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/resultdisplay.cpp" line="38"/>
         <source>Partial information migration failed, please go to UOS for manual transfer</source>
-        <translation>L&apos;migration des informations partielles a échoué, veuillez aller sur UOS pour effectuer le transfert manuel</translation>
+        <translation>ການໂອນຂໍ້ມູນບໍ່ແທ້ງຄົບ, ກະລຸນາໄປທີ່ UOS ເພື່ອເລີກລຽມການໂອນຂໍ້ມູນດີເສືອມູນສຳເລັດ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/resultdisplay.cpp" line="50"/>
         <source>Back</source>
-        <translation>Retour</translation>
+        <translation>ກັບຄືນ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/resultdisplay.cpp" line="52"/>
         <source>Exit</source>
-        <translation>Quitter</translation>
+        <translation>ອອກ</translation>
     </message>
 </context>
 <context>
@@ -513,17 +513,17 @@
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/selectmainwidget.cpp" line="216"/>
         <source>Selected:0</source>
-        <translation>Sélectionné : 0</translation>
+        <translation>ການເລືອກ:0</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/selectmainwidget.cpp" line="237"/>
         <source>Selected:%1</source>
-        <translation>Sélectionné : %1</translation>
+        <translation>ການເລືອກ:%1</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/selectmainwidget.cpp" line="304"/>
         <source>Edit</source>
-        <translation>Éditer</translation>
+        <translation>ແກ້ໄຂ</translation>
     </message>
 </context>
 <context>
@@ -531,42 +531,42 @@
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/selectmainwidget.cpp" line="90"/>
         <source>File</source>
-        <translation>Fichier</translation>
+        <translation>ໄຟລ໌</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/selectmainwidget.cpp" line="95"/>
         <source>App</source>
-        <translation>Application</translation>
+        <translation>ການໂອນຂໍ້ມູນອື່ນໆ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/selectmainwidget.cpp" line="97"/>
         <source>Config</source>
-        <translation>Configuration</translation>
+        <translation>ກຳນົດຄ່າ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/selectmainwidget.cpp" line="112"/>
         <source>Back</source>
-        <translation>Retour</translation>
+        <translation>ກັບຄືນ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/selectmainwidget.h" line="72"/>
         <source>Select data to transfer</source>
-        <translation>Sélectionnez les données à transférer</translation>
+        <translation>ជ្រួតពិនិត្យទិន្នន័យដែលត្រូវផ្លាស់ប្តូរ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/selectmainwidget.h" line="73"/>
         <source>Please select the content to back up</source>
-        <translation>Veuillez sélectionner le contenu à sauvegarder</translation>
+        <translation>សូមជ្រួតពិនិត្យទិន្នន័យដែលត្រូវធ្វើការសន្ធឹងទុក</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/selectmainwidget.h" line="74"/>
         <source>Start transfer</source>
-        <translation>Démarrer le transfert</translation>
+        <translation>ចាប់ផ្លាស់ប្តូរ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/selectmainwidget.h" line="75"/>
         <source>Next</source>
-        <translation>Suivant</translation>
+        <translation>បន្ទាប់</translation>
     </message>
 </context>
 <context>
@@ -574,67 +574,67 @@
     <message>
         <location filename="../../src/plugins/data-transfer/core/utils/settinghepler.cpp" line="63"/>
         <source>Profiles</source>
-        <translation>Profils</translation>
+        <translation>ການເລືອກຂໍ້ມູນ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/utils/settinghepler.cpp" line="63"/>
         <source>Wrong or missing profile</source>
-        <translation>Profil incorrect ou manquant</translation>
+        <translation>ບໍ່ຖືກຕ້ອງຫຼືຂໍ້ມູນທີ່ຂາດ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/utils/settinghepler.cpp" line="111"/>
         <source>My Wallpaper</source>
-        <translation>Mon fond d&apos;écran</translation>
+        <translation>ບັນຊີຂໍ້ມູນຂອງຂ້ອຍ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/utils/settinghepler.cpp" line="111"/>
         <source>Transfer completed</source>
-        <translation>Transfert terminé</translation>
+        <translation>ການໂອນຂໍ້ມູນສຳເລັດ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/utils/settinghepler.cpp" line="133"/>
         <source>Browser Bookmarks</source>
-        <translation>Signets du navigateur</translation>
+        <translation>ບັນຊີຂໍ້ມູນຂອງບຣາວເຊີ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/utils/settinghepler.cpp" line="146"/>
         <source>BrowserBookMark</source>
-        <translation>Signet du navigateur</translation>
+        <translation>ບັນຊີຂໍ້ມູນຂອງບຣາວເຊີ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/utils/settinghepler.cpp" line="176"/>
         <source>is installed</source>
-        <translation>est installé</translation>
+        <translation>ໄດ້ຕິດຕັ້ງ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/utils/settinghepler.cpp" line="200"/>
         <source>Installing</source>
-        <translation>Installation en cours</translation>
+        <translation>ກຳລາການຕິດຕັ້ງ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/utils/settinghepler.cpp" line="268"/>
         <source>Transfer failed</source>
-        <translation>Transfert échoué</translation>
+        <translation>ການໂອນຂໍ້ມູນລົ້ມເຫລວ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/utils/settinghepler.cpp" line="133"/>
         <source>Format error</source>
-        <translation>Erreur de format</translation>
+        <translation>ຂໍ້ມູນບໍ່ຖືກຕ້ອງ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/utils/settinghepler.cpp" line="143"/>
         <source>Setup failed, configuration can be imported manually</source>
-        <translation>La configuration a échoué, elle peut être importée manuellement</translation>
+        <translation>ກຳລາການຕິດຕັ້ງລົ້ມເຫລວ, ກຳນົດຄ່າສາມາດເລີ່ມຕົ້ນການໂອນຂໍ້ມູນດີເສືອມູນສຳເລັດ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/utils/settinghepler.cpp" line="157"/>
         <source>Installation failed, please go to the app store to install</source>
-        <translation>Installation échouée, veuillez aller dans le magasin d&apos;applications pour l&apos;installer</translation>
+        <translation>ກຳລາການຕິດຕັ້ງລົ້ມເຫລວ, សូមទៅកាយហោប្រាស់ដើម្បីបញ្ជូន</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/utils/settinghepler.cpp" line="249"/>
         <source>Transfer Complete</source>
-        <translation>Transfert Terminé</translation>
+        <translation>ການໂອນຂໍ້ມູນສຳເລັດ</translation>
     </message>
 </context>
 <context>
@@ -642,42 +642,42 @@
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/siderbarwidget.cpp" line="21"/>
         <source>Videos</source>
-        <translation>Vidéos</translation>
+        <translation>ເວດດີໂອ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/siderbarwidget.cpp" line="22"/>
         <source>Pictures</source>
-        <translation>Images</translation>
+        <translation>ເວດດີໂອ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/siderbarwidget.cpp" line="23"/>
         <source>Documents</source>
-        <translation>Documents</translation>
+        <translation>ໄຟລ໌</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/siderbarwidget.cpp" line="24"/>
         <source>Downloads</source>
-        <translation>Téléchargements</translation>
+        <translation>ດາວນ໌ໂຫລດ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/siderbarwidget.cpp" line="25"/>
         <source>Music</source>
-        <translation>Musique</translation>
+        <translation>ເພລີ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/siderbarwidget.cpp" line="26"/>
         <source>Desktop</source>
-        <translation>Bureau</translation>
+        <translation>ເດສກ໌ທອບ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/siderbarwidget.cpp" line="80"/>
         <source>Select:%1</source>
-        <translation>Sélectionner:%1</translation>
+        <translation>ເລືອກ:%1</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/siderbarwidget.cpp" line="225"/>
         <source>local disk</source>
-        <translation>disque local</translation>
+        <translation>ດິສກ໌ທອບ</translation>
     </message>
 </context>
 <context>
@@ -685,18 +685,18 @@
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/startwidget.cpp" line="35"/>
         <source>UOS data transfer</source>
-        <translation>Transfert de données UOS</translation>
+        <translation>ການໂອນຂໍ້ມູນ UOS</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/startwidget.cpp" line="39"/>
         <source>UOS transfer tool enables one click migration of your files, personal data, and applications to
 UOS, helping you seamlessly replace your system.</source>
-        <translation>L&apos;outil de transfert UOS permet une migration en un seul clic de vos fichiers, données personnelles et applications vers UOS, vous aidant à remplacer votre système de manière transparente.</translation>
+        <translation>ເຄື່ອງມືການໂອນຍ້າຍ UOS ເຮັດໃຫ້ການຍ້າຍໄຟລ໌, ຂໍ້ມູນສ່ວນຕົວ ແລະແອັບພລິເຄຊັນຂອງທ່ານໄປຫາ UOS ເປັນໄປໄດ້ດ້ວຍການຄລິກດຽວ ຊ່ວຍໃຫ້ທ່ານປ່ຽນແທນລະບົບໄດ້ຢ່າງລາບລື່ນ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/connect/startwidget.cpp" line="46"/>
         <source>Next</source>
-        <translation>Suivant</translation>
+        <translation>ຕ່ອໄປ</translation>
     </message>
 </context>
 <context>
@@ -704,7 +704,7 @@ UOS, helping you seamlessly replace your system.</source>
     <message>
         <location filename="../../src/plugins/data-transfer/core/utils/transferworker.cpp" line="326"/>
         <source>Transfering</source>
-        <translation>Transfert en cours</translation>
+        <translation>ກຳລາການໂອນຂໍ້ມູນ</translation>
     </message>
 </context>
 <context>
@@ -712,47 +712,47 @@ UOS, helping you seamlessly replace your system.</source>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/transferringwidget.cpp" line="42"/>
         <source>Transferring...</source>
-        <translation>Transfert en cours...</translation>
+        <translation>ກຳລາການໂອນຂໍ້ມູນ...</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/transferringwidget.cpp" line="57"/>
         <source>Calculationing...</source>
-        <translation>Calcul en cours...</translation>
+        <translation>ກຳລາຄຳນວຓ...</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/transferringwidget.cpp" line="63"/>
         <source>Show processes</source>
-        <translation>Afficher les processus</translation>
+        <translation>ສະແດງກຣະບວນການ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/transferringwidget.cpp" line="119"/>
         <source>Hide processes</source>
-        <translation>Masquer les processus</translation>
+        <translation>຋້າງກຣະບວນການ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/transferringwidget.cpp" line="154"/>
         <source>Transfer will be completed in %1 minutes</source>
-        <translation>Le transfert sera terminé dans %1 minutes</translation>
+        <translation>ການໂອນຂໍ້ມູນຈະສຳເລັດຠາຢໃນ %1 ນາທີ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/transferringwidget.cpp" line="171"/>
         <source>Transfering</source>
-        <translation>Transfert en cours</translation>
+        <translation>ກຳລາການໂອນຂໍ້ມູນ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/transferringwidget.cpp" line="199"/>
         <source>Transfer will be completed in %1 secondes</source>
-        <translation>Le transfert sera terminé dans %1 secondes</translation>
+        <translation>ການໂອນຂໍ້ມູນຈະສຳເລັດຠາຢໃນ %1 ວິນາທີ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/transferringwidget.cpp" line="202"/>
         <source>Transfer will be completed in --</source>
-        <translation>Le transfert sera terminé dans --</translation>
+        <translation>ການໂອນຂໍ້ມູນຈະສຳເລັດຠາຢໃນ --</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/transferringwidget.cpp" line="237"/>
         <source>Decompressing</source>
-        <translation>Décompression</translation>
+        <translation>ກຳລາການການຢ້າງຂໍ້ມູນ</translation>
     </message>
 </context>
 <context>
@@ -760,7 +760,7 @@ UOS, helping you seamlessly replace your system.</source>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/backupload/unzipwoker.cpp" line="126"/>
         <source>Decompressing</source>
-        <translation>Décompression</translation>
+        <translation>ກຳລາການການຢ້າງຂໍ້ມູນ</translation>
     </message>
 </context>
 <context>
@@ -768,32 +768,32 @@ UOS, helping you seamlessly replace your system.</source>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/backupload/uploadfilewidget.cpp" line="197"/>
         <source>Drag file here </source>
-        <translation>Glissez le fichier ici </translation>
+        <translation>ລັງສະແດງຂໍ້ມູນທີ່ຕ້ອງການໂອນຂ້ອມູນ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/backupload/uploadfilewidget.cpp" line="202"/>
         <source>Import file</source>
-        <translation>Importer un fichier</translation>
+        <translation>ນຳເຂົ້າໄຟລ໌</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/backupload/uploadfilewidget.cpp" line="276"/>
         <source>Only .zip is supported, please</source>
-        <translation>Seul le format .zip est pris en charge, veuillez</translation>
+        <translation>ພຽງແຕ່ .zip ທີ່ສາມາດນຳເຂົ້າໄດ້ ກະລຸນາຕິດຕ່ອທີ່ຢູ່ຂອງທ່ານ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/backupload/uploadfilewidget.cpp" line="277"/>
         <source>reselect</source>
-        <translation>réselectionner</translation>
+        <translation>ເລືອກອີກຄຣັ້ງ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/backupload/uploadfilewidget.cpp" line="351"/>
         <source>select zip file</source>
-        <translation>sélectionner un fichier zip</translation>
+        <translation>ເລືອກໄຟລ໌ zip</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/backupload/uploadfilewidget.cpp" line="351"/>
         <source>ZIP file (*.zip)</source>
-        <translation>Fichier ZIP (*.zip)</translation>
+        <translation>ໄຟລ໌ ZIP (*.zip)</translation>
     </message>
 </context>
 <context>
@@ -801,37 +801,37 @@ UOS, helping you seamlessly replace your system.</source>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/backupload/uploadfilewidget.cpp" line="40"/>
         <source>Select data transfer file</source>
-        <translation>Sélectionner un fichier de transfert de données</translation>
+        <translation>ເລືອກໄຟລ໌ການໂອນຂໍ້ມູນ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/backupload/uploadfilewidget.cpp" line="49"/>
         <source>File error, cannot transfer, please reselect</source>
-        <translation>Erreur de fichier, impossible de transférer, veuillez réselectionner</translation>
+        <translation>ເກີດຂໍ້ຜິດພາດໃນໄຟລ໌ ບໍ່ສາມາດໂອນໄດ້ ກະລຸນາເລືອກອີກຄຣັ້ງ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/backupload/uploadfilewidget.cpp" line="62"/>
         <source>Back</source>
-        <translation>Précédent</translation>
+        <translation>ກລັບ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/backupload/uploadfilewidget.cpp" line="64"/>
         <source>Next</source>
-        <translation>Suivant</translation>
+        <translation>ຕ່ອໄປ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/backupload/uploadfilewidget.cpp" line="69"/>
         <source>Retry</source>
-        <translation>Réessayer</translation>
+        <translation>ລອບລອບ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/backupload/uploadfilewidget.cpp" line="122"/>
         <source>The file is corrupted and cannot be migrated. Please replace it with a backup file.</source>
-        <translation>Le fichier est corrompu et ne peut pas être migré. Veuillez le remplacer par un fichier de sauvegarde.</translation>
+        <translation>ໄຟລ໌ຖືກຊື້ຊື່ສຳລັບບໍ່ສາມາດໂອນໄດ້ ກະລຸນາສະແດງອີກຄຣັ້ງ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/backupload/uploadfilewidget.cpp" line="133"/>
         <source>Insufficient space on UOS. Please reserve at least %1G of space and try again.</source>
-        <translation>Espace insuffisant sur UOS. Veuillez réserver au moins %1G d&apos;espace et réessayez.</translation>
+        <translation>ພຽງແຕ່ພື້ນທີ່ສຳລັບບໍ່ສາມາດໂອນໄດ້ ກະລຸນາຈອດພື້ນທີ່ອຢູ່ໄດ້ %1G ການໂອນຂໍ້ມູນອີກຄຣັ້ງ</translation>
     </message>
 </context>
 <context>
@@ -839,7 +839,7 @@ UOS, helping you seamlessly replace your system.</source>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/select/userselectfilesize.cpp" line="22"/>
         <source>Calculating</source>
-        <translation>Calcul en cours</translation>
+        <translation>ກຳລາຄຳນວຓ</translation>
     </message>
 </context>
 <context>
@@ -847,32 +847,32 @@ UOS, helping you seamlessly replace your system.</source>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/waittransferwidget.cpp" line="32"/>
         <source>Waiting for transfer...</source>
-        <translation>En attente du transfert...</translation>
+        <translation>ກຳລາຄຳນວຓ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/waittransferwidget.cpp" line="37"/>
         <source>Please select the data to transfer on Windows</source>
-        <translation>Veuillez sélectionner les données à transférer sur Windows</translation>
+        <translation>ກະລຸນາເລືອກຂໍ້ມູນທີ່ຕ້ອງການໂອນຂ້ອມູນບໍ່ສາມາດໂອນໄດ້ ກະລຸນາເລືອກອີກຄຣັ້ງ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/waittransferwidget.cpp" line="47"/>
         <source>Cancel</source>
-        <translation>Annuler</translation>
+        <translation>ຢກເລີກ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/waittransferwidget.cpp" line="99"/>
         <source>Close</source>
-        <translation>Fermer</translation>
+        <translation>ປິດ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/waittransferwidget.cpp" line="101"/>
         <source>This operation will clear the transmission progress, Do you want to continue.</source>
-        <translation>Cette opération effacera la progression du transfert, voulez-vous continuer.</translation>
+        <translation>ການດຳເນີນການຈະລືບຂໍ້ມູນການໂອນຂ້ອມູນທີ່ຍັງຄ້າງ ທ່ານຕ້ອງການເຮັດວຽກຕໍ່ຫາງບໍ່</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/transfer/waittransferwidget.cpp" line="102"/>
         <source>This operation is not recoverable</source>
-        <translation>Cette opération est irréversible</translation>
+        <translation>ການດຳເນີນການບໍ່ສາມາດກູ້ຄືນໄດ້</translation>
     </message>
 </context>
 <context>
@@ -880,32 +880,32 @@ UOS, helping you seamlessly replace your system.</source>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/getbackup/zipfileprocessresultwidget.cpp" line="32"/>
         <source>Exit</source>
-        <translation>Quitter</translation>
+        <translation>ອອກ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/getbackup/zipfileprocessresultwidget.cpp" line="49"/>
         <source>Back</source>
-        <translation>Retour</translation>
+        <translation>ກລັບ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/getbackup/zipfileprocessresultwidget.cpp" line="84"/>
         <source>Back up succeed</source>
-        <translation>Sauvegarde réussie</translation>
+        <translation>ການສ້າງອົງບຳຄົງສຳເລັດ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/getbackup/zipfileprocessresultwidget.cpp" line="90"/>
         <source>Congratulations, Your Information has been Successfully Backed Up.</source>
-        <translation>Félicitations, vos informations ont été correctement sauvegardées.</translation>
+        <translation>ຢິບດີທີ່ຂໍ້ມູນຂອງທ່ານໄດ້ຖືກບຳຄັງສຳເລັດ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/getbackup/zipfileprocessresultwidget.cpp" line="95"/>
         <source>Go to View</source>
-        <translation>Aller à la vue</translation>
+        <translation>ໄປຫາເບິ່ງ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/getbackup/zipfileprocessresultwidget.cpp" line="120"/>
         <source>Back up failed</source>
-        <translation>Sauvegarde échouée</translation>
+        <translation>ການສ້າງອົງບຳຄົງລົງທະຍາ</translation>
     </message>
 </context>
 <context>
@@ -913,22 +913,22 @@ UOS, helping you seamlessly replace your system.</source>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/getbackup/zipfileprocesswidget.cpp" line="44"/>
         <source>Packing  %1</source>
-        <translation>Emballage %1</translation>
+        <translation>ການຈัດແບບ %1</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/getbackup/zipfileprocesswidget.cpp" line="53"/>
         <source>Transfer will be completed in %1 minutes</source>
-        <translation>Transfert sera terminé dans %1 minutes</translation>
+        <translation>ການໂອນຂໍ້ມູນຈະສຳເລັດຠາຢໃນ %1 ນາທີ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/getbackup/zipfileprocesswidget.cpp" line="56"/>
         <source>Transfer will be completed in %1 secondes</source>
-        <translation>Transfert sera terminé dans %1 secondes</translation>
+        <translation>ການໂອນຂໍ້ມູນຈະສຳເລັດຠາຢໃນ %1 ວິນາທີ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/getbackup/zipfileprocesswidget.cpp" line="84"/>
         <source>Creating Backup File...</source>
-        <translation>Création du fichier de sauvegarde...</translation>
+        <translation>ການສ້າງອົງບຳຄົງ...</translation>
     </message>
 </context>
 <context>
@@ -936,12 +936,12 @@ UOS, helping you seamlessly replace your system.</source>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/getbackup/zipworker.cpp" line="283"/>
         <source>%1 File compression failed</source>
-        <translation>%1 Compression du fichier échouée</translation>
+        <translation>ການຈັດແບບໄຟລ໌ %1 ລົ້ມເຫລວ</translation>
     </message>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/getbackup/zipworker.cpp" line="213"/>
         <source>Back up file done</source>
-    <translation>Fichier de sauvegarde terminé</translation>
+        <translation>ການສ້າງອົງບຳຄົງສຳເລັດ</translation>
     </message>
 </context>
 <context>
@@ -949,7 +949,7 @@ UOS, helping you seamlessly replace your system.</source>
     <message>
         <location filename="../../src/plugins/data-transfer/core/gui/linux/mainwindow_p_linux.cpp" line="32"/>
         <source>UOS data transfer</source>
-        <translation>Transfert de données UOS</translation>
+        <translation>ການໂອນຂໍ້ມູນຂອງ UOS</translation>
     </message>
 </context>
 </TS>

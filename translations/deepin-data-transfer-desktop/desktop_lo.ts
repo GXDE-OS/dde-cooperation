@@ -6,17 +6,17 @@
     <message>
         <location filename="Desktop Entry]GenericName" line="0"/>
         <source>Data Transfer</source>
-        <translation>Transfert de données</translation>
+        <translation>ການໂອນຂໍ້ມູນ</translation>
     </message>
     <message>
         <location filename="Desktop Entry]Comment" line="0"/>
         <source>Data transfer is a powerful tool that helps you transfer your files, settings from windows to linux.</source>
-        <translation>Le transfert de données est un outil puissant qui vous aide à transférer vos fichiers et paramètres de Windows vers Linux.</translation>
+        <translation>ການໂອນຂໍ້ມູນແມ່ນເຄື່ອງມືທີ່ມີປະສິດທິພາບສູງທີ່ຊ່ວຍໃຫ້ທ່ານໂອນໄຟລ໌ ແລະການຕັ້ງຄ່າຈາກ Windows ໄປຫາ Linux</translation>
     </message>
     <message>
         <location filename="Desktop Entry]Name" line="0"/>
         <source>Deepin Data Transfer</source>
-        <translation>Deepin Transfert de données</translation>
+        <translation>Deepin ການໂອນຂໍ້ມູນ</translation>
     </message>
 </context>
 </TS>
