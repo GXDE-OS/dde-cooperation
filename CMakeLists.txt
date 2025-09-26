@@ -96,7 +96,7 @@ endif()
 option(ENABLE_SLOTIPC "Enable SlotIPC for compatible with old daemon" ON)
 
 # Find Qt version
-find_package(QT NAMES Qt5 REQUIRED COMPONENTS Core)
+find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core)
 message("   >>> Found Qt version: ${QT_VERSION_MAJOR}")
 # 检查并设置环境变量
 if(NOT DEFINED ENV{QT_SELECT})
