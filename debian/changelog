@@ -1,3 +1,20 @@
+dde-cooperation (1.1.20) unstable; urgency=medium
+
+  * chore: Update version to 1.1.20.
+  * fix: Fix some UI issues.
+  * fix: Add delay before application exit to ensure config is saved
+  * fix: Disable search by self IP
+
+ -- re2zero <yangwu@uniontech.com>  Thu, 18 Sep 2025 19:02:33 +0800
+
+dde-cooperation (1.1.19) unstable; urgency=medium
+
+  * chore: Update version to 1.1.19.
+  * fix: Update notification handling to prevent showing in notification center
+  * fix: disable logging for sensitive information
+
+ -- re2zero <yangwu@uniontech.com>  Thu, 11 Sep 2025 13:56:43 +0800
+
 dde-cooperation (1.1.18) unstable; urgency=medium
 
   * chore: Update version to 1.1.18. 
