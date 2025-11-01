@@ -1,3 +1,23 @@
+dde-cooperation (1.1.22) unstable; urgency=medium
+
+  * chore: Update version to 1.1.22.
+  * fix: [CI] Fix windows building env issue.
+  * fix: Enhance file watcher and connection history management
+  * fix: Add file transfer settings dialog improvements
+
+ -- re2zero <yangwu@uniontech.com>  Thu, 30 Oct 2025 19:39:19 +0800
+
+dde-cooperation (1.1.21) unstable; urgency=medium
+
+  * chore: Update version to 1.1.21.
+  * fix: Implement graceful shutdown process in TransferHelper
+  * fix: Fix network connect tips
+  * fix: Fix not show offline device if not same subnet.
+  * fix: Fix not show device for NotAllow mode
+  * fix: Fix transfer dialog still show issue
+
+ -- re2zero <yangwu@uniontech.com>  Fri, 10 Oct 2025 13:31:19 +0800
+
 dde-cooperation (1.1.20) unstable; urgency=medium
 
   * chore: Update version to 1.1.20.

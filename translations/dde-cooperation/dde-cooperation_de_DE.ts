@@ -1,15 +1,15 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="sq">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="de_DE">
 <context>
     <name>Application</name>
     <message>
         <location filename="../../src/apps/dde-cooperation/main.cpp" line="50"/>
         <source>Cooperation</source>
-        <translation>Bashkëpunim</translation>
+        <translation>Mitbenutzung</translation>
     </message>
     <message>
         <location filename="../../src/apps/dde-cooperation/main.cpp" line="54"/>
         <source>Cooperation is a powerful cross-terminal office tool that helps you deliver files, share keys and mice, and share clipboards between different devices.</source>
-        <translation>Bashkëpunimi është një mjet i fuqishëm zyre që ju ndihmon të dërgoni kartela, të dani me të tjerë tastiera dhe minj, si dhe të ndani të papastra mes pajisjesh të ndryshme.</translation>
+        <translation>Mitbenutzung ist ein mächtiges geräteübergreifendes Werkzeug, das hilft zwischen verschiedenen Geräten Dateien bereitzustellen sowie Tastatur, Maus und Klemmbrett auszutauschen.</translation>
     </message>
 </context>
 <context>
@@ -17,13 +17,13 @@
     <message>
         <location filename="../../src/lib/cooperation/dfmplugin/cooperationplugin.cpp" line="69"/>
         <source>File transfer settings</source>
-        <translation>Rregullime shpërnguljesh kartelash</translation>
+        <translation>Dateiübertragungseinstellungen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/dfmplugin/cooperationplugin.cpp" line="71"/>
         <source>Settings</source>
         <comment>button</comment>
-        <translation>Rregullime</translation>
+        <translation>Einstellungen</translation>
     </message>
 </context>
 <context>
@@ -32,7 +32,7 @@
         <location filename="../../src/lib/cooperation/core/gui/widgets/cooperationstatewidget.cpp" line="341"/>
         <location filename="../../src/lib/cooperation/core/gui/widgets/cooperationstatewidget.cpp" line="373"/>
         <source>Local IP: %1</source>
-        <translation>IP Vendore: %1</translation>
+        <translation>Lokale IP: %1</translation>
     </message>
 </context>
 <context>
@@ -40,19 +40,19 @@
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/dialogs/cooperationdialog.cpp" line="25"/>
         <source>&quot;%1&quot; send some files to you</source>
-        <translation>“%1” dërgon ca kartela te ju</translation>
+        <translation>&quot;%1&quot; Schickt Dateien</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/dialogs/cooperationdialog.cpp" line="34"/>
         <source>Reject</source>
         <comment>button</comment>
-        <translation>Hidhe poshtë</translation>
+        <translation>Ablehnen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/dialogs/cooperationdialog.cpp" line="35"/>
         <source>Accept</source>
         <comment>button</comment>
-        <translation>Pranoje</translation>
+        <translation>Annehmen</translation>
     </message>
 </context>
 <context>
@@ -60,7 +60,7 @@
     <message>
         <location filename="../../src/lib/cooperation/core/gui/win/cooperationsearchedit.cpp" line="34"/>
         <source>Search</source>
-        <translation>Kërkoni</translation>
+        <translation>Suche</translation>
     </message>
 </context>
 <context>
@@ -70,31 +70,31 @@
         <location filename="../../src/lib/cooperation/core/net/helper/dialogs/cooperationtaskdialog.cpp" line="131"/>
         <source>Cancel</source>
         <comment>button</comment>
-        <translation>Anuloje</translation>
+        <translation>Abbrechen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/dialogs/cooperationtaskdialog.cpp" line="134"/>
         <source>Retry</source>
         <comment>button</comment>
-        <translation>Riprovoni</translation>
+        <translation>Erneut versuchen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/dialogs/cooperationtaskdialog.cpp" line="157"/>
         <source>Reject</source>
         <comment>button</comment>
-        <translation>Hidhe poshtë</translation>
+        <translation>Ablehnen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/dialogs/cooperationtaskdialog.cpp" line="160"/>
         <source>Accept</source>
         <comment>button</comment>
-        <translation>Pranoje</translation>
+        <translation>Annehmen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/dialogs/cooperationtaskdialog.cpp" line="184"/>
         <source>Close</source>
         <comment>button</comment>
-        <translation>Mbylle</translation>
+        <translation>Schließen</translation>
     </message>
 </context>
 <context>
@@ -102,12 +102,12 @@
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/dialogs/cooperationdialog.cpp" line="275"/>
         <source>File Transfer</source>
-        <translation>Shpërngulje Kartelash</translation>
+        <translation>Dateiübertragung</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/dialogs/cooperationdialog.cpp" line="278"/>
         <source>File transfer</source>
-        <translation>Shpërngulje kartelash</translation>
+        <translation>Dateiübertragung</translation>
     </message>
 </context>
 <context>
@@ -115,52 +115,52 @@
     <message>
         <location filename="../../src/lib/cooperation/core/utils/cooperationutil.cpp" line="217"/>
         <source>View Help Manual</source>
-        <translation>Shihni Doracak Ndihme</translation>
+        <translation>Hilfe-Anleitung ansehen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/utils/cooperationutil.cpp" line="218"/>
         <source>Welcome to dde-cooperation</source>
-        <translation>Mirë se vini te dde-cooperation</translation>
+        <translation>Willkommen zu dde-Mitbenutzung</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/utils/cooperationutil.cpp" line="222"/>
         <source>Keyboard and mouse sharing</source>
-        <translation>Ndarje me të tjerë e tastierës dhe miut</translation>
+        <translation>Tastatur- und Maus-Mitbenutzung</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/utils/cooperationutil.cpp" line="222"/>
         <source>When a connection is made between two devices, the initiator&apos;s keyboard and mouse can be used to control the other device</source>
-        <translation>Kur mes dy pajisjeve bëhet një lidhje, tastiera dhe miu i atij që e filloi lidhjen mund të përdoren për të kontrolluar pajisjen tjetër</translation>
+        <translation>Wenn zwischen zwei Geräten eine Verbindung hergestellt wurde, können Tastatur und Maus des Ausgangsgerätes für das verbundene benutzt werden</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/utils/cooperationutil.cpp" line="224"/>
         <source>Clipboard sharing</source>
-        <translation>Ndarje të papastre me të tjerë</translation>
+        <translation>Zwischenablage-Mitbenutzung</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/utils/cooperationutil.cpp" line="224"/>
         <source>Once a connection is made between two devices, the clipboard will be shared and can be copied on one device and pasted on the other device</source>
-        <translation>Kur mes dy pajisjeve bëhet një lidhje, e papastra do të jetë e përbashkët dhe mund kopjohet te njëra pajisje dhe të ngjitet te pajisja tjetër</translation>
+        <translation>Sobald zwei Geräte miteinander verbunden sind, kann die Zwischenablage mitbenutzt werden, von einem Gerät aus kopiert und in das andere eingefügt werden</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/utils/cooperationutil.cpp" line="226"/>
         <source>Delivery of documents</source>
-        <translation>Dërgim dokumentesh</translation>
+        <translation>Bereitstellung von Dokumenten</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/utils/cooperationutil.cpp" line="226"/>
         <source>After connecting between two devices, you can initiate a file delivery to the other device</source>
-        <translation>Pas lidhjes mes dy pajisjeve, mund të nisni dërgim kartelash te pajisja tjetër</translation>
+        <translation>Nach dem Verbinden zweier Geräte können Sie die Übertragung von Dateien von einem zum anderen Gerät anstoßen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/utils/cooperationutil.cpp" line="228"/>
         <source>For detailed instructions, please click on the Help Manual below</source>
-        <translation>Për udhëzime të hollësishme, ju lutemi, klikoni më poshtë mbi Doracak Ndihme</translation>
+        <translation>Für genaue Anleitung klicken Sie bitte auf das Hilfehandbuch unten</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/utils/cooperationutil.cpp" line="228"/>
         <source>Usage</source>
-        <translation>Përdorim</translation>
+        <translation>Gebrauch</translation>
     </message>
 </context>
 <context>
@@ -168,17 +168,17 @@
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/deviceitem.cpp" line="191"/>
         <source>connected</source>
-        <translation>e lidhur</translation>
+        <translation>verbunden</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/deviceitem.cpp" line="197"/>
         <source>connectable</source>
-        <translation>mund të lidhet</translation>
+        <translation>verbndbar</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/deviceitem.cpp" line="204"/>
         <source>offline</source>
-        <translation>jo në linjë</translation>
+        <translation>offline</translation>
     </message>
 </context>
 <context>
@@ -186,28 +186,28 @@
     <message>
         <location filename="../../src/lib/cooperation/core/discover/discovercontroller.cpp" line="245"/>
         <source>Confirm</source>
-        <translation>Ripohojeni</translation>
+        <translation>Bestätigen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/discover/discovercontroller.cpp" line="246"/>
         <source>Close</source>
-        <translation>Mbylle</translation>
+        <translation>Schließen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/discover/discovercontroller.cpp" line="248"/>
         <location filename="../../src/lib/cooperation/core/discover/discovercontroller.cpp" line="257"/>
         <source>Please click to confirm to enable the LAN discovery service!</source>
-        <translation>Ju lutemi, klikoni që të riphoni aktivizimin e shërbimit të pikasjes së rrjeteve LAN!</translation>
+        <translation>Bitte bestätigen, um eine LAN-Entdeckung zuzulassen! </translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/discover/discovercontroller.cpp" line="249"/>
         <source>Unable to discover and be discovered by other devices when LAN discovery service is not turned on</source>
-        <translation>S’arrihet të zbulohet dhe të jetë i zbulueshëm nga pajisje të tjera, kur shërbimi i pikasjes së LAN-eve s’është në punë</translation>
+        <translation>Solange ers LAN-Entdeckungsdienst nicht an ist, kann dies Gerät nicht entdeckt, und auch keine anderen entdeckt werden</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/discover/discovercontroller.cpp" line="258"/>
         <source>Unable to discover and be discovered by other devices when LAN discovery service is not turned onRight click on Windows Start menu -&gt;Computer Management -&gt;Services and Applications -&gt;Services to enable Bonjour service</source>
-        <translation>S’arrihet të zbulohet dhe të jetë i zbulueshëm nga pajisje të tjera, kur shërbimi i pikasjes së LAN-eve s’është në punë. Djathtasklikoni te menuja Windows Start -&gt;Computer Management -&gt;Services and Applications -&gt;Services to enable Bonjour service</translation>
+        <translation>Solange der LAN-Entdeckungsdienst nicht an ist, kann dies Gerät nicht entdeckt, und auch keine anderen entdeckt werden. Richtsklick auf Winsows &lt; Startmenü &gt; Computerverwaltung &gt; Programme und Dienste &gt; Programme um Bonjour-Dienst zu ermöglichen</translation>
     </message>
 </context>
 <context>
@@ -215,42 +215,42 @@
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/firsttipwidget.cpp" line="126"/>
         <source>First step</source>
-        <translation>Hapi i [arë</translation>
+        <translation>Erster Schritt</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/firsttipwidget.cpp" line="127"/>
         <source>The opposite end opens the application and connects to the same network</source>
-        <translation>Pala matanë hap aplikacionin dhe lidhet me të njëjtin rrjet</translation>
+        <translation>Die gegenüberliegende Seite öffnet ein Programm und verbindet sich mit demselben Netzwerk</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/firsttipwidget.cpp" line="128"/>
         <source>Second step</source>
-        <translation>Hapi i dytë</translation>
+        <translation>Zweiter Schritt</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/firsttipwidget.cpp" line="130"/>
         <source>Third step</source>
-        <translation>Hapi i tretë</translation>
+        <translation>Dritter Schritt</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/firsttipwidget.cpp" line="189"/>
         <source>to send the file</source>
-        <translation>për të dërguar kartelën</translation>
+        <translation>um die Datei zu senden</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/firsttipwidget.cpp" line="196"/>
         <source>to connect to the peer device</source>
-        <translation>për t’u lidhur te pajisja ortake</translation>
+        <translation>um sich mit dem Gerät zu verbinden, mit dem sich ausgetauscht werden soll</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/firsttipwidget.cpp" line="129"/>
         <source>Enter the peer IP in the search box</source>
-        <translation>Jepni te kuadrati i kërkimeve IP-në e ortakut</translation>
+        <translation>Geben Sie die Austausch-IP in das Suchfeld ein</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/firsttipwidget.cpp" line="131"/>
         <source>Click</source>
-        <translation>Klikoni</translation>
+        <translation>Klicken</translation>
     </message>
 </context>
 <context>
@@ -264,12 +264,12 @@
         <location filename="../../src/lib/cooperation/core/gui/widgets/filechooseredit.cpp" line="158"/>
         <location filename="../../src/lib/cooperation/core/gui/widgets/filechooseredit.cpp" line="166"/>
         <source>the file save location is invalid</source>
-        <translation>vendndodhja për ruajtje kartelash është e pavlefshme</translation>
+        <translation>der Dateispeicherort ist ungültig</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/filechooseredit.cpp" line="172"/>
         <source>This path is a read-only directory. Please choose a different location for saving the file.</source>
-        <translation>Ky shteg është një drejtori vetëm për lexim. Ju lutemi, zgjidhni një vendndodhje tjetër për ruajtjen e kartelës.</translation>
+        <translation>Dieser Pfad weist auf ein ein schreibgeschütztes Verzeichnis</translation>
     </message>
 </context>
 <context>
@@ -277,12 +277,12 @@
     <message>
         <location filename="../../src/lib/cooperation/core/gui/phone/screenmirroringwindow.cpp" line="204"/>
         <source>The current device has been locked</source>
-        <translation>Pajisja e tanishme është kyçur</translation>
+        <translation>Das derzeitige Verzeichnis ist gesperrt</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/phone/screenmirroringwindow.cpp" line="207"/>
         <source>You can unlock it on mobile devices</source>
-        <translation>Mund ta shkyçni te pajisjet celulare</translation>
+        <translation>Sie können es auf mobilen Geräten entsperren</translation>
     </message>
 </context>
 <context>
@@ -290,7 +290,7 @@
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/cooperationstatewidget.cpp" line="81"/>
         <source>Looking for devices</source>
-        <translation>Po shihet për pajisje</translation>
+        <translation>Nach Geräten suchen</translation>
     </message>
 </context>
 <context>
@@ -298,45 +298,45 @@
     <message>
         <location filename="../../src/lib/cooperation/core/gui/mainwindow.cpp" line="266"/>
         <source>Minimise to system tray</source>
-        <translation>Minimizoje te panel sistemi</translation>
+        <translation>In die System-Palette verkleinern</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/mainwindow.cpp" line="268"/>
         <source>Exit</source>
-        <translation>Dalje</translation>
+        <translation>Verlassen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/mainwindow.cpp" line="277"/>
         <source>No more enquiries</source>
-        <translation>Pa kërkime të tjera</translation>
+        <translation>Keine weiteren Anfragen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/mainwindow.cpp" line="285"/>
         <location filename="../../src/lib/cooperation/core/gui/mainwindow.cpp" line="296"/>
         <source>Cancel</source>
-        <translation>Anuloje</translation>
+        <translation>Abbrechen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/mainwindow.cpp" line="286"/>
         <location filename="../../src/lib/cooperation/core/gui/mainwindow.cpp" line="295"/>
         <source>Confirm</source>
-        <translation>Ripohojeni</translation>
+        <translation>Bestätigen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/mainwindow.cpp" line="287"/>
         <location filename="../../src/lib/cooperation/core/gui/mainwindow.cpp" line="294"/>
         <source>Please select your operation</source>
-        <translation>Ju lutemi, përzgjidhni veprimin tuaj</translation>
+        <translation>Bitte wählen Sie Ihre Aktion aus</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/mainwindow.cpp" line="338"/>
         <source>Restore</source>
-        <translation>Riktheje</translation>
+        <translation>Wiederherstellen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/mainwindow.cpp" line="339"/>
         <source>Quit</source>
-        <translation>Dilni</translation>
+        <translation>Beenden</translation>
     </message>
 </context>
 <context>
@@ -344,7 +344,7 @@
     <message>
         <location filename="../../src/lib/cooperation/core/gui/linux/mainwindow_p_linux.cpp" line="62"/>
         <source>Computer</source>
-        <translation>Kompjuter</translation>
+        <translation>Computer</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/linux/mainwindow_p_linux.cpp" line="63"/>
@@ -354,23 +354,23 @@
     <message>
         <location filename="../../src/lib/cooperation/core/gui/linux/mainwindow_p_linux.cpp" line="74"/>
         <source>Selection of delivery device</source>
-        <translation>Përzgjedhje pajisjeje dërgimi</translation>
+        <translation>Auswahl des bereitstellenden Gerätes</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/linux/mainwindow_p_linux.cpp" line="84"/>
         <location filename="../../src/lib/cooperation/core/gui/win/mainwindow_p_win.cpp" line="126"/>
         <source>Settings</source>
-        <translation>Rregullime</translation>
+        <translation>Einstellungen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/linux/mainwindow_p_linux.cpp" line="88"/>
         <source>Download client</source>
-        <translation>Shkarkoni klientin</translation>
+        <translation>Hilfsprogramm herunterladen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/win/mainwindow_p_win.cpp" line="130"/>
         <source>Download Windows client</source>
-        <translation>Shkarkoni klient Windows</translation>
+        <translation>Windows-Hilfsprogramm herunterladen</translation>
     </message>
 </context>
 <context>
@@ -378,7 +378,7 @@
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/cooperationstatewidget.cpp" line="150"/>
         <source>Please connect to the network</source>
-        <translation>Ju lutemi, lidhuni te rrjeti</translation>
+        <translation>Bitte Verbinden Sie sich mit dem Netzwerk</translation>
     </message>
 </context>
 <context>
@@ -386,57 +386,57 @@
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/cooperationstatewidget.cpp" line="185"/>
         <source>1. Enable cross-end collaborative applications. Applications on the UOS can be downloaded from the App Store, and applications on the Windows side can be downloaded from: </source>
-        <translation>1. Aktivizoni aplikacione bashkëpunimi. Aplikacionet te UOS mund të shkarkohen që nga App Store, ndërsa aplikacionet më anë të Windows-it mund të shkarkohen që nga: </translation>
+        <translation>1. Ermöglichen Sie überquer-Zusammenarbeitsprogramme. Programme unter UOS können aus dem AppStore heruntergeladen werden, und auf Windows-Seite von:</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/cooperationstatewidget.cpp" line="199"/>
         <source>2. On the same LAN as the device</source>
-        <translation>2. Në të njëjtin LAN si pajisja</translation>
+        <translation>2. Im selben LAN, wie das Gerät</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/cooperationstatewidget.cpp" line="204"/>
         <source>3. File Manager-Settings-File Drop-Allow the following users to drop files to me -&quot;Everyone on the same LAN&quot;</source>
-        <translation>3. Përgjegjës Kartelash-Rregullime-Hedhje Kartelash-Lejo përdoruesit vijues të lënë kartela për mua -“Gjithkënd në të njëjtin LAN”</translation>
+        <translation>3. Dateiverwaltungs-Einstellungen - Datei-Drop - Folgeneden Benutzern das Droppen von Dateien hin zu mir - &quot;Alle im selbern LAN&quot;</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/cooperationstatewidget.cpp" line="206"/>
         <source>3. Settings-Basic Settings-Discovery Mode-&quot;Allow everyone in the same LAN&quot;</source>
-        <translation>3. Rregullime-Rregullime Bazë-Mënyrë Pikasjeje-“Lejo gjithkënd në të njëjtin LAN”</translation>
+        <translation>3. Einstellungen - Grundeinstellungen - Entdeckungsmodus - &quot;Alle Nutzer im selben LAN erlauben&quot;</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/cooperationstatewidget.cpp" line="212"/>
         <source>4. Try entering the target device IP in the top search box</source>
-        <translation>4. Povoni të jepni IP-në e pajisjes së synuar te kuadrati i kërkimit sipër</translation>
+        <translation>4. Versuchen Sie die Zielgeräte-IP in das obige Suchfeld einzutragen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/cooperationstatewidget.cpp" line="216"/>
         <source>Unable to find collaborative device？</source>
-        <translation>S’arrihet të gjendet pajisje për bashkë[unim?</translation>
+        <translation>Kein Zusammenarbeits-Gerät zu finden?</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/cooperationstatewidget.cpp" line="245"/>
         <source>1. The mobile phone needs to download cross end collaborative applications.</source>
-        <translation>1. Telefoni celular lypset të shkarkojë aplikacione bashkëpunimi.</translation>
+        <translation>1. Das Smartphone muss Zusammenarbeits-Programme herunterladen.</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/cooperationstatewidget.cpp" line="246"/>
         <source>Go to download&gt;</source>
-        <translation>Kaloni te shkarkime&gt;</translation>
+        <translation>gehe zu Download&gt;</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/cooperationstatewidget.cpp" line="250"/>
         <source>2. After installation, scan the code to connect to this device for collaboration.</source>
-        <translation>2. Pas instalimi, skanoni kodin për t’u lidhur te pajisja për bashkëpunim.</translation>
+        <translation>2. Nach der Installation, scannen Sie den Code um sich mit dem Gerät für Zusammenarbeit zu verbinden.</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/cooperationstatewidget.cpp" line="251"/>
         <source>3. After connecting this device, the mobile end needs to keep cross end collaborative applications open and on the same LAN as this device</source>
-        <translation>3. Pas lidhjes së kësaj pajisjeje, është e nevojshme që ana e celularit të mbajë hapur aplikacione bashkëpunimi dhe në të njëjtin rrjet me këtë pajisje</translation>
+        <translation>3. Nach dem Verbinden mit dem Gerät muss das mobile Endgerät das Zusammenarbeitsprogramm offen und im selben LAN bleiben wie dieses Gerät.</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/cooperationstatewidget.cpp" line="253"/>
         <source>Instructions for use</source>
-        <translation>Udhëzime për përdorim</translation>
+        <translation>Anleitung zur Benutzung</translation>
     </message>
 </context>
 <context>
@@ -444,7 +444,7 @@
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/cooperationstatewidget.cpp" line="293"/>
         <source>No device found</source>
-        <translation>S’u gjet pajisje</translation>
+        <translation>Kein Gerät gefunden</translation>
     </message>
 </context>
 <context>
@@ -452,39 +452,39 @@
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/phonehelper.cpp" line="65"/>
         <source>Disconnect</source>
-        <translation>Shkëputu</translation>
+        <translation>Trennen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/phonehelper.cpp" line="93"/>
         <source>“%1”apply to initiate screen casting</source>
-        <translation type="unfinished"/>
+        <translation>&quot;%1&quot; anwenden um Bildschirmübertragung anzustoßen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/phonehelper.cpp" line="95"/>
         <location filename="../../src/lib/cooperation/core/net/helper/phonehelper.cpp" line="212"/>
         <source>cancel</source>
-        <translation>anuloje</translation>
+        <translation>abbrechen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/phonehelper.cpp" line="96"/>
         <location filename="../../src/lib/cooperation/core/net/helper/phonehelper.cpp" line="157"/>
         <source>comfirm</source>
-        <translation>ripohojeni</translation>
+        <translation>bestätigen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/phonehelper.cpp" line="139"/>
         <source>“%1”connection disconnected!</source>
-        <translation>Lidhja “%1” u shkëput!</translation>
+        <translation>&quot;%1&quot;-Verbindung getrennt!</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/phonehelper.cpp" line="210"/>
         <source>Are you sure to disconnect and collaborate with &apos;%1&apos;?</source>
-        <translation>Jeni i sigurt se doni të shkëputet dhe të bashkëpunoni me &apos;%1&apos;?</translation>
+        <translation>Soll wirklich getrennt und zusammengearbeitet werden mit &quot;%1&quot;?</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/phonehelper.cpp" line="213"/>
         <source>disconnect</source>
-        <translation>shkëputu</translation>
+        <translation>trennen</translation>
     </message>
 </context>
 <context>
@@ -492,13 +492,13 @@
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/dialogs/cooperationdialog.cpp" line="115"/>
         <source>Remaining time %1 | %2%</source>
-        <translation>Kohë e mbetur %1 | %2%</translation>
+        <translation>Verbleibende Zeit %1 | %2%</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/dialogs/cooperationdialog.cpp" line="133"/>
         <source>Cancel</source>
         <comment>button</comment>
-        <translation>Anuloje</translation>
+        <translation>Abbrechen</translation>
     </message>
 </context>
 <context>
@@ -506,22 +506,22 @@
     <message>
         <location filename="../../src/lib/cooperation/core/gui/phone/phonewidget.cpp" line="102"/>
         <source>Scan code connection</source>
-        <translation>Skanoni kod lidhjeje</translation>
+        <translation>Verbindung über Scan-Code</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/phone/phonewidget.cpp" line="108"/>
         <source>Please use the cross end collaboration app to scan the code</source>
-        <translation>Please use the cross end collaboration app to scan the code</translation>
+        <translation>Bitte nutzen Sie das Zusammenarbeitsprogramm zum Scannen des Codes</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/phone/phonewidget.cpp" line="114"/>
         <source>Mobile phones and devices need to be connected to the same local area network</source>
-        <translation>Telefona dhe pajisje celulare lypset të jenë të lidhur në të njëjtin rrjet zone vendore</translation>
+        <translation>Mobile Endgerät müssen mit dem selben lokalen Netzwerk verbunden sein wie dieses Gerät.</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/phone/phonewidget.cpp" line="147"/>
         <source>Click to download UOS assistant APP</source>
-        <translation>Klikoni që të shkarkoni aplikacionin nidhmës të UOS-it</translation>
+        <translation>Klicken Sie, um das UOS Assistenz-Programm herunterzuladen</translation>
     </message>
 </context>
 <context>
@@ -530,13 +530,13 @@
         <location filename="../../src/lib/cooperation/core/net/helper/dialogs/cooperationdialog.cpp" line="179"/>
         <source>Ok</source>
         <comment>button</comment>
-        <translation>OK</translation>
+        <translation>Ok</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/dialogs/cooperationdialog.cpp" line="182"/>
         <source>View</source>
         <comment>button</comment>
-        <translation>Shiheni</translation>
+        <translation>Ansehen</translation>
     </message>
 </context>
 <context>
@@ -545,98 +545,98 @@
         <location filename="../../src/lib/cooperation/core/gui/dialogs/settingdialog.cpp" line="47"/>
         <location filename="../../src/lib/cooperation/core/gui/dialogs/settingdialog.cpp" line="53"/>
         <source>Everyone in the same LAN</source>
-        <translation>Gjithkënd në të njëjtin LAN</translation>
+        <translation>Alle im selben LAN</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/dialogs/settingdialog.cpp" line="49"/>
         <location filename="../../src/lib/cooperation/core/gui/dialogs/settingdialog.cpp" line="55"/>
         <source>Not allow</source>
-        <translation>Mos e lejo</translation>
+        <translation>Nicht erlauben</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/dialogs/settingdialog.cpp" line="50"/>
         <source>Screen right</source>
-        <translation>Ekrani djathtas</translation>
+        <translation>Bildschirm rechts</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/dialogs/settingdialog.cpp" line="51"/>
         <source>Screen left</source>
-        <translation>Ekrani majtas</translation>
+        <translation>Bildschirm links</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/dialogs/settingdialog.cpp" line="54"/>
         <source>Only those who are collaborating are allowed</source>
-        <translation>Lejohen vetëm ata që po bashkëpunojnë</translation>
+        <translation>Nur die, denen Zusammenarbeit erlaubt ist</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/dialogs/settingdialog.cpp" line="132"/>
         <source>Basic Settings</source>
-        <translation>Rregullime Bazë</translation>
+        <translation>Grundeinstellungen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/dialogs/settingdialog.cpp" line="143"/>
         <source>Discovery mode</source>
-        <translation>Mënyra pikasje</translation>
+        <translation>Entdeckungs-Modus</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/dialogs/settingdialog.cpp" line="145"/>
         <source>Other devices can discover and connect with you through the &quot;Cooperation&quot; app</source>
-        <translation>Pajisjet të tjera mund t’ju pikasin dhe lidhen me ju përmes aplikacionit “Bashkëpunim”</translation>
+        <translation>Andere Geräte können entdecken und sich verbinden mit Dir über das Programm &quot;Mitbenutzung&quot;</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/dialogs/settingdialog.cpp" line="195"/>
         <source>Device name</source>
-        <translation>Emër pajisjeje</translation>
+        <translation>Gerätename</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/dialogs/settingdialog.cpp" line="213"/>
         <source>Peripheral share</source>
-        <translation>Ndarje me të tjerë pajisjesh periferike</translation>
+        <translation>Peripherie-Mitbenutzung</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/dialogs/settingdialog.cpp" line="215"/>
         <source>Allows peripherals that have been established to collaborate across devices to control this device, including keyboard, mouse, trackpad, etc</source>
-        <translation>Lejon që pajisje periferike që janë njohur të bashkëpunojnë përmes pajisjesh për të kontrolluar këtë pajisje, përfshi tastierë, mi, trackpad, etj</translation>
+        <translation>Erlaubt für Zusammenarbeit eingerichtete Peripherie-Geräten, inkl. Tastatur, Maus, Trackpad usw., dieses Gerät zu steuern, </translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/dialogs/settingdialog.cpp" line="224"/>
         <source>When this device is the connected party, the mouse penetrates from the screen of this device to the position of the connected party</source>
-        <translation>Kur kjo pajisje është pala e lidhur, miu kalon nga ekrani i kësaj pajisje te pozivioni i palës së lidhur</translation>
+        <translation>Wenn dieses Gerät die verbundene Seite ist, greift die Maus über vom Bildschirm dieses Gerätes zur Position der damit verbundenen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/dialogs/settingdialog.cpp" line="254"/>
         <source>Connection direction</source>
-        <translation>Kah lidhjeje</translation>
+        <translation>Verbindungsrichtung</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/dialogs/settingdialog.cpp" line="273"/>
         <source>Allows the following users to send files to me</source>
-        <translation>Lejon përdoruesit vijues të dërgojnë kartela te unë</translation>
+        <translation>Erlaubt folgenden Benutzern mir Dateien zu schicken</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/dialogs/settingdialog.cpp" line="280"/>
         <source>File save location</source>
-        <translation>Vendndodhje ruajtjeje kartelash</translation>
+        <translation>Dateispeicherort</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/dialogs/settingdialog.cpp" line="296"/>
         <source>Share clipboard</source>
-        <translation>Ndani me të tjerët të papastrën</translation>
+        <translation>Klemmbrett mitbenutzen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/dialogs/settingdialog.cpp" line="298"/>
         <source>When sharing is enabled on the server (the connected device), the clipboard will be shared between the two computers</source>
-        <translation>Kur ndarja me të tjerë është aktivizur te shërbyesi (pajisja e lidhur), e papastra do të jetë e përbashkët mes dy kompjuterave</translation>
+        <translation>Wenn mitbenutzen ermöglicht ist auf dem Server (das verbundene Gerät),kann auf das Klemmbrett von beiden Computern zugegriffen weden.</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/dialogs/settingdialog.cpp" line="355"/>
         <source>The device name must contain 1 to 20 characters</source>
-        <translation>Emri i pajisjes duhet të përmbajë 1 deri në 20 shenja</translation>
+        <translation>Der Gerätename darf zwischen 1 und 20 Zeichen lang sein</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/dialogs/settingdialog.cpp" line="362"/>
         <source>The device name must contain 1 to 63 characters</source>
-        <translation>Emri i pajisjes duhet të përmbajë 1 deri në 63 shenja</translation>
+        <translation>Der Gerätename darf zwischen 1 und 63 Zeichen lang sein</translation>
     </message>
 </context>
 <context>
@@ -644,12 +644,12 @@
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="238"/>
         <source>connect</source>
-        <translation>lidhu</translation>
+        <translation>verbinden</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="246"/>
         <source>Disconnect</source>
-        <translation>Shkëputu</translation>
+        <translation>Trennen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="263"/>
@@ -658,118 +658,118 @@
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="458"/>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="511"/>
         <source>Unable to collaborate to &quot;%1&quot;</source>
-        <translation>S’arrihet të bashkëpunohet te “%1”</translation>
+        <translation>&quot;%1&quot; konnte nicht mitbenutzt werden</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="265"/>
         <source>You are connecting to another device</source>
-        <translation>Po lidheni me një pajisje tjetër</translation>
+        <translation>Sie verbinden sich mit einem anderen Gerät</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="280"/>
         <source>Requesting collaborate to &quot;%1&quot;</source>
-        <translation>Po kërkohet të bashkëpunohet te “%1”</translation>
+        <translation>Anfrage &quot;%1&quot; mitzubenutzen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="307"/>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="483"/>
         <source>Coordination with &quot;%1&quot; has ended</source>
-        <translation>Bashkërendimi me “%1” ka përfunduar</translation>
+        <translation>Abstimmung mit &quot;%1&quot; ist beendet</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="353"/>
         <source>A cross-end collaboration request was received from &quot;%1&quot;</source>
-        <translation>Nga “%1” u mor një kërkesë bashkëpunimi</translation>
+        <translation>Eine Anfrage auf überkreuzende Zusammenarbeit wurde von &quot;%1&quot; erhalten</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="354"/>
         <source>Reject</source>
-        <translation>Hidhe poshtë</translation>
+        <translation>Zurückweisen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="355"/>
         <source>Accept</source>
-        <translation>Pranoje</translation>
+        <translation>Annehmen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="374"/>
         <source>Cooperation</source>
-        <translation>Bashkëpunim</translation>
+        <translation>Mitbenutzung</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="393"/>
         <source>Connect to &quot;%1&quot; failed</source>
-        <translation>Lidhja me “%1” dështoi</translation>
+        <translation>Verbinden mit &quot;%1&quot; fehlgeschlagen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="418"/>
         <source>Unable to collaborate</source>
-        <translation>S’arrihet të bashkëpunohet</translation>
+        <translation>Zusammenarbeit nicht möglich</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="419"/>
         <source>Failed to run process!</source>
-        <translation>S’u arrit të xhirohej procesi!</translation>
+        <translation>Prozess konnte nicht gestartet weden!</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="441"/>
         <source>Connection successful, coordinating with  &quot;%1&quot;</source>
-        <translation>Lidhje e suksesshme, po bëhet bashkërendim me   “%1”</translation>
+        <translation>Verbindung steht, Abstimmen mit &quot;%1&quot; läuft gerade</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="449"/>
         <source>&quot;%1&quot; has rejected your request for collaboration</source>
-        <translation>“%1” ka hedhur poshtë kërkesën tuaj për bashkëpunim</translation>
+        <translation>&quot;%1&quot; hat ihre Anfrage nach Zusammenarbeit abgewiesen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="459"/>
         <source>&quot;%1&quot; is connecting with other devices</source>
-        <translation>“%1” po lidhet me pajisje të tjera</translation>
+        <translation>&quot;%1&quot; verbindet sich mit anderen Geräten</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="503"/>
         <source>The connection request sent to you by &quot;%1&quot; was interrupted due to a timeout</source>
-        <translation>Kërkesa për lidhje dërguar te ju nga “%1” u ndërpre për shkak mbarimi të kohës</translation>
+        <translation>Die Verbindungsanfrage, die von &quot;%1&quot; an Sie gesendet wurde wurde unterbrochen wegen Zeitüberschreitung</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="513"/>
         <source>The other party does not confirm, please try again later</source>
-        <translation>Pala tjetër nuk e ripohon, ju lutemi, riprovoni më vonë</translation>
+        <translation>Die andere Seite bestätigt nicht, bitte später erneut versuchen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="524"/>
         <source>The other party has cancelled the connection request !</source>
-        <translation>Pala tjetër ka anuluar kërkesën për lidhje!</translation>
+        <translation>Die andere Seite hat die Verbindungsanfrage abgewiesen!</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="528"/>
         <source>connect failed</source>
-        <translation>lidhja dështoi</translation>
+        <translation>Verbinden fehlgeschlagen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="538"/>
         <source>Network not connected, file delivery failed this time.                               Please connect to the network and try again!</source>
-        <translation>Rrjet i palidhur, dhënia e kartelës këtë herë dështoi.                               Ju lutemi, lidhuni në rrjet dhe riprovoni!</translation>
+        <translation>Netzwerk nicht verbunden, Dateiversand dieses Mal fehlgeschlagen. Bitte mit Netzwerk verbinden und erneut versuchen!</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="545"/>
         <source>File transfer failed</source>
-        <translation>Shpërngulja e kartelës dështoi</translation>
+        <translation>Dateiübertragung fehlgeschlagen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="547"/>
         <source>Network not connected, file delivery failed this time.                                           Please connect to the network and try again!</source>
-        <translation>Rrjet i palidhur, dhënia e kartelës këtë herë dështoi.                                           Ju lutemi, lidhuni në rrjet dhe riprovoni!</translation>
+        <translation>Netzwerk nicht verbunden, Dateiversand dieses Mal fehlgeschlagen. Bitte mit Netzwerk verbinden und erneut versuchen!</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="562"/>
         <source>Network exception</source>
-        <translation>Gabim rrjeti</translation>
+        <translation>Netzwerk-Ausnahme</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="563"/>
         <source>Please check the network &quot;%1&quot;</source>
-        <translation>Ju lutemi, kontrolloni rrjetin “%1”</translation>
+        <translation>Bitte überprüfen Sie das Netzwek &quot;%1&quot;</translation>
     </message>
 </context>
 <context>
@@ -778,12 +778,12 @@
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="103"/>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="109"/>
         <source>Cooperation</source>
-        <translation>Bashkëpunim</translation>
+        <translation>Mitbenutzung</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/sharehelper.cpp" line="200"/>
         <source>Connection successful, coordinating with &quot;%1&quot;</source>
-        <translation>Lidhje e suksesshme, po bëhet bashkërendim me “%1”</translation>
+        <translation>Verbindung steht, Abstimmen mit &quot;%1&quot; läuft gerade</translation>
     </message>
 </context>
 <context>
@@ -791,115 +791,115 @@
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="433"/>
         <source>Connect to &quot;%1&quot; failed</source>
-        <translation>Lidhja me “%1” dështoi</translation>
+        <translation>Verbinden mit &quot;%1&quot; fehlgeschlagen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="458"/>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="609"/>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="683"/>
         <source>File read/write exception</source>
-        <translation>Gadim leximi/shkrimi kartele</translation>
+        <translation>Datei schreiben/lesen-Ausnahme</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="579"/>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="630"/>
         <source>The other party has canceled the file transfer</source>
-        <translation>Pala tjetër ka anuluar kërkesën për shpërngulje kartelash</translation>
+        <translation>Die andere Seite hat die Dateiübertragung abgebrochen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="478"/>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="626"/>
         <source>File sent successfully</source>
-        <translation>Kartela u dërgua me sukses</translation>
+        <translation>Datei erfolgreich versendet</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="168"/>
         <source>View transfer history</source>
-        <translation>Shihni historik shpërnguljesh</translation>
+        <translation>Übertragungshistorie ansehen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="177"/>
         <source>Send files</source>
-        <translation>Dërgoni kartela</translation>
+        <translation>Dateien senden</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="302"/>
         <source>The other party did not receive, the files failed to send</source>
-        <translation>Pala tjetër nuk mori, s’u arrit të dërgohen kartelat</translation>
+        <translation>Die andere Seite hat nicht empfangen, das Senden der Dateien ist fehlgeschlagen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="332"/>
         <source>Cancel</source>
-        <translation>Anuloje</translation>
+        <translation>Abbrechen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="335"/>
         <source>File receiving %1% | Remaining time %2</source>
-        <translation>Marrje kartele %1% | Kohë e mbetur %2</translation>
+        <translation>Datei wird empfangen %1 | Verbleibende Zeit %2</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="342"/>
         <source>Sending files to &quot;%1&quot;</source>
-        <translation>Po dërgohen kartela te “%1”</translation>
+        <translation>Dateien werden an &quot;%1&quot; gesendet</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="342"/>
         <source>Receiving files from &quot;%1&quot;</source>
-        <translation>Po merren kartela nga “%1”</translation>
+        <translation>Dateien werden von &quot;%1&quot; empfangen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="399"/>
         <source>Reject</source>
-        <translation>Hidhe poshtë</translation>
+        <translation>Zurückweisen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="400"/>
         <source>Accept</source>
-        <translation>Pranoje</translation>
+        <translation>Annehmen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="401"/>
         <source>Close</source>
-        <translation>Mbylle</translation>
+        <translation>Schließen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="394"/>
         <source>&quot;%1&quot; send some files to you</source>
-        <translation>“%1” dërgon ca kartela te ju</translation>
+        <translation>&quot;%1&quot; schickt einige Dateien her</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="313"/>
         <source>View</source>
-        <translation>Shiheni</translation>
+        <translation>Ansehen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="412"/>
         <source>The other party has cancelled the transfer request !</source>
-        <translation>Pala tjetër ka anuluar kërkesën për shpërngulje!</translation>
+        <translation>Die andere Seite hat die Übertragungsanfrage abgewiesen!</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="452"/>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="605"/>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="680"/>
         <source>Insufficient storage space, file delivery failed this time. Please clean up disk space and try again!</source>
-        <translation>Hapësirë depozitimi i pamjaftueshme, dhënia e kartelës këtë herë dështoi. Ju lutemi, spastroni hapësirë disku dhe rirpovoni!</translation>
+        <translation>Zu wenig Speicherplatz, Dateiversand schlug dieses Mal fehl. Bitte schaffen Sie Platz auf der Festplatte und versuchen es erneut!</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="455"/>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="607"/>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="677"/>
         <source>Network not connected, file delivery failed this time. Please connect to the network and try again!</source>
-        <translation>Rrjet i palidhur, dhënia e kartelës këtë herë dështoi. Ju lutemi, lidhuni në rrjet dhe riprovoni!</translation>
+        <translation>Nicht mit Netzwerk verbunden, Dateiversand schlug dieses Mal fehl. Bitte verbinden Sie sich mit dem Netzwerk und versuchen es erneut!</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="554"/>
         <source>calculating</source>
-        <translation>po njehsoeht</translation>
+        <translation>wird berechnet</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="563"/>
         <source>The other party rejects your request</source>
-        <translation>Pala tjetër hedh poshtë kërkesën tuaj</translation>
+        <translation>Die andere Seite weist Ihre Anfrage ab</translation>
     </message>
 </context>
 <context>
@@ -907,7 +907,7 @@
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/transferhelper.cpp" line="132"/>
         <source>File transfer</source>
-        <translation>Shpërngulje kartelash</translation>
+        <translation>Dateiübertragung</translation>
     </message>
 </context>
 <context>
@@ -916,7 +916,7 @@
         <location filename="../../src/lib/cooperation/core/gui/phone/vncviewer.cpp" line="211"/>
         <location filename="../../src/lib/cooperation/core/gui/phone/vncviewer.cpp" line="213"/>
         <source>Disconnected</source>
-        <translation>Shkëputur</translation>
+        <translation>Getrennt</translation>
     </message>
 </context>
 <context>
@@ -924,12 +924,12 @@
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/dialogs/cooperationdialog.cpp" line="75"/>
         <source>File Transfer</source>
-        <translation>Shpërngulje Kartelash</translation>
+        <translation>Dateiübertragung</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/net/helper/dialogs/cooperationdialog.cpp" line="91"/>
         <source>Wait for confirmation...</source>
-        <translation>Prit për ripohim…</translation>
+        <translation>Warten auf Bestätigung…</translation>
     </message>
 </context>
 <context>
@@ -938,17 +938,17 @@
         <location filename="../../src/lib/cooperation/core/gui/widgets/workspacewidget.cpp" line="52"/>
         <location filename="../../src/lib/cooperation/core/gui/widgets/workspacewidget.cpp" line="53"/>
         <source>Please enter the device ip/name of the collaborator</source>
-        <translation>Ju lutemi, jepni ip-në/emrin e pajisjes së bashkëpunuesit</translation>
+        <translation>Bitte geben Sie die Geräte-IP/Namen des zusammenarbeitenden ein</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/workspacewidget.cpp" line="56"/>
         <source>Nearby Device</source>
-        <translation>Pajisje Atypari</translation>
+        <translation>Nahegelegenes Gerät</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/core/gui/widgets/workspacewidget.cpp" line="72"/>
         <source>Re-scan for devices</source>
-        <translation>Rikontrollo për pajisje</translation>
+        <translation>Erneut nach Geräten suchen</translation>
     </message>
 </context>
 <context>
@@ -956,7 +956,7 @@
     <message>
         <location filename="../../src/lib/cooperation/transfer/helper/transferhelper.cpp" line="105"/>
         <source>Send files</source>
-        <translation>Dërgoni kartela</translation>
+        <translation>Dateien senden</translation>
     </message>
 </context>
 <context>
@@ -964,7 +964,7 @@
     <message>
         <location filename="../../src/lib/cooperation/dfmplugin/menu/cooperationmenuscene.cpp" line="34"/>
         <source>File transfer</source>
-        <translation>Shpërngulje kartelash</translation>
+        <translation>Dateiübertragung</translation>
     </message>
 </context>
 <context>
@@ -972,7 +972,7 @@
     <message>
         <location filename="../../src/lib/cooperation/dfmplugin/cooperationplugin.cpp" line="64"/>
         <source>File transfer</source>
-        <translation>Shpërngulje kartelash</translation>
+        <translation>Dateiübertragung</translation>
     </message>
 </context>
 <context>
@@ -980,32 +980,32 @@
     <message>
         <location filename="../../src/lib/cooperation/dfmplugin/dialogs/filetransfersettingsdialog.cpp" line="154"/>
         <source>File transfer settings</source>
-        <translation>Rregullime shpërnguljesh kartelash</translation>
+        <translation>Dateiübertragungseinstellungen</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/dfmplugin/dialogs/filetransfersettingsdialog.cpp" line="171"/>
         <source>Everyone in the same LAN</source>
-        <translation>Gjithkënd në të njëjtin LAN</translation>
+        <translation>Alle im selben LAN</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/dfmplugin/dialogs/filetransfersettingsdialog.cpp" line="172"/>
         <source>Only those who are collaborating are allowed</source>
-        <translation>Lejohen vetëm ata që po bashkëpunojnë</translation>
+        <translation>Nur die, denen Zusammenarbeit erlaubt ist</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/dfmplugin/dialogs/filetransfersettingsdialog.cpp" line="173"/>
         <source>Not allow</source>
-        <translation>Mos e lejo</translation>
+        <translation>Nicht erlauben</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/dfmplugin/dialogs/filetransfersettingsdialog.cpp" line="178"/>
         <source>Allows the following users to send files to me</source>
-        <translation>Lejon përdoruesit vijues të më dërgojnë kartela</translation>
+        <translation>Erlaubt folgenden Benutzern mir Dateien zu schicken</translation>
     </message>
     <message>
         <location filename="../../src/lib/cooperation/dfmplugin/dialogs/filetransfersettingsdialog.cpp" line="179"/>
         <source>File save location</source>
-        <translation>Vendndodhje ruajtjeje kartelash</translation>
+        <translation>Dateispeicherort</translation>
     </message>
 </context>
 </TS>

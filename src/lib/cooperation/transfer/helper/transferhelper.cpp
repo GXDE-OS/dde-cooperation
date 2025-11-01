@@ -60,6 +60,19 @@ TransferHelperPrivate::TransferHelperPrivate(TransferHelper *qq)
 
 TransferHelperPrivate::~TransferHelperPrivate()
 {
+    DLOG << "TransferHelperPrivate destructor entered";
+#ifdef ENABLE_COMPAT
+    // Ensure IPC interface is properly disconnected and cleaned up
+    if (ipcInterface) {
+        if (backendOk) {
+            DLOG << "Disconnecting IPC interface in destructor";
+            ipcInterface->disconnectFromServer();
+        }
+        delete ipcInterface;
+        ipcInterface = nullptr;
+        DLOG << "IPC interface cleaned up";
+    }
+#endif
 }
 
 
@@ -141,8 +154,10 @@ void TransferHelper::buttonClicked(const QString &id, const DeviceInfoPointer in
         DLOG << "Selected" << selectedFiles.size() << "files for transfer";
         // send command to local socket.
         Q_EMIT TransferHelper::instance()->sendFiles(ip, name, selectedFiles);
-        qApp->exit(0);
-        DLOG << "Transfer initiated, application exiting";
+        
+        // Delay exit to ensure signal processing is complete
+        QTimer::singleShot(500, TransferHelper::instance(), &TransferHelper::gracefulShutdown);
+        DLOG << "Transfer initiated, scheduled graceful shutdown in 500ms";
     }
 }
 
@@ -154,6 +169,9 @@ bool TransferHelper::buttonVisible(const QString &id, const DeviceInfoPointer in
             return info->connectStatus() != DeviceInfo::Offline;
         case DeviceInfo::TransMode::OnlyConnected:
             return info->connectStatus() == DeviceInfo::Connected;
+        case DeviceInfo::TransMode::NotAllow:
+            DLOG << "Transfer mode is NotAllow, hiding transfer button";
+            return false;
         default:
             return false;
         }
@@ -325,6 +343,34 @@ bool TransferHelper::transable(const DeviceInfoPointer devInfo)
         return true;
     }
 
+    // For NotAllow mode, return true to show device in list
+    // Button visibility will be controlled by buttonVisible() function
+    if (DeviceInfo::TransMode::NotAllow == devInfo->transMode()) {
+        DLOG << "Transfer mode is NotAllow, showing device but disabling transfer";
+        return true;
+    }
+
     DLOG << "Device is not transable, returning false";
     return false;
+}
+
+void TransferHelper::gracefulShutdown()
+{
+    DLOG << "Starting graceful shutdown process";
+    
+#ifdef ENABLE_COMPAT
+    // Disconnect IPC interface first to ensure clean resource cleanup
+    if (d && d->ipcInterface && d->backendOk) {
+        DLOG << "Disconnecting from IPC interface";
+        d->ipcInterface->disconnectFromServer();
+        d->backendOk = false;
+        DLOG << "IPC interface disconnected successfully";
+    }
+#endif
+    
+    // Give a small additional delay for cleanup to complete
+    QTimer::singleShot(100, qApp, []() {
+        DLOG << "Exiting application after cleanup";
+        qApp->exit(0);
+    });
 }
