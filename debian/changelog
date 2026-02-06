@@ -1,3 +1,9 @@
+dde-cooperation (1.2.1gxde1) UNRELEASED; urgency=medium
+
+  * 修复 GXDE 构建问题
+
+ -- gfdgd_xi <3025613752@qq.com>  Fri, 06 Feb 2026 21:34:39 +0800
+
 dde-cooperation (1.2.1) unstable; urgency=medium
 
   * chore: Update version to 1.2.1.
