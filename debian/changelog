@@ -1,3 +1,11 @@
+dde-cooperation (1.2.1) unstable; urgency=medium
+
+  * chore: Update version to 1.2.1.
+  * fix(logger): add initialization check to prevent uninitialized access
+  * build: separate Qt5 and Qt6 build configurations by split debian/control
+
+ -- liujinchang <liujinchang@uniontech.com>  Fri, 06 Feb 2026 15:39:14 +0800
+
 dde-cooperation (1.2.0) unstable; urgency=medium
 
   * chore: Update version to 1.2.0.
