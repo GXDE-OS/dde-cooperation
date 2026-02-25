@@ -1,4 +1,4 @@
-﻿cmake_minimum_required(VERSION 3.1.3)
+﻿cmake_minimum_required(VERSION 3.10)
 project(protobuf C CXX)
 
 add_definitions(-DGOOGLE_PROTOBUF_CMAKE_BUILD)
