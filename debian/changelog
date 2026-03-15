@@ -1,8 +1,8 @@
-dde-cooperation (1.2.1gxde1) UNRELEASED; urgency=medium
+dde-cooperation (1.2.2) unstable; urgency=medium
 
-  * 修复 GXDE 构建问题
+  * fix(log): remove duplicate qCritical logs
 
- -- gfdgd_xi <3025613752@qq.com>  Fri, 06 Feb 2026 21:34:39 +0800
+ -- re2zero <yangwu@uniontech.com>  Thu, 12 Mar 2026 20:24:43 +0800
 
 dde-cooperation (1.2.1) unstable; urgency=medium
 
