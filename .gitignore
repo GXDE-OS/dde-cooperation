@@ -16,22 +16,15 @@ CMake*.json
 vcpkg.json
 
 # AI configuration files
-.roomodes
-.roo/
-.ruru/
-.roo_temp/
-.roo_temp_$$/
 .cursor/
-.spec-workflow/
 .cursorrules
-.cursorindexingignore
-.specstory/
-.taskmaster/
 .kilocode/
-.marscode/
-.qoder/
-.serena/
+
+# AI project spec and knowledge
 .claude/
+.opencode/
+.trellis/
+AGENTS.md
 
 # Modules
 modules/*
