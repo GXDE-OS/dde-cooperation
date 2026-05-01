@@ -1,8 +1,18 @@
-dde-cooperation (1.2.2gxde2) UNRELEASED; urgency=medium
+dde-cooperation (1.2.4) unstable; urgency=medium
 
-  * Non-maintainer upload.
+  * fix(log): remove write to read-only system directory in initLog
+  * fix(discovery): delay init to prevent focus stealing
+  * fix(gui): correct dialog window flags setting
 
- -- gfdgd_xi <3025613752@qq.com>  Mon, 06 Apr 2026 08:37:22 +0800
+ -- re2zero <yangwu@uniontech.com>  Wed, 29 Apr 2026 15:36:09 +0800
+
+dde-cooperation (1.2.3) unstable; urgency=medium
+
+  * chore: Update version to 1.2.3
+  * fix(network): filter virtual network interfaces correctly on Windows
+  * fix: add PNG/JPEG to BMP DIB conversion for X11 clipboard
+
+ -- re2zero <yangwu@uniontech.com>  Thu, 23 Apr 2026 16:42:52 +0800
 
 dde-cooperation (1.2.2) unstable; urgency=medium
 

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -23,6 +23,27 @@ static constexpr char kApp1[] { "dde-cooperation" };
 static constexpr char kApp2[] { "deepin-data-transfer" };
 static constexpr char kDaemon[] { "cooperation-daemon" };
 
+static bool isVirtualInterface(const QNetworkInterface &netInterface)
+{
+    QString name = netInterface.name().toLower();
+    if (name.startsWith("virbr") || name.startsWith("vmnet")
+        || name.startsWith("docker") || name.startsWith("veth")
+        || name.startsWith("br-")) {
+        qInfo() << "Filtering virtual interface (by name):" << netInterface.name();
+        return true;
+    }
+
+    QString humanName = netInterface.humanReadableName().toLower();
+    if (humanName.contains("vmware") || humanName.contains("virtualbox")
+        || humanName.contains("hyper-v") || humanName.contains("virtual ethernet")
+        || humanName.contains("vethernet") || humanName.contains("bluetooth")) {
+        qInfo() << "Filtering virtual interface (by humanReadableName):" << netInterface.humanReadableName();
+        return true;
+    }
+
+    return false;
+}
+
 std::string CommonUitls::getFirstIp()
 {
     QString ip;
@@ -35,10 +56,7 @@ std::string CommonUitls::getFirstIp()
             continue;
         }
 
-        if (netInterface.name().startsWith("virbr") || netInterface.name().startsWith("vmnet")
-            || netInterface.name().startsWith("docker")) {
-            // 跳过桥接，虚拟机和docker的网络接口
-            qInfo() << "netInterface name:" << netInterface.name();
+        if (isVirtualInterface(netInterface)) {
             continue;
         }
 
@@ -154,12 +172,15 @@ void CommonUitls::initLog()
     QString logConfPath = logDir();
 #endif
     QString configFile = logConfPath + "config.conf";   //日志级别配置
-    QFile file(configFile);
     QSettings settings(configFile, QSettings::IniFormat);
+#ifndef linux
+    // On Windows, create config file if not exists (logDir is user-writable)
+    QFile file(configFile);
     if (!file.exists()) {
         settings.setValue("g_minLogLevel", 2);
         settings.sync();
     }
+#endif
 
 #ifndef QT_DEBUG
     int level = settings.value("g_minLogLevel", 2).toInt();
