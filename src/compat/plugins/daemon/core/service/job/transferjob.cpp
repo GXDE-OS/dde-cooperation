@@ -1,4 +1,4 @@
-﻿// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+﻿// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -20,6 +20,29 @@
 #include <QPointer>
 #include <QElapsedTimer>
 #include <QStorageInfo>
+#include <cstring>
+#include <filesystem>
+
+// Security helper: check if resolved target is within baseDir (inclusive)
+// Uses lexically_normal for syntactic path normalization (resolves . and ..)
+// without filesystem access, preventing path traversal via ../ sequences.
+static bool isPathWithinDir(const fastring &target, const fastring &baseDir) {
+    namespace fs = std::filesystem;
+    fs::path resolvedTarget = fs::path(target.c_str()).lexically_normal();
+    fs::path resolvedBase = fs::path(baseDir.c_str()).lexically_normal();
+    if (resolvedTarget == resolvedBase) return true;
+    auto targetStr = resolvedTarget.string();
+    auto baseStr = resolvedBase.string();
+    // GCC's lexically_normal() does not strip trailing separators.
+    // If baseDir ends with '/', baseStr would be "/home/user/Downloads/"
+    // causing baseStr[baseStr.size()] to land on the filename's first char
+    // instead of '/', falsely blocking legitimate paths.
+    while (!baseStr.empty() && (baseStr.back() == '/' || baseStr.back() == '\\'))
+        baseStr.pop_back();
+    return targetStr.size() > baseStr.size()
+        && targetStr.compare(0, baseStr.size(), baseStr) == 0
+        && (targetStr[baseStr.size()] == '/' || targetStr[baseStr.size()] == '\\');
+}
 
 TransferJob::TransferJob(QObject *parent)
     : QObject(parent)
@@ -96,6 +119,11 @@ void TransferJob::initJob(fastring appname, fastring targetappname, int id, fast
     _writejob = write;
     _status = INIT;
     _save_fulldir = path::join(DaemonConfig::instance()->getStorageDir(_app_name), _savedir);
+    if (!isPathWithinDir(_save_fulldir, DaemonConfig::instance()->getStorageDir(_app_name))) {
+        ELOG << "path traversal blocked: _save_fulldir=" << _save_fulldir
+             << " storagedir=" << DaemonConfig::instance()->getStorageDir(_app_name);
+        return;
+    }
     if (_writejob) {
         Comshare::instance()->updateStatus(CURRENT_STATUS_TRAN_FILE_RCV);
         fastring fullpath = _save_fulldir;
@@ -120,6 +148,16 @@ fastring TransferJob::acName(const fastring &name)
 
 fastring TransferJob::getSaveFullpath(const fastring &rootdir, const fastring &filename)
 {
+    // V20 增强：第一层安全检查（文件名合法性）
+    if (filename.empty()) {
+        ELOG << "Empty filename rejected";
+        return "";
+    }
+    if (filename.contains("..") || filename.starts_with("/") || filename.starts_with("\\")) {
+        ELOG << "Path traversal attempt detected, filename rejected: " << filename;
+        return "";
+    }
+
     // 第一层子目录已存在则尝试获取已重命名后的名字，比如 abc/ddd/eee.txt -> abc(1)/ddd/eee.txt
     auto acfilename = filename;
     if (acfilename.contains("/")) {
@@ -138,6 +176,35 @@ fastring TransferJob::getSaveFullpath(const fastring &rootdir, const fastring &f
     }
 
     fastring fullpath = path::join(rootdir, acfilename);
+
+    // isPathWithinDir 只做词法规范化（. / ..），realpath 额外处理符号链接
+    // 以 DaemonConfig::getStorageDir() 作为可信根目录，而非客户端传来的 rootdir
+    fastring allowedRoot = DaemonConfig::instance()->getStorageDir(_app_name);
+    char *realRoot = realpath(allowedRoot.c_str(), nullptr);
+    char *realFull = realpath(fullpath.c_str(), nullptr);
+    if (realFull == nullptr) {
+        std::pair<fastring, fastring> pairs = path::split(fullpath);
+        fastring parentDir = pairs.first;
+        realFull = realpath(parentDir.c_str(), nullptr);
+    }
+    if (realRoot != nullptr && realFull != nullptr) {
+        fastring rootPath(realRoot);
+        fastring fullPath(realFull);
+        if (!fullPath.starts_with(rootPath)) {
+            ELOG << "Path traversal detected! Target outside allowed directory: " << fullpath;
+            free(realRoot);
+            free(realFull);
+            return "";
+        }
+    }
+    if (realRoot) free(realRoot);
+    if (realFull) free(realFull);
+
+    if (!isPathWithinDir(fullpath, rootdir)) {
+        ELOG << "path traversal blocked in getSaveFullpath: fullpath=" << fullpath
+             << " rootdir=" << rootdir;
+        return "";
+    }
     return fullpath;
 }
 
@@ -634,6 +701,15 @@ void TransferJob::readFileBlock(fastring filepath, int fileid, const fastring su
 bool TransferJob::writeAndCreateFile(const QSharedPointer<FSDataBlock> block, const fastring fullpath)
 {
     _notify_fileid = block->file_id;
+
+    // 安全检查：路径为空表示路径验证失败（可能是路径穿越攻击）
+    if (fullpath.empty() && !(block->flags & JobTransFileOp::FILE_COUNTED)
+        && !(block->flags & JobTransFileOp::FILE_COUNTING)
+        && !(block->flags & JobTransFileOp::FILE_TRANS_OVER)) {
+        ELOG << "Invalid file path, possible path traversal attack";
+        return false;
+    }
+
     // 创建文件
     if (block->flags & JobTransFileOp::FIlE_DIR_CREATE) {
         if (!createFile(fullpath, true))
