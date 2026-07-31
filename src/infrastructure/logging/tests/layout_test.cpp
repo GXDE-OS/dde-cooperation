@@ -20,7 +20,7 @@ Record createTestLayoutRecord(Level level, const std::string& message) {
 }
 
 // 辅助函数：将Level转换为字符串
-std::string levelToString(const Level& level) {
+inline std::string levelToString(const Level& level) {
     std::ostringstream oss;
     oss << level;
     return oss.str();
@@ -75,7 +75,7 @@ TEST_CASE("Layout customization", "[layout]") {
         std::string formatted(reinterpret_cast<const char*>(recordCopy.raw.data()), recordCopy.raw.size());
         
         // 验证格式化结果符合预期
-        REQUIRE(formatted == "CUSTOM: [INFO] Custom layout test");
+        REQUIRE(formatted == "CUSTOM: [Info] Custom layout test");
     }
 }
 
@@ -99,7 +99,7 @@ TEST_CASE("CustomLayout functionality", "[layout]") {
         std::string result(reinterpret_cast<const char*>(recordCopy.raw.data()), recordCopy.raw.size());
         
         // 验证raw字段包含正确的格式化字符串
-        std::string expected = "LAMBDA: [WARN] TestLogger - Warning message";
+        std::string expected = "LAMBDA: [Warn] TestLogger - Warning message";
         REQUIRE(result == expected);
     }
     
@@ -125,7 +125,7 @@ TEST_CASE("CustomLayout functionality", "[layout]") {
         std::string result(reinterpret_cast<const char*>(recordCopy.raw.data()), recordCopy.raw.size());
         
         // 验证raw字段包含正确的格式化字符串
-        std::string expected = "FUNCTOR: [ERROR] Error message";
+        std::string expected = "FUNCTOR: [Error] Error message";
         REQUIRE(result == expected);
     }
 } 

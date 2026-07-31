@@ -10,6 +10,7 @@ Terminal=false
 Type=Application
 X-Deepin-DEComponent=true
 X-Deepin-Vendor=deepin
+X-Deepin-Singleton=true
 
 # Translations:
 # Do not manually modify!
@@ -30,8 +31,8 @@ GenericName[zh_TW]=資料遷移
 Name[bo]=Deepinགཞི་གྲངས་སྤོ་བ།
 Name[fr]=Deepin Transfert de données
 Name[ug]=UOS سانلىق مەلۇمات يۆتكەش قورالى
-Name[zh_CN]=深度数据迁移
-Name[zh_HK]=深度數據遷移
+Name[zh_CN]=数据迁移
+Name[zh_HK]=數據遷移
 Name[lo]=ການໂອນຂໍ້ມູນ
-Name[zh_TW]=深度資料遷移
+Name[zh_TW]=資料遷移
 
