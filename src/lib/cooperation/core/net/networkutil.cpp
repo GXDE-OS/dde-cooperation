@@ -1,4 +1,4 @@
-﻿// SPDX-FileCopyrightText: 2023 - 2024 UnionTech Software Technology Co., Ltd.
+﻿// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -7,7 +7,9 @@
 
 #include "manager/sessionmanager.h"
 #include "manager/sessionproto.h"
+#include "manager/tunnelmanager.h"
 #include "common/commonutils.h"
+#include "common/constant.h"
 
 #include "cooconstrants.h"
 #include "discover/discovercontroller.h"
@@ -42,6 +44,41 @@ NetworkUtilPrivate::NetworkUtilPrivate(NetworkUtil *qq)
     servePort = COO_SESSION_PORT;
     DLOG << "Using session port:" << servePort;
 
+    tunnelManager = new TunnelManager(this);
+    tunnelManager->setSendHandler([this](const QString &target, int mask, const QByteArray &payload) {
+        sessionManager->sendTunnelMessage(target, mask, payload);
+    });
+    // Only loopback targets are exposed. The peer can never ask us to dial an
+    // arbitrary host or port.
+    tunnelManager->registerService(QStringLiteral("barrier"), QStringLiteral("127.0.0.1"),
+                                   UNI_SHARE_SERVER_PORT);
+    connect(sessionManager, &SessionManager::tunnelMessageReceived,
+            tunnelManager, &TunnelManager::onTunnelMessage, Qt::QueuedConnection);
+
+    // Transfer services are temporary: the sender registers its file server,
+    // the receiver opens a loopback forward for the announced service.
+    sessionManager->setTunnelHandlers(
+            [this](const QString &serviceId, quint16 port) {
+                return tunnelManager
+                        && tunnelManager->registerService(serviceId,
+                                                          QStringLiteral("127.0.0.1"), port);
+            },
+            [this](const QString &serviceId) {
+                if (tunnelManager)
+                    tunnelManager->unregisterService(serviceId);
+            },
+            [this](const QString &serviceId, const QString &peerIp) -> quint16 {
+                // Re-select the peer in case it was cleared while the request
+                // was waiting for the user. Never replace another active peer.
+                if (!tunnelManager || !ensureTunnelPeer(peerIp))
+                    return 0;
+                return tunnelManager->startLocalForward(serviceId);
+            },
+            [this](const QString &serviceId) {
+                if (tunnelManager)
+                    tunnelManager->stopLocalForward(serviceId);
+            });
+
     ExtenMessageHandler msg_cb([this](int32_t mask, const picojson::value &json_value, std::string *res_msg) -> bool {
 #ifdef QT_DEBUG
         DLOG << "NetworkUtil >> " << mask << " msg_cb, json_msg: " << json_value << std::endl;
@@ -69,9 +106,15 @@ NetworkUtilPrivate::NetworkUtilPrivate(NetworkUtil *qq)
             DLOG << "Handling APPLY_TRANS message";
             ApplyMessage req, res;
             req.from_json(json_value);
+            WLOG << "Received transfer request from:" << req.host << "nick:" << req.nick
+                 << "tunnel:" << req.tunnel;
             res.flag = DO_WAIT;
             *res_msg = res.as_json().serialize();
             confirmTargetAddress = QString::fromStdString(req.host);
+            // Remember the offer. The tunnel peer itself is selected on the
+            // GUI thread when the request is accepted, because that is where
+            // the tunnel manager lives.
+            transTunnelOffered.store(req.tunnel);
 
             q->metaObject()->invokeMethod(TransferHelper::instance(),
                                           "notifyTransferRequest",
@@ -85,6 +128,7 @@ NetworkUtilPrivate::NetworkUtilPrivate(NetworkUtil *qq)
             ApplyMessage req, res;
             req.from_json(json_value);
             bool agree = (req.flag == REPLY_ACCEPT);
+            peerTransTunnel.store(agree && req.tunnel);
             res.flag = DO_DONE;
             *res_msg = res.as_json().serialize();
             q->metaObject()->invokeMethod(TransferHelper::instance(),
@@ -98,12 +142,28 @@ NetworkUtilPrivate::NetworkUtilPrivate(NetworkUtil *qq)
             req.from_json(json_value);
             res.flag = DO_WAIT;
             QString info = QString::fromStdString(req.host + "," + req.nick + "," + req.fingerprint);
+            // The fourth field is optional and keeps compatibility with older
+            // peers that only send ip,name,fingerprint.
+            info += QStringLiteral(",") + (req.tunnel ? QStringLiteral("1") : QStringLiteral("0"));
             *res_msg = res.as_json().serialize();
             confirmTargetAddress = QString::fromStdString(req.host);
             q->metaObject()->invokeMethod(ShareHelper::instance(),
                                           "notifyConnectRequest",
                                           Qt::QueuedConnection,
                                           Q_ARG(QString, info));
+        }
+            return true;
+        case APPLY_BARRIER_READY: {
+            DLOG << "Handling APPLY_BARRIER_READY message";
+            ApplyMessage req, res;
+            req.from_json(json_value);
+            res.flag = DO_DONE;
+            *res_msg = res.as_json().serialize();
+
+            q->metaObject()->invokeMethod(ShareHelper::instance(),
+                                          "handleBarrierReady",
+                                          Qt::QueuedConnection,
+                                          Q_ARG(QString, QString::fromStdString(req.host)));
         }
             return true;
         case APPLY_SHARE_RESULT: {
@@ -247,11 +307,44 @@ NetworkUtilPrivate::NetworkUtilPrivate(NetworkUtil *qq)
 NetworkUtilPrivate::~NetworkUtilPrivate()
 {
     DLOG << "NetworkUtilPrivate destructor";
+    // Tear the tunnel down while the session manager is still alive, and stop
+    // it from trying to send CLOSE frames during shutdown.
+    if (sessionManager)
+        sessionManager->clearTunnelHandlers();
+
+    if (tunnelManager) {
+        tunnelManager->setSendHandler(nullptr);
+        tunnelManager->stopAll();
+    }
+}
+
+bool NetworkUtilPrivate::ensureTunnelPeer(const QString &ip)
+{
+    if (!tunnelManager || ip.isEmpty())
+        return false;
+
+    if (tunnelManager->peer().isEmpty())
+        tunnelManager->setPeer(ip);
+
+    return tunnelManager->peer() == ip;
 }
 
 void NetworkUtilPrivate::handleConnectStatus(int result, QString reason)
 {
     DLOG << " connect status: " << result << " " << reason.toStdString();
+
+    // Close tunnel streams only when the failed peer is the tunnel peer. Other
+    // discovery/connect attempts must not tear down an active cooperation.
+    // The reason may be the actual socket address instead of the advertised
+    // one behind NAT.
+    // -1 disconnected, -2 error, -3 pingout, 110 timeout, 113 unreachable
+    if (tunnelManager && !tunnelManager->peer().isEmpty() && !reason.isEmpty()
+        && (reason == tunnelManager->peer()
+            || (!tunnelManager->peerRemote().isEmpty() && reason == tunnelManager->peerRemote()))
+        && (result == -1 || result == -2 || result == -3 || result == 110 || result == 113)) {
+        tunnelManager->onPeerDisconnected();
+    }
+
     if (result == 113 || result == 110) {
         DLOG << "Host unreachable or timeout, adding search device";
         // host unreachable or timeout
@@ -715,12 +808,14 @@ void NetworkUtil::sendTransApply(const QString &ip, bool compat)
         DLOG << "Sending transfer apply via session manager";
         // update the target address
         d->confirmTargetAddress = ip;
+        d->peerTransTunnel.store(false);
 
         // send transfer apply, and async handle in RPC recv
         ApplyMessage msg;
         msg.flag = ASK_NEEDCONFIRM;
         msg.nick = deviceName.toStdString();   // user define nice name
         msg.host = CooperationUtil::localIPAddress().toStdString();
+        msg.tunnel = d->tunnelManager != nullptr;   // this peer can use the tunnel
         QString jsonMsg = msg.as_json().serialize().c_str();
         d->sessionManager->sendRpcRequest(ip, APPLY_TRANS, jsonMsg);
     }
@@ -774,6 +869,7 @@ void NetworkUtil::sendShareApply(const QString &ip, bool compat)
         msg.nick = selfinfo->deviceName().toStdString();
         msg.host = CooperationUtil::localIPAddress().toStdString();
         msg.fingerprint = _selfFingerPrint.toStdString();   // send self fingerprint
+        msg.tunnel = true;   // this build supports the reverse tunnel
         QString jsonMsg = msg.as_json().serialize().c_str();
         d->sessionManager->sendRpcRequest(ip, APPLY_SHARE, jsonMsg);
     }
@@ -813,6 +909,10 @@ void NetworkUtil::replyTransRequest(bool agree, const QString &targetIp)
         ApplyMessage msg;
         msg.flag = agree ? REPLY_ACCEPT : REPLY_REJECT;
         msg.host = CooperationUtil::localIPAddress().toStdString();
+        // Tell the sender whether this side can serve the reverse tunnel.
+        // Selecting the peer happens here on the GUI thread.
+        msg.tunnel = agree && d->transTunnelOffered.load()
+                && d->ensureTunnelPeer(targetIp);
         QString jsonMsg = msg.as_json().serialize().c_str();
 
         // _confirmTargetAddress
@@ -833,9 +933,11 @@ void NetworkUtil::replyTransRequest(bool agree, const QString &targetIp)
     }
 }
 
-void NetworkUtil::replyShareRequest(bool agree, const QString &selfprint, const QString &targetIp)
+void NetworkUtil::replyShareRequest(bool agree, const QString &selfprint, const QString &targetIp,
+                                    bool tunnelSupported)
 {
-    DLOG << "Replying share request, agree:" << agree << "selfprint:" << selfprint.toStdString() << "target IP:" << targetIp.toStdString();
+    DLOG << "Replying share request, agree:" << agree << "selfprint:" << selfprint.toStdString()
+         << "target IP:" << targetIp.toStdString() << "tunnel:" << tunnelSupported;
     if (d->confirmTargetAddress == targetIp) {
         DLOG << "Confirm target address matches, sending RPC request";
         // send transfer reply, skip result
@@ -843,6 +945,7 @@ void NetworkUtil::replyShareRequest(bool agree, const QString &selfprint, const 
         msg.flag = agree ? REPLY_ACCEPT : REPLY_REJECT;
         msg.host = CooperationUtil::localIPAddress().toStdString();
         msg.fingerprint = selfprint.toStdString();   // send self fingerprint
+        msg.tunnel = tunnelSupported;
         QString jsonMsg = msg.as_json().serialize().c_str();
 
         // _confirmTargetAddress
@@ -858,6 +961,40 @@ void NetworkUtil::replyShareRequest(bool agree, const QString &selfprint, const 
         DLOG << "Compat mode not enabled, cannot reply share request";
 #endif
     }
+}
+
+void NetworkUtil::sendBarrierReady(const QString &ip)
+{
+    DLOG << "Sending barrier ready to:" << ip.toStdString();
+    ApplyMessage msg;
+    msg.flag = DO_DONE;
+    msg.host = CooperationUtil::localIPAddress().toStdString();
+    msg.port = UNI_SHARE_SERVER_PORT;
+    msg.tunnel = true;
+    QString jsonMsg = msg.as_json().serialize().c_str();
+    d->sessionManager->sendRpcRequest(ip, APPLY_BARRIER_READY, jsonMsg);
+}
+
+void NetworkUtil::setTunnelPeer(const QString &ip)
+{
+    if (d->tunnelManager)
+        d->tunnelManager->setPeer(ip);
+}
+
+quint16 NetworkUtil::startTunnelForward(const QString &serviceId)
+{
+    return d->tunnelManager ? d->tunnelManager->startLocalForward(serviceId) : 0;
+}
+
+void NetworkUtil::stopTunnels()
+{
+    if (d->tunnelManager)
+        d->tunnelManager->stopAll();
+}
+
+bool NetworkUtil::isTunnelForwarding() const
+{
+    return d->tunnelManager && d->tunnelManager->isForwarding();
 }
 
 void NetworkUtil::replyShareRequestBusy(const QString &targetIp)
@@ -924,7 +1061,11 @@ void NetworkUtil::doSendFiles(const QStringList &fileList, const QString &target
     if (d->confirmTargetAddress == targetIp) {
         DLOG << "Confirm target address matches, sending files via session manager";
         int ranport = deepin_cross::CommonUitls::getAvailablePort();
-        d->sessionManager->sendFiles(d->confirmTargetAddress, ranport, fileList);
+        // Use the reverse tunnel only when the receiver accepted it, and only
+        // for the peer that currently owns the tunnel (an active barrier
+        // session with another device stays untouched).
+        const bool useTunnel = d->peerTransTunnel.load() && d->ensureTunnelPeer(targetIp);
+        d->sessionManager->sendFiles(d->confirmTargetAddress, ranport, fileList, useTunnel);
     } else {
 #ifdef ENABLE_COMPAT
         DLOG << "Compat mode enabled, trying with old protocol by daemon";
@@ -982,6 +1123,11 @@ QString NetworkUtil::deviceInfoStr()
 void NetworkUtil::stop()
 {
     DLOG << "Stopping NetworkUtil";
+    if (d->tunnelManager) {
+        d->tunnelManager->stopAll();
+        d->tunnelManager->setPeer(QString());
+    }
+
     metaObject()->invokeMethod(TransferHelper::instance(),
                                "closeAllNotifications",
                                Qt::QueuedConnection);

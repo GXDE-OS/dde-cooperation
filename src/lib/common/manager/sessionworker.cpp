@@ -37,6 +37,25 @@ SessionWorker::~SessionWorker()
     _asioService->Stop();
 }
 
+bool SessionWorker::onTunnelMessage(const std::string &remote, const proto::OriginMessage &msg)
+{
+    if (!isTunnelMessageType(msg.mask))
+        return false;
+
+    if (static_cast<int64_t>(msg.json_msg.size()) > TUNNEL_MAX_FRAME_SIZE) {
+        WLOG << "onTunnelMessage: drop oversized frame, mask:" << msg.mask
+             << "size:" << msg.json_msg.size();
+        return true;
+    }
+
+    QByteArray payload;
+    if (!msg.json_msg.empty())
+        payload = QByteArray(msg.json_msg.data(), static_cast<int>(msg.json_msg.size()));
+
+    emit tunnelMessageReceived(msg.mask, payload, QString::fromStdString(remote));
+    return true;
+}
+
 void SessionWorker::onReceivedMessage(const proto::OriginMessage &request, proto::OriginMessage *response)
 {
     DLOG << "onReceivedMessage id=" << request.id << " mask=" << request.mask << " json_msg: " << request.json_msg;
@@ -135,7 +154,8 @@ void SessionWorker::onReceivedMessage(const proto::OriginMessage &request, proto
         res.size = 0;//TransferHelper::getRemainSize();
         response->json_msg = res.as_json().serialize();
 
-        emit onTransData(endpoint, nameList);
+        emit onTransData(endpoint, nameList, req.tunnel,
+                         QString::fromStdString(req.service));
 
         uint64_t total = req.size;
         if (total > 0) {
@@ -375,8 +395,44 @@ bool SessionWorker::sendAsyncRequest(const QString &target, const proto::OriginM
         return true;
     }
 
-    DLOG << "Failed to send async request to target:" << target.toStdString();
+    WLOG << "Failed to send async request to target:" << target.toStdString()
+         << "mask:" << request.mask;
     return false;
+}
+
+void SessionWorker::sendTunnelMessage(const QString &target, int mask, const QByteArray &payload)
+{
+    if (target.isEmpty()) {
+        WLOG << "sendTunnelMessage: empty target";
+        return;
+    }
+
+    std::string ip = target.toStdString();
+    std::string data;
+    if (!payload.isEmpty())
+        data.assign(payload.constData(), static_cast<size_t>(payload.size()));
+
+    // Prefer the session that actually belongs to the target peer. The client
+    // side may be connected to a different device (e.g. a transfer session),
+    // and blindly using it would leak tunnel frames to the wrong peer.
+    if (_client && _client->hasConnected(ip)) {
+        _client->sendMessage(ip, mask, data);
+        return;
+    }
+
+    if (_server && _server->hasConnected(ip)) {
+        _server->sendMessage(ip, mask, data);
+        return;
+    }
+
+    // NAT fallback: the advertised IP may differ from the socket endpoint.
+    if (_client && _client->IsConnected()) {
+        WLOG << "sendTunnelMessage: using connected client fallback for:" << ip;
+        _client->sendMessage(ip, mask, data);
+        return;
+    }
+
+    WLOG << "sendTunnelMessage: no connected session for:" << ip;
 }
 
 void SessionWorker::updatePincode(QString code)
@@ -412,6 +468,18 @@ bool SessionWorker::isClientLogin(QString &ip)
     }
 
     return foundValue && hasConnected;
+}
+
+bool SessionWorker::isServerLogined(const QString &ip)
+{
+    auto it = _login_hosts.constFind(ip);
+    if (it == _login_hosts.constEnd() || !it.value())
+        return false;
+
+    const bool connected = _server && _server->hasConnected(ip.toStdString());
+    DLOG << "Checking server session for:" << ip.toStdString()
+         << "connected:" << connected;
+    return connected;
 }
 
 void SessionWorker::setRealIP(const QString &realIP)
@@ -519,12 +587,11 @@ bool SessionWorker::doAsyncRequest(T *endpoint, const std::string& target, const
 {
     if (endpoint && endpoint->hasConnected(target)) {
         DLOG << "doAsyncRequest to " << target;
-        endpoint->asyncRequestWithHandler(target, request, [this](int32_t type, const std::string &response) {
+        return endpoint->asyncRequestWithHandler(target, request, [this](int32_t type, const std::string &response) {
             DLOG << "doAsyncRequest callback: " << type << " " << response;
             QString res = QString::fromStdString(response);
             emit onRpcResult(type, res);
         });
-        return true;
     }
     return false;
 }
